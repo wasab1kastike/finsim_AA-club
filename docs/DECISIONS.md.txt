@@ -1,0 +1,21 @@
+# Decisions (ADRs)
+
+## ADR-0001: Engine & Language
+- **Decision**: Godot 4.x (GDScript)
+- **Date**: 2025-09-09
+- **Why**: Small team fit, easy exports, good scene graph for lanes
+- **Alternatives**: Unity, Phaser/TS (deferred)
+
+## ADR-0002: Branching model
+- **Decision**: Trunk-based, short-lived feature branches
+- **Examples**: feat/idle-tick, feat/lanes
+- **Policy**: PRs into main, squash & merge
+
+## ADR-0003: Commit style
+- **Types**: feat:, fix:, tune:, content:, refactor:
+- **Examples**:
+  - feat: add GameClock autoload and 0.5s tick
+  - fix: prevent negative food when tick underflows
+  - tune: rebalance Ski Troop aspd 1.0→0.9
+  - content: add Sauna Diplomacy event card
+  - refactor: extract damage calc to Unit.gd
