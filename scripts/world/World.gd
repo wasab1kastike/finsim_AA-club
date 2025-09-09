@@ -7,7 +7,7 @@ var tile_occupants: Dictionary = {}
 
 @onready var hud: CanvasLayer = $Hud
 @onready var game_clock: Node = $GameClock
-@onready var tile_map: TileMap = $LaneTileMap
+@onready var tile_map: TileMap = $HexMap
 
 
 func _ready() -> void:
@@ -19,10 +19,13 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var pos: Vector2 = tile_map.to_local(event.position)
-		selected_tile = tile_map.local_to_map(pos)
-		hud.update_tile(selected_tile, tile_occupants.get(selected_tile))
+        if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+                var pos: Vector2 = tile_map.to_local(event.position)
+                selected_tile = tile_map.local_to_map(pos)
+                var tile_data = GameState.tiles.get(selected_tile)
+                if tile_data:
+                        print("%d,%d,%s" % [selected_tile.x, selected_tile.y, tile_data.get("terrain", "")])
+                hud.update_tile(selected_tile, tile_occupants.get(selected_tile))
 	elif event is InputEventKey and event.pressed and event.keycode == KEY_B:
 		construct_building(FARM_BUILDING, selected_tile)
 
