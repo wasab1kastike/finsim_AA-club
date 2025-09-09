@@ -3,7 +3,7 @@ config_version=5
 
 [application]
 config/name="finsim_aa-club"
-run/main_scene="res://scenes/world/World.tscn"
+run/main_scene="res://scenes/ui/Main.tscn"
 config/features=PackedStringArray("4.0")
 
 [autoload]

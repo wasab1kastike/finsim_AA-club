@@ -19,6 +19,9 @@ Vertical slice WIP: 3 buildings, 3 units, 3 lanes, 1 neighbor AI, prestige stub,
 2. Press ▶ to run
 3. Exports via export_presets.cfg (to be added)
 
+## Runbook
+Open the project in Godot 4.x (Standard). In Project Settings, confirm the Main Scene is `scenes/ui/Main.tscn` and AutoLoads include `GameClock` (`res://autoload/GameClock.gd`) and `GameState` (`res://autoload/GameState.gd`). Press ▶ to run, then use the Save/Load demo to test persistence.
+
 ## Testing
 Run automated tests in headless mode:
 
