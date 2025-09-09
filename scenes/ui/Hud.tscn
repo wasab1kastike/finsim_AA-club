@@ -7,6 +7,9 @@
 [node name="ResourcesLabel" type="Label" parent="."]
 text = "Money: 0 Ammo: 0"
 
+[node name="TileInfoLabel" type="Label" parent="."]
+text = "Tile: (0,0) - Empty"
+
 [node name="StartButton" type="Button" parent="."]
 text = "Start"
 
