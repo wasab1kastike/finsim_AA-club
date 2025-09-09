@@ -18,5 +18,12 @@ Mouse-only prototype:
 - Left panel: build  
 - Center: map  
 - Bottom: battle lanes  
-- Right: policies/events  
+- Right: policies/events
 - Sisu button: clutch play
+
+## Tests
+Requires the Godot 4 command line. Run all unit tests with:
+
+```
+godot --headless --path . -s tests/test_runner.gd
+```

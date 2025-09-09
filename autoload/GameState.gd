@@ -19,7 +19,7 @@ var last_timestamp: int = 0
 const SAVE_PATH := "user://save.json"
 
 func _ready() -> void:
-    load()
+    self.load()
 
 func save() -> void:
     last_timestamp = Time.get_unix_time_from_system()
