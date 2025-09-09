@@ -27,3 +27,8 @@ text = "Trigger Event"
 
 [node name="EventLabel" type="Label" parent="."]
 text = "No events"
+
+[node name="BuildButton" type="Button" parent="."]
+text = "Build"
+
+[node name="BuildingSelector" type="OptionButton" parent="."]
