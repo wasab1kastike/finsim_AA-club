@@ -19,6 +19,11 @@ func axial_to_world(q: int, r: int) -> Vector2:
     var y := hex_radius * 1.5 * r
     return Vector2(x, y)
 
+func world_to_axial(pos: Vector2) -> Vector2i:
+    var q := (sqrt(3.0) / 3.0 * pos.x - pos.y / 3.0) / hex_radius
+    var r := (2.0 / 3.0 * pos.y) / hex_radius
+    return Vector2i(int(round(q)), int(round(r)))
+
 func generate_map() -> void:
     for child in get_children():
         child.queue_free()
