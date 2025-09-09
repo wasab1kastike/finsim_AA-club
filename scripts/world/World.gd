@@ -1,10 +1,15 @@
 extends Node2D
 
-const FARM_BUILDING: Resource = preload("res://resources/buildings/farm.tres")
+const BUILDINGS := {
+        "Farm": preload("res://resources/buildings/farm.tres"),
+        "Mine": preload("res://resources/buildings/mine.tres"),
+        "Barracks": preload("res://resources/buildings/barracks.tres"),
+}
 const FOOTMAN: Resource = preload("res://resources/units/footman.tres")
 
 var selected_tile: Vector2i = Vector2i.ZERO
 var tile_occupants: Dictionary = {}
+var selected_building: Resource = BUILDINGS["Farm"]
 
 @onready var hud: CanvasLayer = $Hud
 @onready var game_clock: Node = $GameClock
@@ -29,8 +34,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		var pos: Vector2 = map_generator.to_local(event.position)
 		selected_tile = map_generator.world_to_axial(pos)
 		hud.update_tile(selected_tile, tile_occupants.get(selected_tile))
-	elif event is InputEventKey and event.pressed and event.keycode == KEY_B:
-		construct_building(FARM_BUILDING, selected_tile)
+        elif event is InputEventKey and event.pressed and event.keycode == KEY_B:
+                construct_building(selected_building, selected_tile)
 
 func construct_building(building_res: Resource, tile_pos: Vector2i) -> void:
 	if tile_occupants.has(tile_pos) or !hex_tiles.has(tile_pos):
