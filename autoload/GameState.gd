@@ -19,7 +19,7 @@ var last_timestamp: int = 0
 const SAVE_PATH := "user://save.json"
 
 func _ready() -> void:
-    load()
+    load_state()
 
 func save() -> void:
     last_timestamp = Time.get_unix_time_from_system()
@@ -33,7 +33,7 @@ func save() -> void:
         file.store_string(JSON.stringify(data))
         file.close()
 
-func load() -> void:
+func load_state() -> void:
     if not FileAccess.file_exists(SAVE_PATH):
         last_timestamp = Time.get_unix_time_from_system()
         return

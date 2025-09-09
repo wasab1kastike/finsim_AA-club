@@ -19,6 +19,13 @@ Vertical slice WIP: 3 buildings, 3 units, 3 lanes, 1 neighbor AI, prestige stub,
 2. Press ▶ to run
 3. Exports via export_presets.cfg (to be added)
 
+## Testing
+Run automated tests in headless mode:
+
+```
+godot4 --headless -s tests/test_runner.gd
+```
+
 ## Controls
 Mouse-only prototype:  
 - Left panel: build  
