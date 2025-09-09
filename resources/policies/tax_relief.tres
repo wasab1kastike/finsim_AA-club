@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script="res://scripts/policies/Policy.gd"]
+
+[resource]
+name = "Tax Relief"
+description = "Spend gold to raise morale."
+costs = {"gold": 20}
+effects = {"morale": 10}
+cooldown = 30.0
