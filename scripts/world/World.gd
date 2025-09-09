@@ -1,6 +1,7 @@
 extends Node2D
 
 const FARM_BUILDING: Resource = preload("res://resources/buildings/farm.tres")
+const FOOTMAN: Resource = preload("res://resources/units/footman.tres")
 
 var selected_tile: Vector2i = Vector2i.ZERO
 var tile_occupants: Dictionary = {}
@@ -8,14 +9,18 @@ var tile_occupants: Dictionary = {}
 @onready var hud: CanvasLayer = $Hud
 @onready var game_clock: Node = $GameClock
 @onready var map_generator: Node2D = $MapGenerator
+@onready var battle_manager: Node2D = $Battle
 var hex_tiles: Dictionary = {}
 
 func _ready() -> void:
 	hud.start_pressed.connect(game_clock.start)
 	hud.pause_pressed.connect(game_clock.stop)
 	game_clock.tick.connect(_on_tick)
+	game_clock.tick.connect(battle_manager._on_tick)
 	for hex in map_generator.get_children():
 		hex_tiles[Vector2i(hex.q, hex.r)] = hex
+	battle_manager.spawn_unit(FOOTMAN, Vector2i(0, 0), 0)
+	battle_manager.spawn_unit(FOOTMAN, Vector2i(3, 3), 1)
 	hud.update_resources(GameState.res)
 	hud.update_tile(selected_tile, null)
 
