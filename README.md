@@ -1,5 +1,11 @@
 # finsim_aa-club
-A cozy 4X idle/autobattler inspired by Finnish history and the *sisu* spirit.
+
+A 4X strategy autobattler with idle elements.
+
+## Gameplay
+- Start with a single sauna in Finland.
+- Gain units over time or by clicking the löyly.
+- Finnish drunken warriors automatically battle enemies and build new saunas.
 
 ## Status
 Vertical slice WIP: 3 buildings, 3 units, 3 lanes, 1 neighbor AI, prestige stub, events.
