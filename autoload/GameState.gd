@@ -1,7 +1,8 @@
 extends Node
 
 var res := {
-    "wood": 0.0,
+    "gold": 100.0,
+    "wood": 100.0,
     "food": 0.0,
     "research": 0.0,
     "influence": 0.0,
