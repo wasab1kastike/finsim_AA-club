@@ -16,10 +16,12 @@ func _ready() -> void:
 
 
 func update_resources(resources: Dictionary) -> void:
-	var parts: PackedStringArray = []
-	for key in resources.keys().sorted():
-		parts.append("%s: %d" % [key.capitalize(), int(resources[key])])
-	resources_label.text = " ".join(parts)
+        var keys := resources.keys()
+        keys.sort()
+        var parts: PackedStringArray = []
+        for key in keys:
+                parts.append("%s: %d" % [key.capitalize(), int(resources[key])])
+        resources_label.text = " ".join(parts)
 
 
 func update_tile(tile_pos: Vector2i, building: Building) -> void:
