@@ -5,3 +5,8 @@ config_version=5
 config/name="finsim_aa-club"
 run/main_scene="res://scenes/world/World.tscn"
 config/features=PackedStringArray("4.0")
+
+[autoload]
+GameState="*res://autoload/GameState.gd"
+GameClock="*res://autoload/GameClock.gd"
+RNG="*res://autoload/RNG.gd"
