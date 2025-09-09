@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script="res://scripts/core/Building.gd"]
+
+[resource]
+name = "Lumber Mill"
+construction_cost = {"gold": 40, "wood": 60}
+production_rates = {"wood": 10}

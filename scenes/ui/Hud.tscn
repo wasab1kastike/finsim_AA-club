@@ -18,3 +18,10 @@ text = "Pause"
 
 [node name="ClockLabel" type="Label" parent="."]
 text = "Time: 0"
+
+[node name="BuildingSelect" type="OptionButton" parent="."]
+
+[node name="UnitSelect" type="OptionButton" parent="."]
+
+[node name="SpawnUnitButton" type="Button" parent="."]
+text = "Spawn Unit"
