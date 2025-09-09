@@ -1,6 +1,12 @@
 extends Node2D
 
-const FARM_BUILDING: Resource = preload("res://resources/buildings/farm.tres")
+const BUILDINGS := {
+	"Farm": preload("res://resources/buildings/farm.tres"),
+	"Mine": preload("res://resources/buildings/mine.tres"),
+	"Barracks": preload("res://resources/buildings/barracks.tres"),
+}
+
+var selected_building: Resource = BUILDINGS["Farm"]
 
 var selected_tile: Vector2i = Vector2i.ZERO
 var tile_occupants: Dictionary = {}
@@ -13,6 +19,8 @@ var hex_tiles: Dictionary = {}
 func _ready() -> void:
 	hud.start_pressed.connect(game_clock.start)
 	hud.pause_pressed.connect(game_clock.stop)
+	hud.building_selected.connect(_on_building_selected)
+	hud.build_pressed.connect(_on_build_pressed)
 	game_clock.tick.connect(_on_tick)
 	for hex in map_generator.get_children():
 		hex_tiles[Vector2i(hex.q, hex.r)] = hex
@@ -25,7 +33,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		selected_tile = map_generator.world_to_axial(pos)
 		hud.update_tile(selected_tile, tile_occupants.get(selected_tile))
 	elif event is InputEventKey and event.pressed and event.keycode == KEY_B:
-		construct_building(FARM_BUILDING, selected_tile)
+		construct_building(selected_building, selected_tile)
 
 func construct_building(building_res: Resource, tile_pos: Vector2i) -> void:
 	if tile_occupants.has(tile_pos) or !hex_tiles.has(tile_pos):
@@ -46,3 +54,9 @@ func _on_tick(time: float) -> void:
 			)
 	hud.update_resources(GameState.res)
 	hud.update_clock(time)
+
+func _on_building_selected(name: String) -> void:
+	selected_building = BUILDINGS.get(name, BUILDINGS["Farm"])
+
+func _on_build_pressed() -> void:
+	construct_building(selected_building, selected_tile)
