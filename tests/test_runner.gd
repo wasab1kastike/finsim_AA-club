@@ -10,6 +10,7 @@ class TestResult:
 var test_scripts := [
     preload("res://tests/test_rng.gd"),
     preload("res://tests/test_game_clock.gd"),
+    preload("res://tests/test_building.gd"),
 ]
 
 func _init() -> void:
