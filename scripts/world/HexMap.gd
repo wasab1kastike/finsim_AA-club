@@ -6,7 +6,7 @@ class_name HexMap
 
 signal tile_clicked(qr:Vector2i)
 
-const HEX_DIRS = [Vector2i(1,0), Vector2i(1,-1), Vector2i(0,-1), Vector2i(-1,0), Vector2i(-1,1), Vector2i(0,1)]
+const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 var _terrain_sources: Dictionary = {}
 var fog_map: TileMap = null
@@ -47,10 +47,9 @@ func _setup_tileset() -> void:
             _terrain_sources[names[i]] = ids[i]
 
 func _generate_tiles() -> void:
-    var rng := RandomNumberGenerator.new()
     for q in range(-radius, radius + 1):
         for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
-            var terrain := _random_terrain(rng)
+            var terrain := _random_terrain()
             GameState.tiles[Vector2i(q, r)] = {
                 "terrain": terrain,
                 "owner": "none",
@@ -74,8 +73,8 @@ func _set_tile(coord: Vector2i) -> void:
         else:
             fog_map.set_cell(0, coord, fog_map.source_id, Vector2i.ZERO)
 
-func _random_terrain(rng: RandomNumberGenerator) -> String:
-    var roll := rng.randf()
+func _random_terrain() -> String:
+    var roll := RNG.randf()
     var acc := 0.0
     for k in terrain_weights.keys():
         acc += terrain_weights[k]
@@ -94,7 +93,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 static func axial_neighbors(q: int, r: int) -> Array[Vector2i]:
     var res: Array[Vector2i] = []
-    for d in HEX_DIRS:
+    for d in HexUtils.HEX_DIRS:
         res.append(Vector2i(q + d.x, r + d.y))
     return res
 
@@ -118,7 +117,9 @@ func reveal_all() -> void:
             fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
-    return to_global(map_to_local(qr))
+    var radius := tile_set.tile_size.x / 2.0
+    return HexUtils.axial_to_world(qr.x, qr.y, radius)
 
 func world_to_axial(pos: Vector2) -> Vector2i:
-    return local_to_map(to_local(pos))
+    var radius := tile_set.tile_size.x / 2.0
+    return HexUtils.world_to_axial(pos, radius)

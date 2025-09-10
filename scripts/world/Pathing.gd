@@ -1,7 +1,6 @@
 extends Object
 class_name Pathing
-const HEX_DIRS = [Vector2i(1,0), Vector2i(1,-1), Vector2i(0,-1), Vector2i(-1,0), Vector2i(-1,1), Vector2i(0,1)]
-
+const HexUtils = preload("res://scripts/world/HexUtils.gd")
 const HexMap = preload("res://scripts/world/HexMap.gd")
 
 static func bfs_path(start: Vector2i, goal: Vector2i, passable: Callable) -> Array[Vector2i]:
@@ -13,7 +12,7 @@ static func bfs_path(start: Vector2i, goal: Vector2i, passable: Callable) -> Arr
         var current: Vector2i = frontier.pop_front()
         if current == goal:
             break
-        for dir in HEX_DIRS:
+        for dir in HexUtils.HEX_DIRS:
             var nxt: Vector2i = current + dir
             if !passable.call(nxt):
                 continue
