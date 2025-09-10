@@ -3,6 +3,7 @@ extends Node2D
 const UnitData = preload("res://scripts/units/UnitData.gd")
 
 @export var unit_data: UnitData
+var id: String = UUID.new_uuid_string()
 var type := "conscript"
 var hp := 100
 var atk := 10
@@ -25,6 +26,7 @@ func apply_data(d: UnitData) -> void:
 
 func to_dict() -> Dictionary:
     return {
+        "id": id,
         "type": type,
         "data_path": unit_data.resource_path if unit_data else "",
         "pos_qr": pos_qr,
@@ -32,6 +34,7 @@ func to_dict() -> Dictionary:
     }
 
 func from_dict(data: Dictionary) -> void:
+    id = data.get("id", id)
     pos_qr = data.get("pos_qr", pos_qr)
     var path: String = data.get("data_path", "")
     if path != "":
