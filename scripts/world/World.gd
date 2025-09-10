@@ -104,9 +104,9 @@ func _resolve_combat(pos: Vector2i) -> void:
     GameState.tiles[pos] = tile
 
 func spend_sisu_heal() -> bool:
-    if GameState.res.get(Resources.SISU, 0.0) <= 0:
+    if GameState.res.get(Resources.SISU, 0.0) < 1.0:
         return false
-    GameState.res[Resources.SISU] -= 1
+    GameState.res[Resources.SISU] = GameState.res.get(Resources.SISU, 0.0) - 1.0
     for i in range(GameState.units.size()):
         var u: Dictionary = GameState.units[i]
         var ud: UnitData = load(u.get("data_path", "")) as UnitData
