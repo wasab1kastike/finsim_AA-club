@@ -22,22 +22,21 @@ func process_tick() -> void:
     _move_raiders()
 
 func _spawn_raiders() -> void:
-    for coord in GameState.tiles.keys():
-        var tile: Dictionary = GameState.tiles[coord]
-        if tile.get("hostile", false):
-            var target: Vector2i = _find_target(coord)
-            var path: Array[Vector2i] = Pathing.bfs_path(coord, target, func(p: Vector2i):
-                return GameState.tiles.has(p) and GameState.tiles[p].get("terrain") != "lake"
-            )
-            if path.size() >= 2:
-                var r: Node = unit_scene.instantiate()
-                r.pos_qr = coord
-                r.position = hex_map.axial_to_world(coord)
-                var vis = r.get_node_or_null("Visual")
-                if vis:
-                    vis.color = Color(0,0,0)
-                units_root.add_child(r)
-                raiders.append({"node": r, "path": path, "step": 0})
+    for coord in GameState.hostile_tiles:
+        var tile: Dictionary = GameState.tiles.get(coord, {})
+        var target: Vector2i = _find_target(coord)
+        var path: Array[Vector2i] = Pathing.bfs_path(coord, target, func(p: Vector2i):
+            return GameState.tiles.has(p) and GameState.tiles[p].get("terrain") != "lake"
+        )
+        if path.size() >= 2:
+            var r: Node = unit_scene.instantiate()
+            r.pos_qr = coord
+            r.position = hex_map.axial_to_world(coord)
+            var vis = r.get_node_or_null("Visual")
+            if vis:
+                vis.color = Color(0,0,0)
+            units_root.add_child(r)
+            raiders.append({"node": r, "path": path, "step": 0})
 
 func _move_raiders() -> void:
     for i in range(raiders.size() - 1, -1, -1):
