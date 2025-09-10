@@ -11,7 +11,7 @@ func test_game_state_resources(res) -> void:
         Resources.ORE,
         Resources.RESEARCH,
         Resources.INFLUENCE,
-        Resources.STEAM,
+        Resources.LOYLY,
         Resources.SISU,
         Resources.MORALE,
         Resources.GOLD,

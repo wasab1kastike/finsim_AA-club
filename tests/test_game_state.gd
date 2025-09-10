@@ -32,7 +32,7 @@ func test_offline_gain(res) -> void:
 
     gs.res[Resources.WOOD] = 0.0
     gs.res[Resources.FOOD] = 0.0
-    gs.res[Resources.STEAM] = 0.0
+    gs.res[Resources.LOYLY] = 0.0
     gs.load()
 
     var expected_ticks := int(5 / clock.TICK_INTERVAL)
