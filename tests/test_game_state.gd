@@ -47,7 +47,9 @@ func test_unit_stats_persist(res) -> void:
     _remove_save(gs)
 
     gs.units.clear()
+    var uid := "test-unit-id"
     gs.units.append({
+        "id": uid,
         "type": "Footman",
         "data_path": "res://resources/units/footman.tres",
         "pos_qr": Vector2i(1, 2),
@@ -58,13 +60,13 @@ func test_unit_stats_persist(res) -> void:
     gs.units.clear()
     gs.load()
 
-    if gs.units.size() != 1:
+    if gs.units.size() != 1 or gs.units[0].get("id", "") != uid:
         res.fail("unit not loaded")
         return
     var u_dict = gs.units[0]
     var unit_scene: PackedScene = load("res://scenes/units/Unit.tscn")
     var unit = unit_scene.instantiate()
     unit.from_dict(u_dict)
-    if unit.hp != 55 or unit.atk != 20 or unit.def != 8 or abs(unit.move - 1.5) > 0.01:
+    if unit.id != uid or unit.hp != 55 or unit.atk != 20 or unit.def != 8 or abs(unit.move - 1.5) > 0.01:
         res.fail("unit stats not preserved")
 

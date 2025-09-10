@@ -30,7 +30,7 @@ func _on_tile_clicked(qr: Vector2i) -> void:
             selected_unit.position = hex_map.axial_to_world(next)
             for i in range(GameState.units.size()):
                 var u: Dictionary = GameState.units[i]
-                if u.get("type", "") == selected_unit.type:
+                if u.get("id", "") == selected_unit.id:
                     GameState.units[i] = selected_unit.to_dict()
                     break
             hex_map.reveal_area(next, 1)
@@ -41,6 +41,7 @@ func spawn_unit_at_center() -> void:
     var data_res: UnitData = load("res://resources/units/footman.tres")
     if data_res:
         u.apply_data(data_res)
+    u.id = UUID.new_uuid_string()
     units_root.add_child(u)
     u.pos_qr = Vector2i.ZERO
     u.position = hex_map.axial_to_world(u.pos_qr)

@@ -39,6 +39,7 @@ func save() -> void:
     var unit_data: Array = []
     for u in units:
         unit_data.append({
+            "id": u.get("id", ""),
             "type": u.get("type", ""),
             "data_path": u.get("data_path", ""),
             "pos_qr": [u.get("pos_qr", Vector2i.ZERO).x, u.get("pos_qr", Vector2i.ZERO).y],
@@ -81,7 +82,11 @@ func load_state() -> void:
     units.clear()
     for u in data.get("units", []):
         var pos_arr: Array = u.get("pos_qr", [0, 0])
+        var uid: String = u.get("id", "")
+        if uid == "":
+            uid = UUID.new_uuid_string()
         units.append({
+            "id": uid,
             "type": u.get("type", ""),
             "data_path": u.get("data_path", ""),
             "pos_qr": Vector2i(int(pos_arr[0]), int(pos_arr[1])),
