@@ -65,4 +65,25 @@ func test_cold_snap_event(res) -> void:
     gs.res[Resources.LOYLY] = 0.0
     gs.production_modifier = 1.0
     gs.modifier_ticks_remaining = 0
+
+func test_unaffordable_choice(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    var em = tree.root.get_node("EventManager")
+    var clock = tree.root.get_node("GameClock")
+    clock.set_process(false)
+    gs.res[Resources.WOOD] = 0.0
+    gs.res[Resources.FOOD] = 0.0
+    var ev: GameEvent = load("res://resources/events/merchant.tres")
+    em.start_event(ev)
+    em._on_choice_selected(ev.choices[0])
+    _cleanup_overlays(tree)
+    if gs.res[Resources.WOOD] != 0.0 or gs.res[Resources.FOOD] != 0.0:
+        res.fail("resources changed")
+        return
+    if em.current_event != ev:
+        res.fail("event advanced despite insufficient resources")
+        return
+    em.current_event = null
+    GameClock.start()
         

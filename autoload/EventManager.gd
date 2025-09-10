@@ -50,6 +50,10 @@ func start_event(ev: GameEvent) -> void:
 func _on_choice_selected(choice: Dictionary) -> void:
     var costs: Dictionary = choice.get("costs", {})
     for k in costs.keys():
+        if GameState.res.get(k, 0) < costs[k]:
+            push_warning("Insufficient %s" % k)
+            return
+    for k in costs.keys():
         GameState.res[k] = GameState.res.get(k, 0) - costs[k]
     var effects: Dictionary = choice.get("effects", {})
     for k in effects.keys():
