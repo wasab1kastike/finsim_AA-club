@@ -3,6 +3,10 @@ var Resources = preload("res://scripts/core/Resources.gd")
 var GameEvent = preload("res://scripts/events/Event.gd")
 var ColdSnapEvent = preload("res://scripts/events/ColdSnap.gd")
 
+class DummyEvent extends GameEvent:
+    func apply() -> bool:
+        return false
+
 func _cleanup_overlays(tree):
     for child in tree.root.get_children():
         if child.name == "EventOverlay":
@@ -105,5 +109,26 @@ func test_unaffordable_choice_keeps_resources(res) -> void:
     gs.res = orig
     em.current_event = null
     clock.start()
+    clock.set_process(true)
+
+func test_event_apply_returns_false(res) -> void:
+    var tree = Engine.get_main_loop()
+    var em = tree.root.get_node("EventManager")
+    var clock = tree.root.get_node("GameClock")
+    clock.set_process(false)
+    clock.start()
+    var ev: DummyEvent = DummyEvent.new()
+    em.start_event(ev)
+    var overlay_present := false
+    for child in tree.root.get_children():
+        if child.name == "EventOverlay":
+            overlay_present = true
+    _cleanup_overlays(tree)
+    if overlay_present:
+        res.fail("overlay shown despite apply returning false")
+    if em.current_event != null:
+        res.fail("current_event not cleared after apply returned false")
+    if not clock.running:
+        res.fail("GameClock stopped despite apply returning false")
     clock.set_process(true)
         
