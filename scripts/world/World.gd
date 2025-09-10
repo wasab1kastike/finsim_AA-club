@@ -8,6 +8,8 @@ signal tile_clicked(qr: Vector2i)
 var selected_unit: Node = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 const Pathing = preload("res://scripts/world/Pathing.gd")
+const AutoResolve = preload("res://scripts/battle/AutoResolve.gd")
+const Resources = preload("res://scripts/core/Resources.gd")
 
 func _ready() -> void:
     hex_map.tile_clicked.connect(_on_tile_clicked)
@@ -34,6 +36,7 @@ func _on_tile_clicked(qr: Vector2i) -> void:
                     GameState.units[i] = selected_unit.to_dict()
                     break
             hex_map.reveal_area(next, 1)
+            _resolve_combat(next)
             GameState.save()
 
 func spawn_unit_at_center() -> void:
@@ -56,3 +59,45 @@ func reveal_all() -> void:
 
 func center_on(qr: Vector2i) -> void:
     position = -hex_map.axial_to_world(qr)
+
+func _resolve_combat(pos: Vector2i) -> void:
+    var tile: Dictionary = GameState.tiles.get(pos, {})
+    var enemies: Array = tile.get("hostiles", [])
+    if enemies.is_empty():
+        return
+    var friendly: Array = []
+    for u in GameState.units:
+        if u.get("pos_qr", Vector2i.ZERO) == pos:
+            friendly.append(u.duplicate())
+    var initial := friendly.size()
+    var result: Dictionary = AutoResolve.resolve(friendly, enemies, tile.get("terrain", "plain"))
+    var survivors: Array = result.get("friendly", [])
+    var enemy_left: Array = result.get("enemies", [])
+    var ids: Dictionary = {}
+    for f in survivors:
+        ids[f.get("id", "")] = f.get("hp", 0)
+    for i in range(GameState.units.size() - 1, -1, -1):
+        var data: Dictionary = GameState.units[i]
+        if data.get("pos_qr", Vector2i.ZERO) == pos:
+            var uid: String = data.get("id", "")
+            if ids.has(uid):
+                data["hp"] = ids[uid]
+                GameState.units[i] = data
+            else:
+                for child in units_root.get_children():
+                    if child.id == uid:
+                        child.queue_free()
+                        break
+                GameState.units.remove_at(i)
+    if selected_unit and not ids.has(selected_unit.id):
+        selected_unit = null
+    tile["hostiles"] = enemy_left
+    if enemy_left.is_empty() and survivors.size() > 0:
+        tile["owner"] = "player"
+        GameState.res[Resources.INFLUENCE] = GameState.res.get(Resources.INFLUENCE, 0.0) + 0.5
+    elif survivors.is_empty():
+        GameState.res[Resources.MORALE] = GameState.res.get(Resources.MORALE, 0.0) - 1.0
+    var casualties := initial - survivors.size()
+    if casualties > 0:
+        GameState.res[Resources.SISU] = GameState.res.get(Resources.SISU, 0.0) + casualties
+    GameState.tiles[pos] = tile
