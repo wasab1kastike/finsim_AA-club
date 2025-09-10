@@ -51,7 +51,7 @@ func _on_build_pressed() -> void:
             return
     for res in cost.keys():
         GameState.res[res] = GameState.res.get(res, 0.0) - cost[res]
-    tile["building"] = _selected_building
+    tile["building"] = _selected_building.resource_path.get_file().get_basename()
     GameState.tiles[_last_clicked] = tile
     hud.update_tile(_last_clicked, _selected_building)
     hud.update_resources(GameState.res)
@@ -59,7 +59,8 @@ func _on_build_pressed() -> void:
 func _on_tile_clicked(qr: Vector2i) -> void:
     _last_clicked = qr
     var data: Dictionary = GameState.tiles.get(qr, {})
-    var building = data.get("building", null)
+    var bname = data.get("building", "")
+    var building = _buildings.get(bname, null)
     hud.update_tile(qr, building)
     hud.show_building_info(building)
     print("Main: clicked %s terrain %s" % [qr, data.get("terrain", "")])

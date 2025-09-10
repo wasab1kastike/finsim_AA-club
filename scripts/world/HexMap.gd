@@ -35,7 +35,7 @@ func _ready() -> void:
         _generate_tiles()
         reveal_area(Vector2i.ZERO, 2)
     else:
-        _load_tiles()
+        _draw_from_saved(_state.tiles)
 
 func _setup_tileset() -> void:
     if tile_set == null:
@@ -111,9 +111,9 @@ func _generate_tiles() -> void:
             _state.set_hostile(coord, is_hostile)
             _set_tile(coord)
 
-func _load_tiles() -> void:
+func _draw_from_saved(tiles: Dictionary) -> void:
     _ensure_singletons()
-    for coord in _state.tiles.keys():
+    for coord in tiles.keys():
         _set_tile(coord)
 
 func _set_tile(coord: Vector2i) -> void:

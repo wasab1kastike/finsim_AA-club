@@ -7,6 +7,7 @@ const SPEED_PER_PRESTIGE := 0.25
 
 const Resources = preload("res://scripts/core/Resources.gd")
 const Prestige = preload("res://scripts/core/Prestige.gd")
+const Building = preload("res://scripts/core/Building.gd")
 
 var res := {
     Resources.WOOD: 0.0,
@@ -51,7 +52,12 @@ func save() -> void:
     last_timestamp = Time.get_unix_time_from_system()
     var tile_data: Dictionary = {}
     for c in tiles.keys():
-        tile_data["%d,%d" % [c.x, c.y]] = tiles[c]
+        var t: Dictionary = tiles[c]
+        var b = t.get("building", null)
+        if b is Building:
+            t = t.duplicate()
+            t["building"] = b.resource_path.get_file().get_basename()
+        tile_data["%d,%d" % [c.x, c.y]] = t
     var unit_data: Array = []
     for u in units:
         unit_data.append({

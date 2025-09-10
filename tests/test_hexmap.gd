@@ -94,3 +94,21 @@ func test_tiles_persist_across_save(res) -> void:
         res.fail("tiles did not persist across save/load")
     _remove_save(gs)
 
+func test_buildings_persist_across_save(res) -> void:
+    _reset_tiles()
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    var map = DummyHexMap.new()
+    map.radius = 1
+    map.terrain_weights = {"forest": 1.0}
+    map._generate_tiles()
+    gs.tiles[Vector2i(0,0)]["building"] = preload("res://resources/buildings/farm.tres")
+    _remove_save(gs)
+    gs.save()
+    gs.tiles.clear()
+    gs.load()
+    var loaded = gs.tiles.get(Vector2i(0,0), {}).get("building", "")
+    if loaded != "farm":
+        res.fail("building did not persist across save/load")
+    _remove_save(gs)
+
