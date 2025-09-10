@@ -1,7 +1,7 @@
 extends GameEvent
 class_name ColdSnapEvent
 
-const Resources = preload("res://scripts/core/Resources.gd")
+## Resources is available globally; avoid preloading to prevent shadowing warnings.
 
 @export var duration_ticks: int = 30
 @export var penalty_multiplier: float = 0.8

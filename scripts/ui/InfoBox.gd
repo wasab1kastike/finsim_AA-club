@@ -1,7 +1,7 @@
 extends Panel
 class_name InfoBox
 
-const Building = preload("res://scripts/core/Building.gd")
+## Building is defined globally; preloading would shadow the class name.
 
 @onready var name_label: Label = $VBoxContainer/NameLabel
 @onready var description_label: Label = $VBoxContainer/DescriptionLabel

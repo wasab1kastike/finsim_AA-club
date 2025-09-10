@@ -1,7 +1,6 @@
 extends Node
 class_name BattleManager
-
-const HexNavigator = preload("res://scripts/battle/HexNavigator.gd")
+## HexNavigator is available globally via `class_name`; no preload needed.
 
 var world: Node = null
 var hex_map: TileMap = null

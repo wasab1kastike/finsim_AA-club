@@ -1,6 +1,6 @@
 extends Node2D
 
-const UnitData = preload("res://scripts/units/UnitData.gd")
+## UnitData is a global class; avoid preloading to prevent shadowing.
 
 @export var unit_data: UnitData
 var id: String = str(Time.get_unix_time_from_system())

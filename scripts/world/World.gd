@@ -10,9 +10,9 @@ signal tile_clicked(qr: Vector2i)
 
 var selected_unit: Node = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
-const Pathing = preload("res://scripts/world/Pathing.gd")
-const AutoResolve = preload("res://scripts/battle/AutoResolve.gd")
-const Resources = preload("res://scripts/core/Resources.gd")
+## Pathing, AutoResolve and Resources provide `class_name` and are globally
+## available; preloading them here would shadow the global identifiers.
+## RaiderManager lacks a global class, so it remains preloaded below.
 
 const RaiderManager = preload("res://scripts/world/RaiderManager.gd")
 

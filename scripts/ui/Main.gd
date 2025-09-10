@@ -1,6 +1,6 @@
 extends Node
 
-const Building = preload("res://scripts/core/Building.gd")
+## Building is a global class, while the tutorial overlay remains preloaded.
 const TutorialOverlay = preload("res://scenes/ui/TutorialOverlay.tscn")
 
 @onready var world: Node = $World

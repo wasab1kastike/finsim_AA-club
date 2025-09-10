@@ -1,7 +1,7 @@
 extends Node
 
-const Pathing = preload("res://scripts/world/Pathing.gd")
-const HexUtils = preload("res://scripts/world/HexUtils.gd")
+## Pathing and HexUtils are global classes; use them directly to avoid
+## shadowing the identifiers with local constants.
 
 var hex_map: TileMap
 var units_root: Node2D

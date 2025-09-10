@@ -1,6 +1,6 @@
 extends Node
 
-const Resources = preload("res://scripts/core/Resources.gd")
+## Resources is globally available via `class_name`; no need to preload it.
 
 const COOLDOWN_TICKS := 20 # 10 seconds at 0.5s per tick
 
@@ -39,8 +39,8 @@ func _heal_units() -> void:
         if path != "":
             var ud = load(path)
             if ud:
-                max_hp = int(ud.max_health)
-        var heal_amount: int = int(max_hp * 0.2)
+                max_hp = roundi(ud.max_health)
+        var heal_amount: int = roundi(max_hp * 0.2)
         hp = min(max_hp, hp + heal_amount)
         data["hp"] = hp
         GameState.units[i] = data

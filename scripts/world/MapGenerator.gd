@@ -5,8 +5,7 @@ extends Node2D
 @export var seed: int = 0
 @export var hex_radius: float = 32.0
 
-const HexUtils = preload("res://scripts/world/HexUtils.gd")
-const Resources = preload("res://scripts/core/Resources.gd")
+## HexUtils and Resources are global classes, no need to preload them here.
 var noise := FastNoiseLite.new()
 @onready var hex_tile_scene: PackedScene = preload("res://scenes/world/HexTile.tscn")
 var _state: Node

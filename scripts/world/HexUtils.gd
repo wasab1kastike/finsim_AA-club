@@ -10,7 +10,7 @@ const HEX_DIRS = [
     Vector2i(0,1),
 ]
 
-const RNG = preload("res://autoload/RNG.gd")
+## RNG autoload is available globally; no need to preload it here.
 
 static func axial_to_world(q: int, r: int, hex_radius: float) -> Vector2:
     var x := hex_radius * sqrt(3.0) * (q + r / 2.0)
@@ -20,7 +20,7 @@ static func axial_to_world(q: int, r: int, hex_radius: float) -> Vector2:
 static func world_to_axial(pos: Vector2, hex_radius: float) -> Vector2i:
     var q := (sqrt(3.0) / 3.0 * pos.x - pos.y / 3.0) / hex_radius
     var r := (2.0 / 3.0 * pos.y) / hex_radius
-    return Vector2i(int(round(q)), int(round(r)))
+    return Vector2i(roundi(q), roundi(r))
 
 static func axial_neighbors(q: int, r: int) -> Array[Vector2i]:
     var res: Array[Vector2i] = []

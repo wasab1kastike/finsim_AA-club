@@ -2,7 +2,7 @@ extends Node
 class_name AutoResolve
 
 static func resolve(friendly: Array, enemies: Array, terrain: String) -> Dictionary:
-    var rounds: int = 5 + int(RNG.randf() * 16.0)
+    var rounds: int = 5 + floori(RNG.randf() * 16.0)
     var atk_mod := 1.0
     var def_mod := 1.0
     if terrain == "hill":
@@ -16,10 +16,10 @@ static func resolve(friendly: Array, enemies: Array, terrain: String) -> Diction
         for j in range(friendly.size()):
             if enemies.is_empty():
                 break
-            var idx := int(RNG.randf() * enemies.size())
+            var idx := floori(RNG.randf() * enemies.size())
             var a: Dictionary = friendly[j]
             var d: Dictionary = enemies[idx]
-            var dmg := max(1, int(round(a.get("atk", 0) * atk_mod - d.get("def", 0) * def_mod)))
+            var dmg := max(1, roundi(a.get("atk", 0) * atk_mod - d.get("def", 0) * def_mod))
             d["hp"] = d.get("hp", 0) - dmg
             if d["hp"] <= 0:
                 enemies.remove_at(idx)
@@ -29,10 +29,10 @@ static func resolve(friendly: Array, enemies: Array, terrain: String) -> Diction
         for j in range(enemies.size()):
             if friendly.is_empty():
                 break
-            var idx := int(RNG.randf() * friendly.size())
+            var idx := floori(RNG.randf() * friendly.size())
             var a2: Dictionary = enemies[j]
             var d2: Dictionary = friendly[idx]
-            var dmg2 := max(1, int(round(a2.get("atk", 0) * atk_mod - d2.get("def", 0) * def_mod)))
+            var dmg2 := max(1, roundi(a2.get("atk", 0) * atk_mod - d2.get("def", 0) * def_mod))
             d2["hp"] = d2.get("hp", 0) - dmg2
             if d2["hp"] <= 0:
                 friendly.remove_at(idx)

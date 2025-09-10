@@ -1,7 +1,7 @@
 extends GameEvent
 class_name TraderEvent
 
-const Resources = preload("res://scripts/core/Resources.gd")
+## Resources is globally accessible via `class_name`; preloading is unnecessary.
 
 @export var required_halot: float = 10.0
 

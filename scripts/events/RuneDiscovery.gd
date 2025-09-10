@@ -1,7 +1,7 @@
 extends GameEvent
 class_name RuneDiscoveryEvent
 
-const Resources = preload("res://scripts/core/Resources.gd")
+## Use global Resources class instead of preloading to avoid shadowing.
 
 @export var required_saunatieto: float = 5.0
 

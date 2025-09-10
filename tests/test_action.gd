@@ -3,7 +3,6 @@ extends Node
 var Action = preload("res://scripts/core/Action.gd")
 var Policy = preload("res://scripts/policies/Policy.gd")
 var GameEvent = preload("res://scripts/events/Event.gd")
-var Resources = preload("res://scripts/core/Resources.gd")
 
 func test_policy_apply_and_cooldown(res):
     var gs = Engine.get_main_loop().root.get_node("GameState")

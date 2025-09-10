@@ -1,5 +1,4 @@
 extends Node
-var Resources = preload("res://scripts/core/Resources.gd")
 var GameEvent = preload("res://scripts/events/Event.gd")
 var ColdSnapEvent = preload("res://scripts/events/ColdSnap.gd")
 

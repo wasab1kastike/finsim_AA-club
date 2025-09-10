@@ -5,9 +5,10 @@ const MAKKARA_PER_TICK := 0.1
 const LOYLY_PER_TICK := 0.2
 const SPEED_PER_SAUNAKUNNIA := 0.25
 
-const Resources = preload("res://scripts/core/Resources.gd")
-const SaunakunniaLib = preload("res://scripts/core/Saunakunnia.gd")
-const Building = preload("res://scripts/core/Building.gd")
+## Resources, Saunakunnia and Building are declared with `class_name` and are
+## globally available. Preloading them here would shadow those global
+## identifiers and trigger "SHADOWED_GLOBAL_IDENTIFIER" warnings, so we rely on
+## the global classes directly.
 
 var res := {
     Resources.HALOT: 0.0,
@@ -19,7 +20,7 @@ var res := {
     Resources.SISU: 0.0,
     Resources.SAUNATUNNELMA: 100.0,
     Resources.KULTA: 100.0,
-    Resources.SAUNAKUNNIA: 0.0,
+    Resources.SAUNAKUNNIA: 0,
 }
 
 var production_modifier: float = 1.0
@@ -39,7 +40,8 @@ func _ready() -> void:
     GameClock.tick.connect(_on_tick)
 
 func _on_tick() -> void:
-    var mult := production_modifier * SaunakunniaLib.production_bonus(int(res.get(Resources.SAUNAKUNNIA, 0)))
+    var saunakunnia_level: int = res.get(Resources.SAUNAKUNNIA, 0)
+    var mult := production_modifier * Saunakunnia.production_bonus(saunakunnia_level)
     res[Resources.HALOT] += HALOT_PER_TICK * mult
     res[Resources.MAKKARA] += MAKKARA_PER_TICK * mult
     res[Resources.LOYLY] += LOYLY_PER_TICK * mult
@@ -97,14 +99,14 @@ func load_state() -> void:
     res[Resources.SISU] = min(10.0, res.get(Resources.SISU, 0.0))
     res[Resources.SAUNATUNNELMA] = max(0.0, res.get(Resources.SAUNATUNNELMA, 0.0))
     tutorial_done = bool(data.get("tutorial_done", false))
-    last_timestamp = int(data.get("last_timestamp", Time.get_unix_time_from_system()))
+    last_timestamp = data.get("last_timestamp", Time.get_unix_time_from_system()) as int
     tiles.clear()
     hostile_tiles.clear()
     var tile_data: Dictionary = data.get("tiles", {})
     for key in tile_data.keys():
         var parts: PackedStringArray = key.split(",")
         if parts.size() == 2:
-            var c := Vector2i(int(parts[0]), int(parts[1]))
+            var c := Vector2i(parts[0].to_int(), parts[1].to_int())
             tiles[c] = tile_data[key]
             if tile_data[key].get("hostile", false):
                 hostile_tiles.append(c)
@@ -118,8 +120,8 @@ func load_state() -> void:
             "id": uid,
             "type": u.get("type", ""),
             "data_path": u.get("data_path", ""),
-            "pos_qr": Vector2i(int(pos_arr[0]), int(pos_arr[1])),
-            "hp": int(u.get("hp", 0)),
+            "pos_qr": Vector2i(pos_arr[0] as int, pos_arr[1] as int),
+            "hp": u.get("hp", 0) as int,
         })
 
     if hostile_tiles.is_empty():
@@ -128,9 +130,10 @@ func load_state() -> void:
     var now := Time.get_unix_time_from_system()
     var elapsed := now - last_timestamp
     if elapsed > 0:
-        var ticks := int(elapsed / GameClock.TICK_INTERVAL)
+        var ticks := floori(elapsed / GameClock.TICK_INTERVAL)
         if ticks > 0:
-            var mult := SaunakunniaLib.production_bonus(int(res.get(Resources.SAUNAKUNNIA, 0)))
+            var saunakunnia_level2: int = res.get(Resources.SAUNAKUNNIA, 0)
+            var mult := Saunakunnia.production_bonus(saunakunnia_level2)
             res[Resources.HALOT] += HALOT_PER_TICK * ticks * mult
             res[Resources.MAKKARA] += MAKKARA_PER_TICK * ticks * mult
             res[Resources.LOYLY] += LOYLY_PER_TICK * ticks * mult
@@ -152,7 +155,7 @@ func gain_saunakunnia() -> void:
     save()
 
 func _apply_speed_for_saunakunnia() -> void:
-    var saunakunnia_level: int = int(res.get(Resources.SAUNAKUNNIA, 0))
+    var saunakunnia_level: int = res.get(Resources.SAUNAKUNNIA, 0)
     GameClock.set_speed(1.0 + saunakunnia_level * SPEED_PER_SAUNAKUNNIA)
 
 func set_hostile(coord: Vector2i, hostile: bool) -> void:

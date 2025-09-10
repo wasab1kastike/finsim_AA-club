@@ -3,7 +3,7 @@ class_name EventOverlay
 
 signal choice_selected(choice: Dictionary)
 
-const GameEvent = preload("res://scripts/events/Event.gd")
+## GameEvent is globally declared; no preload required.
 
 @onready var title_label: Label = $Panel/Title
 @onready var description_label: Label = $Panel/Description

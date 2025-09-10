@@ -23,9 +23,8 @@ var _policies: Array[Policy] = []
 var _events: Array[GameEvent] = []
 var _buildings_info: Array[Building] = []
 
-const Building = preload("res://scripts/core/Building.gd")
-const Policy = preload("res://scripts/policies/Policy.gd")
-const GameEvent = preload("res://scripts/events/Event.gd")
+## Building, Policy and GameEvent are global classes; avoid preloading them to
+## prevent shadowing warnings.
 
 func _ready() -> void:
     start_button.pressed.connect(func(): start_pressed.emit())
@@ -54,7 +53,7 @@ func update_resources(resources: Dictionary) -> void:
     keys.sort()
     var parts: PackedStringArray = []
     for key in keys:
-        parts.append("%s: %d" % [key.capitalize(), int(resources[key])])
+        parts.append("%s: %d" % [key.capitalize(), roundi(resources[key])])
     resources_label.text = " ".join(parts)
 
 func update_tile(tile_pos: Vector2i, building: Building) -> void:

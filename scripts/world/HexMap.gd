@@ -6,7 +6,7 @@ class_name HexMap
 
 signal tile_clicked(qr:Vector2i)
 
-const HexUtils = preload("res://scripts/world/HexUtils.gd")
+## HexUtils is globally available; avoid preloading to prevent shadowing.
 
 @onready var grid: TileMap = $TileMap
 @onready var terrain: TileMapLayer = $TileMap/Terrain
