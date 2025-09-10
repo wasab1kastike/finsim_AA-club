@@ -1,6 +1,6 @@
 extends Node
 
-var HexMapBase = preload("res://scripts/world/HexMap.gd")
+const HexMapBase = preload("res://scripts/world/HexMap.gd")
 
 class DummyHexMap extends HexMapBase:
     func _init():
@@ -9,6 +9,10 @@ class DummyHexMap extends HexMapBase:
         pass
     func _setup_tileset() -> void:
         pass
+    func reveal_area(center: Vector2i, radius: int = 2) -> void:
+        for coord in GameState.tiles.keys():
+            if HexMapBase.axial_distance(coord, center) <= radius:
+                GameState.tiles[coord]["explored"] = true
 
 func _reset_tiles() -> void:
     var tree = Engine.get_main_loop()

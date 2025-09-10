@@ -11,7 +11,7 @@ func _ready() -> void:
     spawn_btn.pressed.connect(_on_spawn)
 
 func _on_tile_clicked(qr: Vector2i) -> void:
-    var data := GameState.tiles.get(qr, {})
+    var data: Dictionary = GameState.tiles.get(qr, {})
     print("Main: clicked %s terrain %s" % [qr, data.get("terrain", "")])
 
 func _on_reveal_all() -> void:

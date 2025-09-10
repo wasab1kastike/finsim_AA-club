@@ -1,4 +1,5 @@
 extends TileMap
+class_name HexMap
 
 @export var radius := 8
 @export var terrain_weights := {"forest":0.4,"taiga":0.35,"hill":0.15,"lake":0.1}
@@ -22,6 +23,7 @@ func _setup_tileset() -> void:
     if tile_set == null:
         tile_set = TileSet.new()
         tile_set.tile_shape = TileSet.TILE_SHAPE_HEXAGON
+    self.layers = max(self.layers, 2)
     var size := Vector2i(64, 64)
     var colors := {
         "forest": Color(0.1,0.5,0.1),
@@ -60,9 +62,9 @@ func _load_tiles() -> void:
         _set_tile(coord)
 
 func _set_tile(coord: Vector2i) -> void:
-    var data := GameState.tiles.get(coord, {})
-    var terrain := data.get("terrain", "forest")
-    var source_id := _terrain_sources.get(terrain, _terrain_sources.get("forest"))
+    var data: Dictionary = GameState.tiles.get(coord, {})
+    var terrain: String = data.get("terrain", "forest")
+    var source_id: int = _terrain_sources.get(terrain, _terrain_sources.get("forest"))
     set_cell(0, coord, source_id, Vector2i.ZERO)
     if data.get("explored", false):
         set_cell(1, coord, -1, Vector2i.ZERO)
@@ -83,7 +85,7 @@ func _unhandled_input(event: InputEvent) -> void:
         var local_pos := to_local(event.position)
         var cell := local_to_map(local_pos)
         if GameState.tiles.has(cell):
-            var terrain := GameState.tiles[cell]["terrain"]
+            var terrain: String = GameState.tiles[cell]["terrain"]
             print("Hex %d,%d terrain %s" % [cell.x, cell.y, terrain])
             emit_signal("tile_clicked", cell)
 
