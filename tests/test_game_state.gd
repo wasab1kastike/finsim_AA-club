@@ -48,12 +48,10 @@ func test_unit_stats_persist(res) -> void:
 
     gs.units.clear()
     gs.units.append({
-        "type": "conscript",
+        "type": "Footman",
+        "data_path": "res://resources/units/footman.tres",
         "pos_qr": Vector2i(1, 2),
         "hp": 55,
-        "atk": 6,
-        "def": 3,
-        "move": 4,
     })
     gs.save()
 
@@ -63,7 +61,10 @@ func test_unit_stats_persist(res) -> void:
     if gs.units.size() != 1:
         res.fail("unit not loaded")
         return
-    var u = gs.units[0]
-    if u.get("hp", 0) != 55 or u.get("atk", 0) != 6 or u.get("def", 0) != 3 or u.get("move", 0) != 4:
+    var u_dict = gs.units[0]
+    var unit_scene: PackedScene = load("res://scenes/units/Unit.tscn")
+    var unit = unit_scene.instantiate()
+    unit.from_dict(u_dict)
+    if unit.hp != 55 or unit.atk != 20 or unit.def != 8 or abs(unit.move - 1.5) > 0.01:
         res.fail("unit stats not preserved")
 

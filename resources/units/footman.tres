@@ -1,6 +1,8 @@
-[gd_resource type="Resource" script="res://scripts/units/Unit.gd"]
+[gd_resource type="Resource" load_steps=2]
+[ext_resource path="res://scripts/units/UnitData.gd" type="Script" id=1]
 
 [resource]
+script = ExtResource("1")
 name = "Footman"
 max_health = 120
 attack = 20

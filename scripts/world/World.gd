@@ -38,6 +38,9 @@ func _on_tile_clicked(qr: Vector2i) -> void:
 
 func spawn_unit_at_center() -> void:
     var u: Node = unit_scene.instantiate()
+    var data_res: UnitData = load("res://resources/units/footman.tres")
+    if data_res:
+        u.apply_data(data_res)
     units_root.add_child(u)
     u.pos_qr = Vector2i.ZERO
     u.position = hex_map.axial_to_world(u.pos_qr)
