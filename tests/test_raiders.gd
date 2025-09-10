@@ -19,16 +19,16 @@ func test_raider_spawn_and_path(res) -> void:
     var world = _setup_world()
     for i in range(19):
         world._on_game_tick()
-    if world.raiders.size() != 0:
+    if world.raider_manager.raiders.size() != 0:
         res.fail("raider spawned early")
         world.queue_free()
         return
     world._on_game_tick()
-    if world.raiders.size() != 1:
+    if world.raider_manager.raiders.size() != 1:
         res.fail("raider did not spawn")
         world.queue_free()
         return
-    var raider = world.raiders[0]["node"]
+    var raider = world.raider_manager.raiders[0]["node"]
     if raider.pos_qr != Vector2i(2,-1):
         res.fail("raider wrong first step %s" % raider.pos_qr)
         world.queue_free()
