@@ -49,11 +49,29 @@ func _move_raiders() -> void:
             var next: Vector2i = path[step]
             node.pos_qr = next
             node.position = hex_map.axial_to_world(next)
-            data["step"] = step
-            raiders[i] = data
+            if step >= path.size() - 1:
+                _raider_reached(node)
+                node.queue_free()
+                raiders.remove_at(i)
+            else:
+                data["step"] = step
+                raiders[i] = data
         else:
+            _raider_reached(node)
             node.queue_free()
             raiders.remove_at(i)
+
+func _raider_reached(node) -> void:
+    var tile: Dictionary = GameState.tiles.get(node.pos_qr, {})
+    var hit := false
+    if tile.get("owner", "") == "player":
+        GameState.decrease_morale(1.0)
+        hit = true
+        tile["owner"] = "enemy"
+        GameState.tiles[node.pos_qr] = tile
+        GameState.set_hostile(node.pos_qr, true)
+    if node.pos_qr == Vector2i.ZERO and not hit:
+        GameState.decrease_morale(1.0)
 
 func _find_target(start: Vector2i) -> Vector2i:
     var candidates: Array[Vector2i] = []

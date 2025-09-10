@@ -111,9 +111,9 @@ func _resolve_combat(pos: Vector2i) -> void:
         tile["owner"] = "player"
         GameState.res[Resources.INFLUENCE] = GameState.res.get(Resources.INFLUENCE, 0.0) + 0.5
     elif survivors.is_empty():
-        GameState.res[Resources.MORALE] = GameState.res.get(Resources.MORALE, 0.0) - 1.0
+        GameState.decrease_morale(1.0)
     var casualties := initial - survivors.size()
     if casualties > 0:
-        GameState.res[Resources.SISU] = GameState.res.get(Resources.SISU, 0.0) + casualties
+        GameState.add_sisu(casualties)
     GameState.tiles[pos] = tile
     GameState.set_hostile(pos, not enemy_left.is_empty())

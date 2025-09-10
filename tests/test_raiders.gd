@@ -1,5 +1,7 @@
 extends Node
 
+var Resources = preload("res://scripts/core/Resources.gd")
+
 func _setup_world():
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
@@ -65,3 +67,21 @@ func test_target_falls_back_to_center(res) -> void:
     var target = rm._find_target(Vector2i(6,-3))
     if target != Vector2i.ZERO:
         res.fail("expected (0,0) got %s" % target)
+
+func test_raider_morale_hit(res) -> void:
+    var world = _setup_world()
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    var orig = gs.res.duplicate()
+    for i in range(19):
+        world._on_game_tick()
+    world._on_game_tick()
+    world._on_game_tick()
+    world._on_game_tick()
+    var expected = max(0.0, orig.get(Resources.MORALE, 0.0) - 1.0)
+    if abs(gs.res[Resources.MORALE] - expected) > 0.01:
+        res.fail("Morale not reduced on raider success")
+    world.queue_free()
+    gs.res = orig
+    gs.units.clear()
+    gs.tiles.clear()
