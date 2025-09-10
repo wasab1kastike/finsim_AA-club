@@ -1,6 +1,7 @@
 extends Node
 
 const Building = preload("res://scripts/core/Building.gd")
+const TutorialOverlay = preload("res://scenes/ui/TutorialOverlay.tscn")
 
 @onready var world: Node = $World
 @onready var hud: CanvasLayer = $Hud
@@ -10,6 +11,7 @@ const Building = preload("res://scripts/core/Building.gd")
 var _selected_building: Building = null
 var _last_clicked: Vector2i = Vector2i.ZERO
 var _buildings: Dictionary = {}
+var _tutorial_overlay: Node = null
 
 func _ready() -> void:
     for file in DirAccess.get_files_at("res://resources/buildings"):
@@ -26,6 +28,8 @@ func _ready() -> void:
     reveal_btn.pressed.connect(_on_reveal_all)
     spawn_btn.pressed.connect(_on_spawn)
     hud.update_resources(GameState.res)
+    if not GameState.tutorial_done:
+        start_tutorial()
 
 func _on_game_tick() -> void:
     hud.update_resources(GameState.res)
@@ -63,3 +67,15 @@ func _on_reveal_all() -> void:
 
 func _on_spawn() -> void:
     world.spawn_unit_at_center()
+
+func start_tutorial() -> void:
+    if _tutorial_overlay:
+        _tutorial_overlay.queue_free()
+    _tutorial_overlay = TutorialOverlay.instantiate()
+    add_child(_tutorial_overlay)
+    _tutorial_overlay.tutorial_completed.connect(_on_tutorial_completed)
+
+func _on_tutorial_completed() -> void:
+    GameState.tutorial_done = true
+    GameState.save()
+    _tutorial_overlay = null
