@@ -9,13 +9,18 @@ const HexUtils = preload("res://scripts/world/HexUtils.gd")
 const Resources = preload("res://scripts/core/Resources.gd")
 var noise := FastNoiseLite.new()
 @onready var hex_tile_scene: PackedScene = preload("res://scenes/world/HexTile.tscn")
+var _state: Node
 
 func _ready() -> void:
     noise.seed = seed
     RNG.seed_from_string(str(seed))
-    generate_map()
+    _state = Engine.get_main_loop().root.get_node("GameState")
+    if _state.tiles.is_empty():
+        _generate_and_store()
+    else:
+        _draw_from_saved()
 
-func generate_map() -> void:
+func _generate_and_store() -> void:
     for child in get_children():
         child.queue_free()
     for r in map_height:
@@ -39,3 +44,21 @@ func generate_map() -> void:
             hex.resource = resource_type
             hex.position = HexUtils.axial_to_world(q, r, hex_radius)
             add_child(hex)
+            var coord := Vector2i(q, r)
+            _state.tiles[coord] = {
+                "terrain": terrain_type,
+                "resource": resource_type,
+            }
+
+func _draw_from_saved() -> void:
+    for child in get_children():
+        child.queue_free()
+    for coord in _state.tiles.keys():
+        var data: Dictionary = _state.tiles[coord]
+        var hex: Node2D = hex_tile_scene.instantiate() as Node2D
+        hex.q = coord.x
+        hex.r = coord.y
+        hex.terrain = data.get("terrain", "water")
+        hex.resource = data.get("resource", "")
+        hex.position = HexUtils.axial_to_world(coord.x, coord.y, hex_radius)
+        add_child(hex)
