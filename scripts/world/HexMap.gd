@@ -34,9 +34,13 @@ func _ready() -> void:
     _ensure_singletons()
     if _state.tiles.is_empty():
         _generate_tiles()
-        reveal_area(Vector2i.ZERO, 2)
     else:
         _draw_from_saved(_state.tiles)
+    reveal_area(Vector2i.ZERO, 2)
+    if fog != null:
+        for coord in _state.tiles.keys():
+            if HexUtils.axial_distance(coord, Vector2i.ZERO) <= 2:
+                fog.erase_cell(coord)
 
 func _setup_tileset() -> void:
     if grid.tile_set == null:
