@@ -75,21 +75,32 @@ func test_reveal_area(res) -> void:
             res.fail("Tile %s explored outside radius" % coord)
             break
 
-func test_tiles_persist_across_save(res) -> void:
-    _reset_tiles()
-    var tree = Engine.get_main_loop()
-    var gs = tree.root.get_node("GameState")
-    var map = DummyHexMap.new()
-    map.radius = 1
-    map.terrain_weights = {"forest": 1.0}
-    map._generate_tiles()
-    _remove_save(gs)
-    gs.save()
-    var before := JSON.stringify(gs.tiles)
-    gs.tiles.clear()
-    gs.load()
-    var after := JSON.stringify(gs.tiles)
-    if before != after:
-        res.fail("tiles did not persist across save/load")
-    _remove_save(gs)
+  func test_tiles_persist_across_save(res) -> void:
+      _reset_tiles()
+      var tree = Engine.get_main_loop()
+      var gs = tree.root.get_node("GameState")
+      var map = DummyHexMap.new()
+      map.radius = 1
+      map.terrain_weights = {"forest": 1.0}
+      map._generate_tiles()
+      _remove_save(gs)
+      gs.save()
+      var before := JSON.stringify(gs.tiles)
+      gs.tiles.clear()
+      gs.load()
+      var after := JSON.stringify(gs.tiles)
+      if before != after:
+          res.fail("tiles did not persist across save/load")
+      _remove_save(gs)
+
+  func test_center_starts_with_sauna(res) -> void:
+      _reset_tiles()
+      var map = DummyHexMap.new()
+      map.radius = 1
+      map.terrain_weights = {"forest": 1.0}
+      map._generate_tiles()
+      var gs = Engine.get_main_loop().root.get_node("GameState")
+      var b = gs.tiles.get(Vector2i(0,0), {}).get("building")
+      if b != "sauna":
+          res.fail("expected sauna at origin, got %s" % b)
 

@@ -10,6 +10,8 @@ const HEX_DIRS = [Vector2i(1,0), Vector2i(1,-1), Vector2i(0,-1), Vector2i(-1,0),
 
 var _terrain_sources: Dictionary = {}
 var _fog_source_id := -1
+var _building_sources: Dictionary = {}
+const BuildingIcons := preload("res://scripts/world/BuildingIcons.gd")
 
 func _ready() -> void:
     _setup_tileset()
@@ -23,7 +25,7 @@ func _setup_tileset() -> void:
     if tile_set == null:
         tile_set = TileSet.new()
         tile_set.tile_shape = TileSet.TILE_SHAPE_HEXAGON
-    self.layers = max(self.layers, 2)
+    self.layers = max(self.layers, 3)
     var size := Vector2i(64, 64)
     var colors := {
         "forest": Color(0.1,0.5,0.1),
@@ -43,16 +45,35 @@ func _setup_tileset() -> void:
             _fog_source_id = sid
         else:
             _terrain_sources[name] = sid
+    # load building icons from base64 strings
+    for name in ["sauna", "farm", "lumber", "mine", "school"]:
+        var b64: String = BuildingIcons.ICONS.get(name, "")
+        if b64 != "":
+            var img48 := Image.new()
+            var data: PackedByteArray = @GDScript.base64_to_bytes(b64)
+            if img48.load_png_from_buffer(data) == OK:
+                var img64 := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+                img64.fill(Color(0,0,0,0))
+                img64.blit_rect(img48, Rect2i(Vector2i.ZERO, img48.get_size()), Vector2i(8,8))
+                var tex := ImageTexture.create_from_image(img64)
+                var src := TileSetAtlasSource.new()
+                src.texture = tex
+                var sid := tile_set.add_source(src)
+                _building_sources[name] = sid
+    set_layer_z_index(2, 1)
 
 func _generate_tiles() -> void:
     var rng := RandomNumberGenerator.new()
     for q in range(-radius, radius + 1):
         for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
             var terrain := _random_terrain(rng)
+            var building := null
+            if q == 0 and r == 0:
+                building = "sauna"
             GameState.tiles[Vector2i(q, r)] = {
                 "terrain": terrain,
                 "owner": "none",
-                "building": null,
+                "building": building,
                 "explored": false,
             }
             _set_tile(Vector2i(q, r))
@@ -70,6 +91,12 @@ func _set_tile(coord: Vector2i) -> void:
         set_cell(1, coord, -1, Vector2i.ZERO)
     else:
         set_cell(1, coord, _fog_source_id, Vector2i.ZERO)
+    var b: String = data.get("building", null)
+    if b and _building_sources.has(b):
+        var sid: int = _building_sources[b]
+        set_cell(2, coord, sid, Vector2i.ZERO)
+    else:
+        set_cell(2, coord, -1, Vector2i.ZERO)
 
 func _random_terrain(rng: RandomNumberGenerator) -> String:
     var roll := rng.randf()
