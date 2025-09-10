@@ -2,7 +2,7 @@ extends Node
 
 const WOOD_PER_TICK := 0.2
 const FOOD_PER_TICK := 0.1
-const STEAM_PER_TICK := 0.2
+const LOYLY_PER_TICK := 0.2
 
 const Resources = preload("res://scripts/core/Resources.gd")
 
@@ -12,7 +12,7 @@ var res := {
     Resources.ORE: 0.0,
     Resources.RESEARCH: 0.0,
     Resources.INFLUENCE: 0.0,
-    Resources.STEAM: 0.0,
+    Resources.LOYLY: 0.0,
     Resources.SISU: 0.0,
     Resources.MORALE: 100.0,
     Resources.GOLD: 0.0,
@@ -35,7 +35,7 @@ func _ready() -> void:
 func _on_tick() -> void:
     res[Resources.WOOD] += WOOD_PER_TICK * production_modifier
     res[Resources.FOOD] += FOOD_PER_TICK * production_modifier
-    res[Resources.STEAM] += STEAM_PER_TICK * production_modifier
+    res[Resources.LOYLY] += LOYLY_PER_TICK * production_modifier
     if modifier_ticks_remaining > 0:
         modifier_ticks_remaining -= 1
         if modifier_ticks_remaining <= 0:
@@ -110,7 +110,7 @@ func load_state() -> void:
         if ticks > 0:
             res[Resources.WOOD] += WOOD_PER_TICK * ticks
             res[Resources.FOOD] += FOOD_PER_TICK * ticks
-            res[Resources.STEAM] += STEAM_PER_TICK * ticks
+            res[Resources.LOYLY] += LOYLY_PER_TICK * ticks
     last_timestamp = now
     save()
 
