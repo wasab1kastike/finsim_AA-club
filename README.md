@@ -19,7 +19,21 @@ Vertical slice WIP: 3 buildings, 3 units, hex-grid combat, 1 neighbor AI, saunak
 ## Build
 1. Open in Godot 4.x
 2. Press ▶ to run
-3. Exports via export_presets.cfg (to be added)
+3. Exports via `export_presets.cfg` (Linux, Web, Windows)
+
+## Running on Windows 11
+
+### Minimum Requirements
+- Windows 11 (64-bit) with a Vulkan-capable GPU
+- Godot Engine 4.4.x for Windows
+- 4 GB RAM and 1 GB free disk space
+
+### How to Run
+1. Download and install Godot 4.4.x for Windows.
+2. Clone this repository and open `project.godot` in Godot.
+   - Or run directly: `godot4.exe --path .`
+3. (Optional) Run tests: `godot4.exe --headless -s tests/test_runner.gd`
+4. To export a standalone build, use the included **Windows Desktop** export preset.
 
 ## Runbook
 Open the project in Godot 4.x (Standard). In Project Settings, confirm the Main Scene is `scenes/ui/Main.tscn` and AutoLoads include `GameClock` (`res://autoload/GameClock.gd`) and `GameState` (`res://autoload/GameState.gd`). Press ▶ to run, then use the Save/Load demo to test persistence.
