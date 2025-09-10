@@ -1,62 +1,53 @@
 extends Node2D
 
-const BUILDINGS := {
-	"Farm": preload("res://resources/buildings/farm.tres"),
-	"Mine": preload("res://resources/buildings/mine.tres"),
-	"Barracks": preload("res://resources/buildings/barracks.tres"),
-}
+signal tile_clicked(qr: Vector2i)
 
-var selected_building: Resource = BUILDINGS["Farm"]
+@onready var hex_map: TileMap = $HexMap
+@onready var units_root: Node2D = $Units
 
-var selected_tile: Vector2i = Vector2i.ZERO
-var tile_occupants: Dictionary = {}
-
-@onready var hud: CanvasLayer = $Hud
-@onready var game_clock: Node = $GameClock
-@onready var map_generator: Node2D = $MapGenerator
-var hex_tiles: Dictionary = {}
+var selected_unit: Node = null
+var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 
 func _ready() -> void:
-	hud.start_pressed.connect(game_clock.start)
-	hud.pause_pressed.connect(game_clock.stop)
-	hud.building_selected.connect(_on_building_selected)
-	hud.build_pressed.connect(_on_build_pressed)
-	game_clock.tick.connect(_on_tick)
-	for hex in map_generator.get_children():
-		hex_tiles[Vector2i(hex.q, hex.r)] = hex
-	hud.update_resources(GameState.res)
-	hud.update_tile(selected_tile, null)
+    hex_map.tile_clicked.connect(_on_tile_clicked)
+    for data in GameState.units:
+        var u = unit_scene.instantiate()
+        u.type = data.get("type", "conscript")
+        u.pos_qr = data.get("pos_qr", Vector2i.ZERO)
+        u.position = hex_map.axial_to_world(u.pos_qr)
+        units_root.add_child(u)
+        selected_unit = u
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var pos: Vector2 = map_generator.to_local(event.position)
-		selected_tile = map_generator.world_to_axial(pos)
-		hud.update_tile(selected_tile, tile_occupants.get(selected_tile))
-	elif event is InputEventKey and event.pressed and event.keycode == KEY_B:
-		construct_building(selected_building, selected_tile)
+func _on_tile_clicked(qr: Vector2i) -> void:
+    emit_signal("tile_clicked", qr)
+    if selected_unit:
+        var path = Pathing.bfs_path(selected_unit.pos_qr, qr, func(p: Vector2i):
+            return GameState.tiles.has(p) and GameState.tiles[p]["terrain"] != "lake"
+        )
+        if path.size() > 1 and path.size() - 1 <= selected_unit.move:
+            var next := path[1]
+            selected_unit.pos_qr = next
+            selected_unit.position = hex_map.axial_to_world(next)
+            for u in GameState.units:
+                if u.get("type", "") == selected_unit.type:
+                    u["pos_qr"] = next
+                    break
+            hex_map.reveal_area(next, 1)
+            GameState.save()
 
-func construct_building(building_res: Resource, tile_pos: Vector2i) -> void:
-	if tile_occupants.has(tile_pos) or !hex_tiles.has(tile_pos):
-		return
-	var building: Building = building_res.duplicate(true) as Building
-	var cost := building.get_construction_cost()
-	for res_name in cost.keys():
-		GameState.res[res_name] = GameState.res.get(res_name, 0) - cost[res_name]
-	tile_occupants[tile_pos] = building
-	hud.update_resources(GameState.res)
-	hud.update_tile(tile_pos, building)
+func spawn_unit_at_center() -> void:
+    var u = unit_scene.instantiate()
+    units_root.add_child(u)
+    u.pos_qr = Vector2i.ZERO
+    u.position = hex_map.axial_to_world(u.pos_qr)
+    GameState.units.append({"type": u.type, "pos_qr": u.pos_qr})
+    selected_unit = u
+    hex_map.reveal_area(u.pos_qr, 1)
+    GameState.save()
 
-func _on_tick(time: float) -> void:
-	for building in tile_occupants.values():
-		for res_name in building.get_production_rates().keys():
-			GameState.res[res_name] = (
-				GameState.res.get(res_name, 0) + building.get_production_rates()[res_name]
-			)
-	hud.update_resources(GameState.res)
-	hud.update_clock(time)
+func reveal_all() -> void:
+    hex_map.reveal_all()
+    GameState.save()
 
-func _on_building_selected(name: String) -> void:
-	selected_building = BUILDINGS.get(name, BUILDINGS["Farm"])
-
-func _on_build_pressed() -> void:
-	construct_building(selected_building, selected_tile)
+func center_on(qr: Vector2i) -> void:
+    position = -hex_map.axial_to_world(qr)
