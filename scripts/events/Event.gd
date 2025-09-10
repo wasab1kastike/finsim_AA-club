@@ -7,3 +7,6 @@ class_name GameEvent
 
 func can_trigger() -> bool:
     return true
+
+func apply() -> bool:
+    return true
