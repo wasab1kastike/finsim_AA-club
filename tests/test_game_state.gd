@@ -51,8 +51,8 @@ func test_unit_stats_persist(res) -> void:
     var uid := "test-unit-id"
     gs.units.append({
         "id": uid,
-        "type": "Footman",
-        "data_path": "res://resources/units/footman.tres",
+        "type": "Saunoja",
+        "data_path": "res://resources/units/saunoja.tres",
         "pos_qr": Vector2i(1, 2),
         "hp": 55,
     })

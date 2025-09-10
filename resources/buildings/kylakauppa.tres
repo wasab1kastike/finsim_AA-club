@@ -1,5 +1,5 @@
 [gd_resource type="Resource" script="res://scripts/core/Building.gd"]
 [resource]
-name = "Mine"
+name = "Kyläkauppa"
 construction_cost = {"gold": 100, "wood": 50}
 production_rates = {"gold": 10}
