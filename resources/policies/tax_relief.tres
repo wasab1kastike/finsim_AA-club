@@ -2,7 +2,7 @@
 
 [resource]
 name = "Tax Relief"
-description = "Spend gold to raise morale."
-costs = {"gold": 20}
-effects = {"morale": 10}
+description = "Spend kulta to raise saunatunnelma."
+costs = {"kulta": 20}
+effects = {"saunatunnelma": 10}
 cooldown = 30.0

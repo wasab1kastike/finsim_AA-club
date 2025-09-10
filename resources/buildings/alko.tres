@@ -2,5 +2,5 @@
 
 [resource]
 name = "Alko"
-construction_cost = {"gold": 50, "wood": 20}
-production_rates = {"food": 5}
+construction_cost = {"kulta": 50, "halot": 20}
+production_rates = {"makkara": 5}

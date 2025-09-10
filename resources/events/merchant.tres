@@ -5,9 +5,9 @@ name = "Traveling Merchant"
 description = "A merchant offers to trade."
 choices = [
 {
-"text": "Trade 10 wood for 15 food",
-"costs": {"wood": 10},
-"effects": {"food": 15},
+"text": "Trade 10 halot for 15 makkara",
+"costs": {"halot": 10},
+"effects": {"makkara": 15},
 "next_event": "res://resources/events/merchant_return.tres",
 },
 {

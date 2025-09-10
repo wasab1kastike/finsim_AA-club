@@ -3,6 +3,6 @@
 [resource]
 name = "Sauna Diplomacy"
 description = "Host a delegation in the sauna."
-effects = {"influence": 10}
-costs = {"wood": 50, "löyly": 1}
+effects = {"laudevalta": 10}
+costs = {"halot": 50, "löyly": 1}
 cooldown = 0.0

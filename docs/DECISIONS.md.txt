@@ -15,7 +15,7 @@
 - **Types**: feat:, fix:, tune:, content:, refactor:
 - **Examples**:
   - feat: add GameClock autoload and 0.5s tick
-  - fix: prevent negative food when tick underflows
-  - tune: rebalance Ski Troop aspd 1.0→0.9
+  - fix: prevent negative makkara when tick underflows
+  - tune: rebalance Hiihtosaunoja aspd 1.0→0.9
   - content: add Sauna Diplomacy event card
   - refactor: extract damage calc to Unit.gd

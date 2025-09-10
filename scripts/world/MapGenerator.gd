@@ -30,9 +30,9 @@ func generate_map() -> void:
             var resource_type := ""
             var roll := RNG.randf()
             if roll < 0.1:
-                resource_type = Resources.GOLD
+                resource_type = Resources.KULTA
             elif roll < 0.25:
-                resource_type = Resources.WOOD
+                resource_type = Resources.HALOT
             hex.q = q
             hex.r = r
             hex.terrain = terrain_type
