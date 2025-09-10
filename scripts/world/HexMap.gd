@@ -9,17 +9,29 @@ signal tile_clicked(qr:Vector2i)
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 var _terrain_sources: Dictionary = {}
+var _building_sources: Dictionary = {}
 var fog_map: TileMap = null
 var _markers: Dictionary = {}
 var marker_root: Node2D
+var _state: Node
+var _rng: Node
+
+func _ensure_singletons() -> void:
+    var root := Engine.get_main_loop().root
+    if _state == null:
+        _state = root.get_node("GameState")
+    if _rng == null:
+        _rng = root.get_node("RNG")
 
 func _ready() -> void:
     _setup_tileset()
+    set_layer_z_index(2, 2)
     marker_root = Node2D.new()
     add_child(marker_root)
     if get_parent() != null:
         fog_map = get_parent().get_node_or_null("FogMap")
-    if GameState.tiles.is_empty():
+    _ensure_singletons()
+    if _state.tiles.is_empty():
         _generate_tiles()
         reveal_area(Vector2i.ZERO, 2)
     else:
@@ -46,20 +58,51 @@ func _setup_tileset() -> void:
             _terrain_sources[name] = sid
     else:
         var names := ["forest","taiga","hill","lake"]
-        var ids := tile_set.get_source_id_list()
+        var ids: Array[int] = tile_set.get_source_id_list()
         for i in range(min(names.size(), ids.size())):
             _terrain_sources[names[i]] = ids[i]
+    _setup_building_tiles()
+
+func _setup_building_tiles() -> void:
+    var size := tile_set.tile_size
+    var colors := {
+        "sauna": Color(0.8, 0.5, 0.3),
+        "farm": Color(0.7, 0.9, 0.4),
+        "lumber": Color(0.3, 0.7, 0.2),
+        "mine": Color(0.5, 0.5, 0.5),
+        "school": Color(0.3, 0.5, 0.9),
+    }
+    for name in colors.keys():
+        var img := Image.create(48, 48, false, Image.FORMAT_RGBA8)
+        img.fill(colors[name])
+        var inner := Image.create(24, 24, false, Image.FORMAT_RGBA8)
+        inner.fill(Color.WHITE)
+        img.blit_rect(inner, Rect2i(Vector2i.ZERO, inner.get_size()), Vector2i(12, 12))
+        var big := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+        big.fill(Color(0, 0, 0, 0))
+        var off := Vector2i((size.x - img.get_width()) / 2, (size.y - img.get_height()) / 2)
+        big.blit_rect(img, Rect2i(Vector2i.ZERO, img.get_size()), off)
+        var tex := ImageTexture.create_from_image(big)
+        var src := TileSetAtlasSource.new()
+        src.texture = tex
+        src.texture_region_size = size
+        var sid := tile_set.add_source(src)
+        _building_sources[name] = sid
 
 func _generate_tiles() -> void:
+    _ensure_singletons()
     for q in range(-radius, radius + 1):
         for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
             var terrain := _random_terrain()
-            var is_hostile := terrain != "lake" and RNG.randf() < 0.09
-            var is_wildlife := terrain != "lake" and RNG.randf() < 0.05
-            GameState.tiles[Vector2i(q, r)] = {
+            var is_hostile: bool = terrain != "lake" and _rng.randf() < 0.09
+            var is_wildlife: bool = terrain != "lake" and _rng.randf() < 0.05
+            var building: String = ""
+            if q == 0 and r == 0:
+                building = "sauna"
+            _state.tiles[Vector2i(q, r)] = {
                 "terrain": terrain,
                 "owner": "none",
-                "building": null,
+                "building": building,
                 "explored": false,
                 "hostile": is_hostile,
                 "wildlife": is_wildlife,
@@ -67,15 +110,22 @@ func _generate_tiles() -> void:
             _set_tile(Vector2i(q, r))
 
 func _load_tiles() -> void:
-    for coord in GameState.tiles.keys():
+    _ensure_singletons()
+    for coord in _state.tiles.keys():
         _set_tile(coord)
 
 func _set_tile(coord: Vector2i) -> void:
-    var data: Dictionary = GameState.tiles.get(coord, {})
+    _ensure_singletons()
+    var data: Dictionary = _state.tiles.get(coord, {})
     var terrain: String = data.get("terrain", "forest")
     var source_id: int = _terrain_sources.get(terrain, _terrain_sources.get("forest"))
     set_cell(0, coord, source_id, Vector2i.ZERO)
-    var marker := _markers.get(coord, null)
+    var bname: String = data.get("building", "")
+    if bname != "" and _building_sources.has(bname):
+        set_cell(2, coord, _building_sources[bname], Vector2i.ZERO)
+    else:
+        erase_cell(2, coord)
+    var marker: Node2D = _markers.get(coord, null)
     if data.get("hostile", false):
         if marker == null:
             marker = preload("res://scripts/world/HostileMarker.gd").new()
@@ -93,7 +143,8 @@ func _set_tile(coord: Vector2i) -> void:
             fog_map.set_cell(0, coord, fog_map.source_id, Vector2i.ZERO)
 
 func _random_terrain() -> String:
-    var roll := RNG.randf()
+    _ensure_singletons()
+    var roll: float = _rng.randf()
     var acc := 0.0
     for k in terrain_weights.keys():
         acc += terrain_weights[k]
@@ -102,24 +153,27 @@ func _random_terrain() -> String:
     return terrain_weights.keys()[0]
 
 func _unhandled_input(event: InputEvent) -> void:
+    _ensure_singletons()
     if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
         var local_pos := to_local(event.position)
         var cell := local_to_map(local_pos)
-        if GameState.tiles.has(cell):
-            var terrain: String = GameState.tiles[cell]["terrain"]
+        if _state.tiles.has(cell):
+            var terrain: String = _state.tiles[cell]["terrain"]
             print("Hex %d,%d terrain %s" % [cell.x, cell.y, terrain])
             emit_signal("tile_clicked", cell)
 
 func reveal_area(center: Vector2i, radius: int = 2) -> void:
-    for coord in GameState.tiles.keys():
+    _ensure_singletons()
+    for coord in _state.tiles.keys():
         if HexUtils.axial_distance(coord, center) <= radius:
-            GameState.tiles[coord]["explored"] = true
+            _state.tiles[coord]["explored"] = true
             if fog_map != null:
                 fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
 
 func reveal_all() -> void:
-    for coord in GameState.tiles.keys():
-        GameState.tiles[coord]["explored"] = true
+    _ensure_singletons()
+    for coord in _state.tiles.keys():
+        _state.tiles[coord]["explored"] = true
         if fog_map != null:
             fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
 
