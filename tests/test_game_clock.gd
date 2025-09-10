@@ -1,5 +1,5 @@
 extends Node
-var GameClock = preload("res://scripts/core/GameClock.gd")
+var GameClock = preload("res://autoload/GameClock.gd")
 
 func test_process_increments_time_when_running(res):
     var clock = GameClock.new()
@@ -13,6 +13,7 @@ func test_process_increments_time_when_running(res):
 
 func test_process_no_increment_when_stopped(res):
     var clock = GameClock.new()
+    clock.stop()
     clock._process(1.0)
     if clock.time != 0.0:
         res.fail("Time should not advance when stopped")
