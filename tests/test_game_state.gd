@@ -39,3 +39,31 @@ func test_offline_gain(res) -> void:
     if gs.res["wood"] < expected - 0.001:
         res.fail("offline gains not applied")
 
+func test_unit_stats_persist(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    var clock = tree.root.get_node("GameClock")
+    clock.set_process(false)
+    _remove_save(gs)
+
+    gs.units.clear()
+    gs.units.append({
+        "type": "conscript",
+        "pos_qr": Vector2i(1, 2),
+        "hp": 55,
+        "atk": 6,
+        "def": 3,
+        "move": 4,
+    })
+    gs.save()
+
+    gs.units.clear()
+    gs.load()
+
+    if gs.units.size() != 1:
+        res.fail("unit not loaded")
+        return
+    var u = gs.units[0]
+    if u.get("hp", 0) != 55 or u.get("atk", 0) != 6 or u.get("def", 0) != 3 or u.get("move", 0) != 4:
+        res.fail("unit stats not preserved")
+

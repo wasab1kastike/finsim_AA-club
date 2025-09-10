@@ -41,6 +41,10 @@ func save() -> void:
         unit_data.append({
             "type": u.get("type", ""),
             "pos_qr": [u.get("pos_qr", Vector2i.ZERO).x, u.get("pos_qr", Vector2i.ZERO).y],
+            "hp": u.get("hp", 0),
+            "atk": u.get("atk", 0),
+            "def": u.get("def", 0),
+            "move": u.get("move", 0),
         })
     var data := {
         "res": res,
@@ -82,6 +86,10 @@ func load_state() -> void:
         units.append({
             "type": u.get("type", ""),
             "pos_qr": Vector2i(int(pos_arr[0]), int(pos_arr[1])),
+            "hp": int(u.get("hp", 0)),
+            "atk": int(u.get("atk", 0)),
+            "def": int(u.get("def", 0)),
+            "move": int(u.get("move", 0)),
         })
 
     var now := Time.get_unix_time_from_system()
