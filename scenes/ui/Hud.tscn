@@ -1,6 +1,7 @@
-[gd_scene load_steps=2]
+[gd_scene load_steps=3]
 
 [ext_resource path="res://scripts/ui/Hud.gd" type="Script" id="1"]
+[ext_resource path="res://scenes/ui/InfoBox.tscn" type="PackedScene" id="2"]
 
 [node name="Hud" type="CanvasLayer" script=ExtResource("1")]
 
@@ -36,3 +37,5 @@ text = "No events"
 text = "Build"
 
 [node name="BuildingSelector" type="OptionButton" parent="."]
+
+[node name="InfoBox" parent="." instance=ExtResource("2")]
