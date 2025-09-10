@@ -56,7 +56,7 @@ func _on_game_tick() -> void:
 
 func spawn_unit_at_center() -> void:
     var u: Node = unit_scene.instantiate()
-    var data_res: UnitData = load("res://resources/units/footman.tres")
+    var data_res: UnitData = load("res://resources/units/saunoja.tres")
     if data_res:
         u.apply_data(data_res)
     u.id = UUID.new_uuid_string()

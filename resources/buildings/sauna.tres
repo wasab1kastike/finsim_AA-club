@@ -1,5 +1,5 @@
 [gd_resource type="Resource" script="res://scripts/core/Building.gd"]
 [resource]
-name = "Barracks"
+name = "Sauna"
 construction_cost = {"gold": 150, "wood": 100}
 production_rates = {"sisu": 2}
