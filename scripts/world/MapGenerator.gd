@@ -5,24 +5,14 @@ extends Node2D
 @export var seed: int = 0
 @export var hex_radius: float = 32.0
 
+const HexUtils = preload("res://scripts/world/HexUtils.gd")
 var noise := FastNoiseLite.new()
-var rng := RandomNumberGenerator.new()
 @onready var hex_tile_scene: PackedScene = preload("res://scenes/world/HexTile.tscn")
 
 func _ready() -> void:
     noise.seed = seed
-    rng.seed = seed
+    RNG.seed_from_string(str(seed))
     generate_map()
-
-func axial_to_world(q: int, r: int) -> Vector2:
-    var x := hex_radius * sqrt(3.0) * (q + r / 2.0)
-    var y := hex_radius * 1.5 * r
-    return Vector2(x, y)
-
-func world_to_axial(pos: Vector2) -> Vector2i:
-    var q := (sqrt(3.0) / 3.0 * pos.x - pos.y / 3.0) / hex_radius
-    var r := (2.0 / 3.0 * pos.y) / hex_radius
-    return Vector2i(int(round(q)), int(round(r)))
 
 func generate_map() -> void:
     for child in get_children():
@@ -37,7 +27,7 @@ func generate_map() -> void:
             elif noise_val > 0.0:
                 terrain_type = "grass"
             var resource_type := ""
-            var roll := rng.randf()
+            var roll := RNG.randf()
             if roll < 0.1:
                 resource_type = "gold"
             elif roll < 0.25:
@@ -46,5 +36,5 @@ func generate_map() -> void:
             hex.r = r
             hex.terrain = terrain_type
             hex.resource = resource_type
-            hex.position = axial_to_world(q, r)
+            hex.position = HexUtils.axial_to_world(q, r, hex_radius)
             add_child(hex)
