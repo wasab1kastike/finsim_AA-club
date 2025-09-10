@@ -1,14 +1,18 @@
-[gd_scene load_steps=4]
+[gd_scene load_steps=5]
 
 [ext_resource path="res://scenes/world/HexMap.tscn" type="PackedScene" id="1"]
 [ext_resource path="res://scripts/world/World.gd" type="Script" id="2"]
-[ext_resource path="res://scripts/world/SeasonTint.gd" type="Script" id="3"]
+[ext_resource path="res://scripts/world/FogMap.gd" type="Script" id="3"]
+[ext_resource path="res://scripts/world/SeasonTint.gd" type="Script" id="4"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("2")
 
-[node name="SeasonTint" type="CanvasModulate" parent="."]
+[node name="FogMap" type="CanvasModulate" parent="."]
 script = ExtResource("3")
+
+[node name="SeasonTint" type="CanvasModulate" parent="."]
+script = ExtResource("4")
 
 [node name="HexMap" parent="." instance=ExtResource("1")]
 
