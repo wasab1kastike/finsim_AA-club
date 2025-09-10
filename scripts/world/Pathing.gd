@@ -2,6 +2,8 @@ extends Object
 class_name Pathing
 const HEX_DIRS = [Vector2i(1,0), Vector2i(1,-1), Vector2i(0,-1), Vector2i(-1,0), Vector2i(-1,1), Vector2i(0,1)]
 
+const HexMap = preload("res://scripts/world/HexMap.gd")
+
 static func bfs_path(start: Vector2i, goal: Vector2i, passable: Callable) -> Array[Vector2i]:
     if start == goal:
         return [start]
