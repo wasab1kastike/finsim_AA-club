@@ -3,6 +3,11 @@ var Resources = preload("res://scripts/core/Resources.gd")
 var GameEvent = preload("res://scripts/events/Event.gd")
 var ColdSnapEvent = preload("res://scripts/events/ColdSnap.gd")
 
+class DummyEvent:
+    extends GameEvent
+    func apply() -> bool:
+        return false
+
 func _cleanup_overlays(tree):
     for child in tree.root.get_children():
         if child.name == "EventOverlay":
@@ -86,4 +91,21 @@ func test_event_fails_prerequisites(res) -> void:
     gs.res = orig
     if em.current_event != null or overlay_present:
         res.fail("event started despite failing prerequisites")
+
+func test_apply_returns_false(res) -> void:
+    var tree = Engine.get_main_loop()
+    var em = tree.root.get_node("EventManager")
+    var clock = tree.root.get_node("GameClock")
+    clock.start()
+    var ev: DummyEvent = DummyEvent.new()
+    em.start_event(ev)
+    var overlay_present := false
+    for child in tree.root.get_children():
+        if child.name == "EventOverlay":
+            overlay_present = true
+    _cleanup_overlays(tree)
+    if overlay_present or em.current_event != null:
+        res.fail("event started despite apply returning false")
+    if not clock.running:
+        res.fail("GameClock stopped on failed event")
         
