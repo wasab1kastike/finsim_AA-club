@@ -18,8 +18,8 @@ func test_branching_event(res) -> void:
     var em = tree.root.get_node("EventManager")
     var clock = tree.root.get_node("GameClock")
     clock.set_process(false)
-    gs.res[Resources.WOOD] = 20.0
-    gs.res[Resources.FOOD] = 0.0
+    gs.res[Resources.HALOT] = 20.0
+    gs.res[Resources.MAKKARA] = 0.0
     var ev: GameEvent = load("res://resources/events/merchant.tres")
     em.start_event(ev)
     em._on_choice_selected(ev.choices[0])
@@ -32,7 +32,7 @@ func test_branching_event(res) -> void:
     _cleanup_overlays(tree)
     if em.current_event != null:
         res.fail("event chain did not resolve")
-    if gs.res[Resources.FOOD] < 15 or gs.res[Resources.WOOD] > 10:
+    if gs.res[Resources.MAKKARA] < 15 or gs.res[Resources.HALOT] > 10:
         res.fail("event effects not applied")
 
 func test_cold_snap_event(res) -> void:
@@ -75,7 +75,7 @@ func test_event_fails_prerequisites(res) -> void:
     var gs = tree.root.get_node("GameState")
     var em = tree.root.get_node("EventManager")
     var orig = gs.res.duplicate()
-    gs.res[Resources.WOOD] = 0.0
+    gs.res[Resources.HALOT] = 0.0
     var ev: GameEvent = load("res://resources/events/merchant.tres")
     if ev.can_trigger():
         res.fail("event unexpectedly triggerable")
@@ -98,7 +98,7 @@ func test_unaffordable_choice_keeps_resources(res) -> void:
     var clock = tree.root.get_node("GameClock")
     clock.set_process(false)
     var orig = gs.res.duplicate()
-    gs.res[Resources.WOOD] = 0.0
+    gs.res[Resources.HALOT] = 0.0
     var ev: GameEvent = load("res://resources/events/merchant.tres")
     em.start_event(ev)
     var before := gs.res.duplicate()

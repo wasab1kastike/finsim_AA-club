@@ -68,7 +68,7 @@ func test_target_falls_back_to_center(res) -> void:
     if target != Vector2i.ZERO:
         res.fail("expected (0,0) got %s" % target)
 
-func test_raider_morale_hit(res) -> void:
+func test_raider_saunatunnelma_hit(res) -> void:
     var world = _setup_world()
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
@@ -78,9 +78,9 @@ func test_raider_morale_hit(res) -> void:
     world._on_game_tick()
     world._on_game_tick()
     world._on_game_tick()
-    var expected = max(0.0, orig.get(Resources.MORALE, 0.0) - 1.0)
-    if abs(gs.res[Resources.MORALE] - expected) > 0.01:
-        res.fail("Morale not reduced on raider success")
+    var expected = max(0.0, orig.get(Resources.SAUNATUNNELMA, 0.0) - 1.0)
+    if abs(gs.res[Resources.SAUNATUNNELMA] - expected) > 0.01:
+        res.fail("Saunatunnelma not reduced on raider success")
     world.queue_free()
     gs.res = orig
     gs.units.clear()

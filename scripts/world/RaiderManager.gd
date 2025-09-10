@@ -65,13 +65,13 @@ func _raider_reached(node) -> void:
     var tile: Dictionary = GameState.tiles.get(node.pos_qr, {})
     var hit := false
     if tile.get("owner", "") == "player":
-        GameState.decrease_morale(1.0)
+        GameState.decrease_saunatunnelma(1.0)
         hit = true
         tile["owner"] = "enemy"
         GameState.tiles[node.pos_qr] = tile
         GameState.set_hostile(node.pos_qr, true)
     if node.pos_qr == Vector2i.ZERO and not hit:
-        GameState.decrease_morale(1.0)
+        GameState.decrease_saunatunnelma(1.0)
 
 func _find_target(start: Vector2i) -> Vector2i:
     var candidates: Array[Vector2i] = []

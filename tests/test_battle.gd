@@ -27,8 +27,8 @@ func test_battle_player_win(res) -> void:
     tdata = gs.tiles[target]
     if tdata.get("owner", "") != "player":
         res.fail("Tile not captured")
-    if abs(gs.res[Resources.INFLUENCE] - (orig.get(Resources.INFLUENCE, 0.0) + 0.5)) > 0.01:
-        res.fail("Influence not granted")
+    if abs(gs.res[Resources.LAUDEVALTA] - (orig.get(Resources.LAUDEVALTA, 0.0) + 0.5)) > 0.01:
+        res.fail("Laudevalta not granted")
     world.queue_free()
     gs.res = orig
     gs.units.clear()
@@ -56,9 +56,9 @@ func test_battle_player_loss(res) -> void:
     tdata = gs.tiles[target]
     if tdata.get("owner", "") == "player":
         res.fail("Tile should remain enemy")
-    var expected_morale = orig.get(Resources.MORALE, 0.0) - 1.0
-    if abs(gs.res[Resources.MORALE] - expected_morale) > 0.01:
-        res.fail("Morale not reduced")
+    var expected_saunatunnelma = orig.get(Resources.SAUNATUNNELMA, 0.0) - 1.0
+    if abs(gs.res[Resources.SAUNATUNNELMA] - expected_saunatunnelma) > 0.01:
+        res.fail("Saunatunnelma not reduced")
     var expected_sisu = orig.get(Resources.SISU, 0.0) + 1.0
     if abs(gs.res[Resources.SISU] - expected_sisu) > 0.01:
         res.fail("Sisu not increased")

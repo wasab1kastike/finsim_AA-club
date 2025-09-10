@@ -40,7 +40,7 @@ text = "Reveal All"
 
 [node name="SpawnButton" type="Button" parent="DebugUI"]
 position = Vector2(0,30)
-text = "Spawn Conscript at Center"
+text = "Spawn Kiuasvartija at Center"
 
 [node name="SpendSisuButton" type="Button" parent="DebugUI"]
 position = Vector2(0,60)

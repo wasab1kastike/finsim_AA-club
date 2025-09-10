@@ -6,22 +6,22 @@ func test_game_state_resources(res) -> void:
     var keys := gs.res.keys()
     keys.sort()
     var expected := [
-        Resources.WOOD,
-        Resources.FOOD,
-        Resources.ORE,
-        Resources.RESEARCH,
-        Resources.INFLUENCE,
+        Resources.HALOT,
+        Resources.MAKKARA,
+        Resources.KIUASKIVET,
+        Resources.SAUNATIETO,
+        Resources.LAUDEVALTA,
         Resources.LOYLY,
         Resources.SISU,
-        Resources.MORALE,
-        Resources.GOLD,
-        Resources.PRESTIGE,
+        Resources.SAUNATUNNELMA,
+        Resources.KULTA,
+        Resources.SAUNAKUNNIA,
     ]
     expected.sort()
     if keys != expected:
         res.fail("resource keys mismatch: %s" % [keys])
 
-func test_starting_gold(res) -> void:
+func test_starting_kulta(res) -> void:
     var gs = Engine.get_main_loop().root.get_node("GameState")
-    if gs.res[Resources.GOLD] <= 0.0:
-        res.fail("starting gold should be positive")
+    if gs.res[Resources.KULTA] <= 0.0:
+        res.fail("starting kulta should be positive")

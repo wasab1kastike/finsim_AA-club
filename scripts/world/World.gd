@@ -112,9 +112,9 @@ func _resolve_combat(pos: Vector2i) -> void:
     tile["hostiles"] = enemy_left
     if enemy_left.is_empty() and survivors.size() > 0:
         tile["owner"] = "player"
-        GameState.res[Resources.INFLUENCE] = GameState.res.get(Resources.INFLUENCE, 0.0) + 0.5
+        GameState.res[Resources.LAUDEVALTA] = GameState.res.get(Resources.LAUDEVALTA, 0.0) + 0.5
     elif survivors.is_empty():
-        GameState.decrease_morale(1.0)
+        GameState.decrease_saunatunnelma(1.0)
     var casualties := initial - survivors.size()
     if casualties > 0:
         GameState.add_sisu(casualties)

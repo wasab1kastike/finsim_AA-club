@@ -10,7 +10,7 @@ See [codex](codex.md) for detailed design notes, including the hex-grid combat m
 - Finnish drunken warriors automatically battle enemies on a hex-grid battlefield and build new saunas.
 
 ## Status
-Vertical slice WIP: 3 buildings, 3 units, hex-grid combat, 1 neighbor AI, prestige stub, events.
+Vertical slice WIP: 3 buildings, 3 units, hex-grid combat, 1 neighbor AI, saunakunnia stub, events.
 
 ## Tech
 - Godot 4.x (GDScript), Desktop + Web
