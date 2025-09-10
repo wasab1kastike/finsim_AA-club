@@ -18,7 +18,7 @@ var res := {
     Resources.LOYLY: 0.0,
     Resources.SISU: 0.0,
     Resources.MORALE: 100.0,
-    Resources.GOLD: 0.0,
+    Resources.GOLD: 100.0,
     Resources.PRESTIGE: 0.0,
 }
 

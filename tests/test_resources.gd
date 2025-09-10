@@ -20,3 +20,8 @@ func test_game_state_resources(res) -> void:
     expected.sort()
     if keys != expected:
         res.fail("resource keys mismatch: %s" % [keys])
+
+func test_starting_gold(res) -> void:
+    var gs = Engine.get_main_loop().root.get_node("GameState")
+    if gs.res[Resources.GOLD] <= 0.0:
+        res.fail("starting gold should be positive")
