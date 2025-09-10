@@ -73,8 +73,11 @@ func _on_event_pressed() -> void:
     var idx := event_selector.get_selected()
     if idx >= 0 and idx < _events.size():
         var ev: GameEvent = _events[idx]
-        EventManager.start_event(ev)
-        event_label.text = "%s triggered" % ev.name
+        if ev.can_trigger():
+            EventManager.start_event(ev)
+            event_label.text = "%s triggered" % ev.name
+        else:
+            event_label.text = "%s cannot trigger" % ev.name
 
 func _on_building_selected(index: int) -> void:
     building_selected.emit(building_selector.get_item_text(index))
