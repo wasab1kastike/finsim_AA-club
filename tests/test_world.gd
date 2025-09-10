@@ -10,6 +10,7 @@ func test_spawn_and_reveal(res) -> void:
     _remove_save(gs)
     gs.units.clear()
     gs.tiles.clear()
+    gs.hostile_tiles.clear()
     var world_scene: PackedScene = load("res://scenes/world/World.tscn")
     var world = world_scene.instantiate()
     tree.root.add_child(world)
@@ -31,4 +32,5 @@ func test_spawn_and_reveal(res) -> void:
     world.queue_free()
     gs.units.clear()
     gs.tiles.clear()
+    gs.hostile_tiles.clear()
     _remove_save(gs)

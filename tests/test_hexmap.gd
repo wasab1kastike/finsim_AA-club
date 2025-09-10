@@ -19,6 +19,7 @@ func _reset_tiles() -> void:
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
     gs.tiles.clear()
+    gs.hostile_tiles.clear()
 
 func _remove_save(gs) -> void:
     if FileAccess.file_exists(gs.SAVE_PATH):
@@ -88,6 +89,7 @@ func test_tiles_persist_across_save(res) -> void:
     gs.save()
     var before := JSON.stringify(gs.tiles)
     gs.tiles.clear()
+    gs.hostile_tiles.clear()
     gs.load()
     var after := JSON.stringify(gs.tiles)
     if before != after:

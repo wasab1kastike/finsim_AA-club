@@ -29,6 +29,7 @@ var last_timestamp: int = 0
 var tiles: Dictionary = {}
 var units: Array = []
 var tutorial_done: bool = false
+var hostile_tiles: Array = []
 
 const SAVE_PATH := "user://save.json"
 
@@ -90,12 +91,15 @@ func load_state() -> void:
     tutorial_done = bool(data.get("tutorial_done", false))
     last_timestamp = int(data.get("last_timestamp", Time.get_unix_time_from_system()))
     tiles.clear()
+    hostile_tiles.clear()
     var tile_data: Dictionary = data.get("tiles", {})
     for key in tile_data.keys():
         var parts: PackedStringArray = key.split(",")
         if parts.size() == 2:
             var c := Vector2i(int(parts[0]), int(parts[1]))
             tiles[c] = tile_data[key]
+            if tiles[c].get("hostile", false):
+                hostile_tiles.append(c)
     units.clear()
     for u in data.get("units", []):
         var pos_arr: Array = u.get("pos_qr", [0, 0])
@@ -139,4 +143,13 @@ func prestige() -> void:
 func _apply_speed_for_prestige() -> void:
     var prestige_level: int = int(res.get(Resources.PRESTIGE, 0))
     GameClock.set_speed(1.0 + prestige_level * SPEED_PER_PRESTIGE)
+
+func set_hostile_tile(coord: Vector2i, hostile: bool) -> void:
+    if hostile:
+        if coord not in hostile_tiles:
+            hostile_tiles.append(coord)
+    else:
+        hostile_tiles.erase(coord)
+    if tiles.has(coord):
+        tiles[coord]["hostile"] = hostile
 

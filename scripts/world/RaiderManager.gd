@@ -22,8 +22,8 @@ func process_tick() -> void:
     _move_raiders()
 
 func _spawn_raiders() -> void:
-    for coord in GameState.tiles.keys():
-        var tile: Dictionary = GameState.tiles[coord]
+    for coord in GameState.hostile_tiles:
+        var tile: Dictionary = GameState.tiles.get(coord, {})
         if tile.get("hostile", false):
             var target: Vector2i = _find_target(coord)
             var path: Array[Vector2i] = Pathing.bfs_path(coord, target, func(p: Vector2i):

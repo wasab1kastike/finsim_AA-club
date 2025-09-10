@@ -17,7 +17,7 @@ var _state: Node
 var _rng: Node
 
 func _ensure_singletons() -> void:
-    var root := Engine.get_main_loop().root
+    var root = Engine.get_main_loop().root
     if _state == null:
         _state = root.get_node("GameState")
     if _rng == null:
@@ -99,7 +99,8 @@ func _generate_tiles() -> void:
             var building: String = ""
             if q == 0 and r == 0:
                 building = "sauna"
-            _state.tiles[Vector2i(q, r)] = {
+            var coord := Vector2i(q, r)
+            _state.tiles[coord] = {
                 "terrain": terrain,
                 "owner": "none",
                 "building": building,
@@ -107,7 +108,8 @@ func _generate_tiles() -> void:
                 "hostile": is_hostile,
                 "wildlife": is_wildlife,
             }
-            _set_tile(Vector2i(q, r))
+            _state.set_hostile_tile(coord, is_hostile)
+            _set_tile(coord)
 
 func _load_tiles() -> void:
     _ensure_singletons()

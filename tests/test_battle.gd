@@ -13,6 +13,7 @@ func test_battle_player_win(res) -> void:
     var orig = gs.res.duplicate()
     gs.units.clear()
     gs.tiles.clear()
+    gs.hostile_tiles.clear()
     var world_scene: PackedScene = load("res://scenes/world/World.tscn")
     var world = world_scene.instantiate()
     tree.root.add_child(world)
@@ -33,6 +34,7 @@ func test_battle_player_win(res) -> void:
     gs.res = orig
     gs.units.clear()
     gs.tiles.clear()
+    gs.hostile_tiles.clear()
     _remove_save(gs)
 
 func test_battle_player_loss(res) -> void:
@@ -42,6 +44,7 @@ func test_battle_player_loss(res) -> void:
     var orig = gs.res.duplicate()
     gs.units.clear()
     gs.tiles.clear()
+    gs.hostile_tiles.clear()
     var world_scene: PackedScene = load("res://scenes/world/World.tscn")
     var world = world_scene.instantiate()
     tree.root.add_child(world)
@@ -66,4 +69,5 @@ func test_battle_player_loss(res) -> void:
     gs.res = orig
     gs.units.clear()
     gs.tiles.clear()
+    gs.hostile_tiles.clear()
     _remove_save(gs)

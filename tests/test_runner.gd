@@ -15,6 +15,7 @@ var test_script_paths := [
     "res://tests/test_hexmap.gd",
     "res://tests/test_pathing.gd",
     "res://tests/test_bfs_performance.gd",
+    "res://tests/test_raider_spawn_performance.gd",
     "res://tests/test_action.gd",
     "res://tests/test_resources.gd",
     "res://tests/test_prestige.gd",
