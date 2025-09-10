@@ -43,8 +43,14 @@ func start_event(ev: GameEvent) -> void:
     if not ev.can_trigger():
         return
     current_event = ev
+    var applied := true
     if ev.has_method("apply"):
-        ev.apply()
+        applied = ev.apply()
+    if not applied:
+        current_event = null
+        GameClock.start()
+        _schedule_next_event()
+        return
     GameClock.stop()
     var overlay = OVERLAY_SCENE.instantiate()
     overlay.show_event(ev)
