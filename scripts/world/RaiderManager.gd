@@ -56,13 +56,21 @@ func _move_raiders() -> void:
             raiders.remove_at(i)
 
 func _find_target(start: Vector2i) -> Vector2i:
+    var candidates: Array[Vector2i] = []
+    for u in GameState.units:
+        candidates.append(u.get("pos_qr", Vector2i.ZERO))
+    if candidates.is_empty():
+        for coord in GameState.tiles.keys():
+            var tile: Dictionary = GameState.tiles[coord]
+            if tile.get("owner", "") == "player" and tile.get("building") != null:
+                candidates.append(coord)
+    if candidates.is_empty():
+        return Vector2i.ZERO
     var best := Vector2i.ZERO
-    var best_dist := HexUtils.axial_distance(start, Vector2i.ZERO)
-    for coord in GameState.tiles.keys():
-        var tile: Dictionary = GameState.tiles[coord]
-        if tile.get("owner", "") == "player" and tile.get("building") != null:
-            var dist := HexUtils.axial_distance(start, coord)
-            if dist < best_dist:
-                best_dist = dist
-                best = coord
+    var best_dist := INF
+    for coord in candidates:
+        var dist := HexUtils.axial_distance(start, coord)
+        if dist < best_dist:
+            best_dist = dist
+            best = coord
     return best

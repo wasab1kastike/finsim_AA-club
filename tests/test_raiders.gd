@@ -43,3 +43,25 @@ func test_raider_spawn_and_path(res) -> void:
     if raider.pos_qr != Vector2i(0,0):
         res.fail("raider did not reach center")
     world.queue_free()
+
+func test_target_prefers_nearest_building(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    gs.units.clear()
+    gs.tiles.clear()
+    gs.tiles[Vector2i(3,-1)] = {"terrain": "forest", "owner": "player", "building": "farm"}
+    gs.tiles[Vector2i(0,0)] = {"terrain": "forest", "owner": "player", "building": "sauna"}
+    var rm = load("res://scripts/world/RaiderManager.gd").new()
+    var target = rm._find_target(Vector2i(6,-3))
+    if target != Vector2i(3,-1):
+        res.fail("expected (3,-1) got %s" % target)
+
+func test_target_falls_back_to_center(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    gs.units.clear()
+    gs.tiles.clear()
+    var rm = load("res://scripts/world/RaiderManager.gd").new()
+    var target = rm._find_target(Vector2i(6,-3))
+    if target != Vector2i.ZERO:
+        res.fail("expected (0,0) got %s" % target)
