@@ -8,9 +8,9 @@ func _setup_world():
     gs.tiles[Vector2i(0,0)] = {"terrain": "forest", "owner": "player", "building": null, "explored": true}
     gs.tiles[Vector2i(1,0)] = {"terrain": "lake", "owner": "none", "building": null, "explored": true}
     gs.tiles[Vector2i(1,-1)] = {"terrain": "forest", "owner": "none", "building": null, "explored": true}
-    gs.tiles[Vector2i(2,0)] = {"terrain": "forest", "owner": "none", "building": null, "explored": true, "hostile": true}
+    gs.tiles[Vector2i(2,0)] = {"terrain": "forest", "owner": "none", "building": null, "explored": true}
     gs.tiles[Vector2i(2,-1)] = {"terrain": "forest", "owner": "none", "building": null, "explored": true}
-    gs.update_hostile_tiles()
+    gs.set_hostile(Vector2i(2,0), true)
     var world_scene: PackedScene = load("res://scenes/world/World.tscn")
     var world = world_scene.instantiate()
     tree.root.add_child(world)
