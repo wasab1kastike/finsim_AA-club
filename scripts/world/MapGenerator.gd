@@ -6,6 +6,7 @@ extends Node2D
 @export var hex_radius: float = 32.0
 
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
+const Resources = preload("res://scripts/core/Resources.gd")
 var noise := FastNoiseLite.new()
 @onready var hex_tile_scene: PackedScene = preload("res://scenes/world/HexTile.tscn")
 
@@ -29,9 +30,9 @@ func generate_map() -> void:
             var resource_type := ""
             var roll := RNG.randf()
             if roll < 0.1:
-                resource_type = "gold"
+                resource_type = Resources.GOLD
             elif roll < 0.25:
-                resource_type = "wood"
+                resource_type = Resources.WOOD
             hex.q = q
             hex.r = r
             hex.terrain = terrain_type

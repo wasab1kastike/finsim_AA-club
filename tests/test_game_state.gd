@@ -1,5 +1,6 @@
 extends Node
 
+var Resources = preload("res://scripts/core/Resources.gd")
 func _remove_save(gs) -> void:
     if FileAccess.file_exists(gs.SAVE_PATH):
         DirAccess.remove_absolute(gs.SAVE_PATH)
@@ -29,14 +30,14 @@ func test_offline_gain(res) -> void:
     file.store_string(JSON.stringify(data))
     file.close()
 
-    gs.res["wood"] = 0.0
-    gs.res["food"] = 0.0
-    gs.res["steam"] = 0.0
+    gs.res[Resources.WOOD] = 0.0
+    gs.res[Resources.FOOD] = 0.0
+    gs.res[Resources.STEAM] = 0.0
     gs.load()
 
     var expected_ticks := int(5 / clock.TICK_INTERVAL)
     var expected: float = gs.WOOD_PER_TICK * expected_ticks
-    if gs.res["wood"] < expected - 0.001:
+    if gs.res[Resources.WOOD] < expected - 0.001:
         res.fail("offline gains not applied")
 
 func test_unit_stats_persist(res) -> void:

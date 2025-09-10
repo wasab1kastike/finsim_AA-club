@@ -4,15 +4,18 @@ const WOOD_PER_TICK := 0.2
 const FOOD_PER_TICK := 0.1
 const STEAM_PER_TICK := 0.2
 
+const Resources = preload("res://scripts/core/Resources.gd")
+
 var res := {
-    "wood": 0.0,
-    "food": 0.0,
-    "ore": 0.0,
-    "research": 0.0,
-    "influence": 0.0,
-    "steam": 0.0,
-    "sisu": 0.0,
-    "morale": 100.0,
+    Resources.WOOD: 0.0,
+    Resources.FOOD: 0.0,
+    Resources.ORE: 0.0,
+    Resources.RESEARCH: 0.0,
+    Resources.INFLUENCE: 0.0,
+    Resources.STEAM: 0.0,
+    Resources.SISU: 0.0,
+    Resources.MORALE: 100.0,
+    Resources.GOLD: 0.0,
 }
 
 var last_timestamp: int = 0
@@ -27,9 +30,9 @@ func _ready() -> void:
     GameClock.tick.connect(_on_tick)
 
 func _on_tick() -> void:
-    res["wood"] += WOOD_PER_TICK
-    res["food"] += FOOD_PER_TICK
-    res["steam"] += STEAM_PER_TICK
+    res[Resources.WOOD] += WOOD_PER_TICK
+    res[Resources.FOOD] += FOOD_PER_TICK
+    res[Resources.STEAM] += STEAM_PER_TICK
 
 func save() -> void:
     last_timestamp = Time.get_unix_time_from_system()
@@ -93,9 +96,9 @@ func load_state() -> void:
     if elapsed > 0:
         var ticks := int(elapsed / GameClock.TICK_INTERVAL)
         if ticks > 0:
-            res["wood"] += WOOD_PER_TICK * ticks
-            res["food"] += FOOD_PER_TICK * ticks
-            res["steam"] += STEAM_PER_TICK * ticks
+            res[Resources.WOOD] += WOOD_PER_TICK * ticks
+            res[Resources.FOOD] += FOOD_PER_TICK * ticks
+            res[Resources.STEAM] += STEAM_PER_TICK * ticks
     last_timestamp = now
     save()
 
