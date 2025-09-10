@@ -4,7 +4,7 @@
 [ext_resource path="res://resources/TileSet.tres" type="TileSet" id="2"]
 
 [node name="HexMap" type="TileMap"]
-layers = 1
+layers = 3
 tile_set = ExtResource("2")
 cell_tile_size = Vector2i(96, 84)
 script = ExtResource("1")

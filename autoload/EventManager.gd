@@ -1,5 +1,7 @@
 extends Node
-class_name EventManager
+
+# The autoload provides the EventManager singleton; avoid registering a global
+# class name that conflicts with the autoload itself.
 
 var events: Array = []
 var current_event: GameEvent = null
@@ -17,8 +19,9 @@ func _load_events() -> void:
     events.clear()
     for file in DirAccess.get_files_at("res://resources/events"):
         if file.get_extension() == "tres":
-            var ev: GameEvent = load("res://resources/events/%s" % file)
-            events.append(ev)
+            var res := load("res://resources/events/%s" % file)
+            if res is GameEvent:
+                events.append(res)
 
 func _schedule_next_event() -> void:
     _ticks_until_event = 30 + int(RNG.randf() * 21)
