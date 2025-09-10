@@ -39,10 +39,21 @@ func _on_tick() -> void:
     res[Resources.WOOD] += WOOD_PER_TICK * mult
     res[Resources.FOOD] += FOOD_PER_TICK * mult
     res[Resources.LOYLY] += LOYLY_PER_TICK * mult
+    res[Resources.SISU] = min(res.get(Resources.SISU, 0.0), 10.0)
+    _check_raider_base()
     if modifier_ticks_remaining > 0:
         modifier_ticks_remaining -= 1
         if modifier_ticks_remaining <= 0:
             production_modifier = 1.0
+
+func _check_raider_base() -> void:
+    var origin := Vector2i.ZERO
+    var tile: Dictionary = tiles.get(origin, {})
+    var hostiles: Array = tile.get("hostiles", [])
+    if hostiles.size() > 0:
+        res[Resources.MORALE] = res.get(Resources.MORALE, 0.0) - 5.0
+        tile["hostiles"] = []
+        tiles[origin] = tile
 
 func save() -> void:
     last_timestamp = Time.get_unix_time_from_system()
@@ -84,6 +95,7 @@ func load_state() -> void:
         last_timestamp = Time.get_unix_time_from_system()
         return
     res = data.get("res", res)
+    res[Resources.SISU] = min(res.get(Resources.SISU, 0.0), 10.0)
     last_timestamp = int(data.get("last_timestamp", Time.get_unix_time_from_system()))
     tiles.clear()
     var tile_data: Dictionary = data.get("tiles", {})

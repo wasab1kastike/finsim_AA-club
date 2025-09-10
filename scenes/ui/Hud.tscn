@@ -36,3 +36,10 @@ text = "No events"
 text = "Build"
 
 [node name="BuildingSelector" type="OptionButton" parent="."]
+
+[node name="SisuButton" type="Button" parent="."]
+text = "Spend Sisu (Heal 20%)"
+
+[node name="SisuCooldown" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true

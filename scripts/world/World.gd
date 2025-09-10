@@ -10,6 +10,7 @@ var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 const Pathing = preload("res://scripts/world/Pathing.gd")
 const AutoResolve = preload("res://scripts/battle/AutoResolve.gd")
 const Resources = preload("res://scripts/core/Resources.gd")
+const UnitData = preload("res://scripts/units/UnitData.gd")
 
 func _ready() -> void:
     hex_map.tile_clicked.connect(_on_tile_clicked)
@@ -99,5 +100,24 @@ func _resolve_combat(pos: Vector2i) -> void:
         GameState.res[Resources.MORALE] = GameState.res.get(Resources.MORALE, 0.0) - 1.0
     var casualties := initial - survivors.size()
     if casualties > 0:
-        GameState.res[Resources.SISU] = GameState.res.get(Resources.SISU, 0.0) + casualties
+        GameState.res[Resources.SISU] = min(GameState.res.get(Resources.SISU, 0.0) + casualties, 10.0)
     GameState.tiles[pos] = tile
+
+func spend_sisu_heal() -> bool:
+    if GameState.res.get(Resources.SISU, 0.0) <= 0:
+        return false
+    GameState.res[Resources.SISU] -= 1
+    for i in range(GameState.units.size()):
+        var u: Dictionary = GameState.units[i]
+        var ud: UnitData = load(u.get("data_path", "")) as UnitData
+        if ud:
+            var max_hp: int = ud.max_health
+            var new_hp: int = int(min(u.get("hp", 0) + max_hp * 0.2, max_hp))
+            u["hp"] = new_hp
+            GameState.units[i] = u
+            for child in units_root.get_children():
+                if child.id == u.get("id", ""):
+                    child.hp = new_hp
+                    break
+    GameState.save()
+    return true

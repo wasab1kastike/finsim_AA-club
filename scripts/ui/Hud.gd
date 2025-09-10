@@ -4,6 +4,7 @@ signal start_pressed
 signal pause_pressed
 signal build_pressed
 signal building_selected
+signal sisu_pressed
 
 @onready var resources_label: Label = $ResourcesLabel
 @onready var tile_info_label: Label = $TileInfoLabel
@@ -17,6 +18,8 @@ signal building_selected
 @onready var building_selector: OptionButton = $BuildingSelector
 @onready var policy_selector: OptionButton = $PolicySelector
 @onready var event_selector: OptionButton = $EventSelector
+@onready var sisu_button: Button = $SisuButton
+@onready var sisu_cooldown: Timer = $SisuCooldown
 
 var _policies: Array[Policy] = []
 var _events: Array[GameEvent] = []
@@ -31,6 +34,8 @@ func _ready() -> void:
     policy_button.pressed.connect(_on_policy_pressed)
     event_button.pressed.connect(_on_event_pressed)
     build_button.pressed.connect(func(): build_pressed.emit())
+    sisu_button.pressed.connect(func(): sisu_pressed.emit())
+    sisu_cooldown.timeout.connect(func(): sisu_button.disabled = false)
     _populate_buildings()
     _populate_policies()
     _populate_events()
@@ -42,6 +47,10 @@ func _ready() -> void:
         policy_selector.select(0)
     if event_selector.item_count > 0:
         event_selector.select(0)
+
+func start_sisu_cooldown() -> void:
+    sisu_button.disabled = true
+    sisu_cooldown.start()
 
 func update_resources(resources: Dictionary) -> void:
     var keys := resources.keys()
