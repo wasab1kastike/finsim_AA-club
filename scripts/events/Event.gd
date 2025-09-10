@@ -1,29 +1,8 @@
-extends Resource
+extends Action
 class_name GameEvent
 
 @export var name: String = ""
 @export var description: String = ""
-@export var costs: Dictionary = {}
-@export var effects: Dictionary = {}
-@export var cooldown: float = 0.0
-
-var last_triggered: float = -INF
 
 func can_trigger() -> bool:
-	return Time.get_unix_time_from_system() - last_triggered >= cooldown and _has_resources()
-
-func _has_resources() -> bool:
-	for key in costs.keys():
-		if GameState.res.get(key, 0) < costs[key]:
-			return false
-	return true
-
-func apply() -> bool:
-	if not can_trigger():
-		return false
-	for key in costs.keys():
-		GameState.res[key] = GameState.res.get(key, 0) - costs[key]
-	for key in effects.keys():
-		GameState.res[key] = GameState.res.get(key, 0) + effects[key]
-	last_triggered = Time.get_unix_time_from_system()
-	return true
+    return can_apply()
