@@ -7,6 +7,7 @@ signal tile_clicked(qr: Vector2i)
 
 var selected_unit: Node = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
+const Pathing = preload("res://scripts/world/Pathing.gd")
 
 func _ready() -> void:
     hex_map.tile_clicked.connect(_on_tile_clicked)
@@ -20,15 +21,15 @@ func _ready() -> void:
 func _on_tile_clicked(qr: Vector2i) -> void:
     emit_signal("tile_clicked", qr)
     if selected_unit:
-        var path = Pathing.bfs_path(selected_unit.pos_qr, qr, func(p: Vector2i):
+        var path: Array[Vector2i] = Pathing.bfs_path(selected_unit.pos_qr, qr, func(p: Vector2i):
             return GameState.tiles.has(p) and GameState.tiles[p]["terrain"] != "lake"
         )
         if path.size() > 1 and path.size() - 1 <= selected_unit.move:
-            var next := path[1]
+            var next: Vector2i = path[1]
             selected_unit.pos_qr = next
             selected_unit.position = hex_map.axial_to_world(next)
             for i in range(GameState.units.size()):
-                var u = GameState.units[i]
+                var u: Dictionary = GameState.units[i]
                 if u.get("type", "") == selected_unit.type:
                     GameState.units[i] = selected_unit.to_dict()
                     break
@@ -36,7 +37,7 @@ func _on_tile_clicked(qr: Vector2i) -> void:
             GameState.save()
 
 func spawn_unit_at_center() -> void:
-    var u = unit_scene.instantiate()
+    var u: Node = unit_scene.instantiate()
     units_root.add_child(u)
     u.pos_qr = Vector2i.ZERO
     u.position = hex_map.axial_to_world(u.pos_qr)
