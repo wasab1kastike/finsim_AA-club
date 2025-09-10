@@ -30,7 +30,13 @@ func _on_tick() -> void:
     if _ticks_until_event <= 0:
         if events.size() > 0:
             var idx := int(RNG.randf() * events.size())
-            start_event(events[idx])
+            var ev: GameEvent = events[idx]
+            if ev.can_trigger():
+                start_event(ev)
+            else:
+                _schedule_next_event()
+        else:
+            _schedule_next_event()
 
 func start_event(ev: GameEvent) -> void:
     if current_event:

@@ -29,3 +29,41 @@ func test_branching_event(res) -> void:
         res.fail("event chain did not resolve")
     if gs.res[Resources.FOOD] < 15 or gs.res[Resources.WOOD] > 10:
         res.fail("event effects not applied")
+
+func test_event_not_triggered_when_requirements_fail(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    var em = tree.root.get_node("EventManager")
+    var clock = tree.root.get_node("GameClock")
+    clock.set_process(false)
+    gs.res[Resources.WOOD] = 0.0
+    var ev: GameEvent = load("res://resources/events/merchant.tres")
+    em.events = [ev]
+    em.current_event = null
+    em._ticks_until_event = 0
+    em._on_tick()
+    _cleanup_overlays(tree)
+    if em.current_event != null:
+        res.fail("event triggered despite failing requirements")
+
+func test_hud_respects_can_trigger(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    var em = tree.root.get_node("EventManager")
+    gs.res[Resources.WOOD] = 0.0
+    var ev: GameEvent = load("res://resources/events/merchant.tres")
+    var hud_scene = load("res://scenes/ui/Hud.tscn")
+    var hud = hud_scene.instantiate()
+    tree.root.add_child(hud)
+    hud._events = [ev]
+    hud.event_selector.clear()
+    hud.event_selector.add_item(ev.name)
+    hud.event_selector.select(0)
+    em.current_event = null
+    hud._on_event_pressed()
+    _cleanup_overlays(tree)
+    if em.current_event != null:
+        res.fail("hud triggered event despite failing requirements")
+    if hud.event_label.text != "%s cannot trigger" % ev.name:
+        res.fail("hud did not report failure")
+    hud.queue_free()
