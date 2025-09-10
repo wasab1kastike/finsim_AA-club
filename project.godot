@@ -10,6 +10,7 @@ config/features=PackedStringArray("4.0")
 GameState="*res://autoload/GameState.gd"
 GameClock="*res://autoload/GameClock.gd"
 RNG="*res://autoload/RNG.gd"
+EventManager="*res://autoload/EventManager.gd"
 
 [gui]
 theme/custom="res://resources/Theme.tres"

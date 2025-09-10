@@ -73,11 +73,8 @@ func _on_event_pressed() -> void:
     var idx := event_selector.get_selected()
     if idx >= 0 and idx < _events.size():
         var ev: GameEvent = _events[idx]
-        if ev.apply():
-            update_resources(GameState.res)
-            event_label.text = "%s occurred!" % ev.name
-        else:
-            event_label.text = "%s on cooldown" % ev.name
+        EventManager.start_event(ev)
+        event_label.text = "%s triggered" % ev.name
 
 func _on_building_selected(index: int) -> void:
     building_selected.emit(building_selector.get_item_text(index))
