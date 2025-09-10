@@ -49,7 +49,7 @@ func _setup_tileset() -> void:
             var b64: String = BuildingIcons.ICONS.get(name, "")
             if b64 != "":
                 var img48 := Image.new()
-                var data: PackedByteArray = @GDScript.base64_to_bytes(b64)
+                var data: PackedByteArray = PackedByteArray.from_base64(b64)
                 if img48.load_png_from_buffer(data) == OK:
                     var img64 := Image.create(64, 64, false, Image.FORMAT_RGBA8)
                     img64.fill(Color(0,0,0,0))
