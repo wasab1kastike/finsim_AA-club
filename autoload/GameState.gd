@@ -5,21 +5,21 @@ const MAKKARA_PER_TICK := 0.1
 const LOYLY_PER_TICK := 0.2
 const SPEED_PER_SAUNAKUNNIA := 0.25
 
-const Resources = preload("res://scripts/core/Resources.gd")
+const ResourcesLib = preload("res://scripts/core/Resources.gd")
 const SaunakunniaLib = preload("res://scripts/core/Saunakunnia.gd")
-const Building = preload("res://scripts/core/Building.gd")
+const BuildingLib = preload("res://scripts/core/Building.gd")
 
 var res := {
-    Resources.HALOT: 0.0,
-    Resources.MAKKARA: 0.0,
-    Resources.KIUASKIVET: 0.0,
-    Resources.SAUNATIETO: 0.0,
-    Resources.LAUDEVALTA: 0.0,
-    Resources.LOYLY: 0.0,
-    Resources.SISU: 0.0,
-    Resources.SAUNATUNNELMA: 100.0,
-    Resources.KULTA: 100.0,
-    Resources.SAUNAKUNNIA: 0.0,
+    ResourcesLib.HALOT: 0.0,
+    ResourcesLib.MAKKARA: 0.0,
+    ResourcesLib.KIUASKIVET: 0.0,
+    ResourcesLib.SAUNATIETO: 0.0,
+    ResourcesLib.LAUDEVALTA: 0.0,
+    ResourcesLib.LOYLY: 0.0,
+    ResourcesLib.SISU: 0.0,
+    ResourcesLib.SAUNATUNNELMA: 100.0,
+    ResourcesLib.KULTA: 100.0,
+    ResourcesLib.SAUNAKUNNIA: 0.0,
 }
 
 var production_modifier: float = 1.0
@@ -39,22 +39,22 @@ func _ready() -> void:
     GameClock.tick.connect(_on_tick)
 
 func _on_tick() -> void:
-    var mult := production_modifier * SaunakunniaLib.production_bonus(int(res.get(Resources.SAUNAKUNNIA, 0)))
-    res[Resources.HALOT] += HALOT_PER_TICK * mult
-    res[Resources.MAKKARA] += MAKKARA_PER_TICK * mult
-    res[Resources.LOYLY] += LOYLY_PER_TICK * mult
+    var mult := production_modifier * SaunakunniaLib.production_bonus(int(res.get(ResourcesLib.SAUNAKUNNIA, 0)))
+    res[ResourcesLib.HALOT] += HALOT_PER_TICK * mult
+    res[ResourcesLib.MAKKARA] += MAKKARA_PER_TICK * mult
+    res[ResourcesLib.LOYLY] += LOYLY_PER_TICK * mult
     if modifier_ticks_remaining > 0:
         modifier_ticks_remaining -= 1
         if modifier_ticks_remaining <= 0:
             production_modifier = 1.0
 
 func save() -> void:
-    last_timestamp = Time.get_unix_time_from_system()
+    last_timestamp = int(Time.get_unix_time_from_system())
     var tile_data: Dictionary = {}
     for c in tiles.keys():
         var t: Dictionary = tiles[c]
         var b = t.get("building", null)
-        if b is Building:
+        if b is BuildingLib:
             t = t.duplicate()
             t["building"] = b.resource_path.get_file().get_basename()
         tile_data["%d,%d" % [c.x, c.y]] = t
@@ -81,21 +81,21 @@ func save() -> void:
 
 func load_state() -> void:
     if not FileAccess.file_exists(SAVE_PATH):
-        last_timestamp = Time.get_unix_time_from_system()
+        last_timestamp = int(Time.get_unix_time_from_system())
         return
     var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
     if not file:
-        last_timestamp = Time.get_unix_time_from_system()
+        last_timestamp = int(Time.get_unix_time_from_system())
         return
     var content := file.get_as_text()
     file.close()
     var data = JSON.parse_string(content)
     if typeof(data) != TYPE_DICTIONARY:
-        last_timestamp = Time.get_unix_time_from_system()
+        last_timestamp = int(Time.get_unix_time_from_system())
         return
     res = data.get("res", res)
-    res[Resources.SISU] = min(10.0, res.get(Resources.SISU, 0.0))
-    res[Resources.SAUNATUNNELMA] = max(0.0, res.get(Resources.SAUNATUNNELMA, 0.0))
+    res[ResourcesLib.SISU] = min(10.0, res.get(ResourcesLib.SISU, 0.0))
+    res[ResourcesLib.SAUNATUNNELMA] = max(0.0, res.get(ResourcesLib.SAUNATUNNELMA, 0.0))
     tutorial_done = bool(data.get("tutorial_done", false))
     last_timestamp = int(data.get("last_timestamp", Time.get_unix_time_from_system()))
     tiles.clear()
@@ -125,15 +125,15 @@ func load_state() -> void:
     if hostile_tiles.is_empty():
         update_hostile_tiles()
 
-    var now := Time.get_unix_time_from_system()
+    var now: int = int(Time.get_unix_time_from_system())
     var elapsed := now - last_timestamp
     if elapsed > 0:
         var ticks := int(elapsed / GameClock.TICK_INTERVAL)
         if ticks > 0:
-            var mult := SaunakunniaLib.production_bonus(int(res.get(Resources.SAUNAKUNNIA, 0)))
-            res[Resources.HALOT] += HALOT_PER_TICK * ticks * mult
-            res[Resources.MAKKARA] += MAKKARA_PER_TICK * ticks * mult
-            res[Resources.LOYLY] += LOYLY_PER_TICK * ticks * mult
+            var mult := SaunakunniaLib.production_bonus(int(res.get(ResourcesLib.SAUNAKUNNIA, 0)))
+            res[ResourcesLib.HALOT] += HALOT_PER_TICK * ticks * mult
+            res[ResourcesLib.MAKKARA] += MAKKARA_PER_TICK * ticks * mult
+            res[ResourcesLib.LOYLY] += LOYLY_PER_TICK * ticks * mult
     last_timestamp = now
     _apply_speed_for_saunakunnia()
     save()
@@ -142,9 +142,9 @@ func load() -> void:
     load_state()
 
 func gain_saunakunnia() -> void:
-    res[Resources.SAUNAKUNNIA] += 1
+    res[ResourcesLib.SAUNAKUNNIA] += 1
     for k in res.keys():
-        if k != Resources.SAUNAKUNNIA:
+        if k != ResourcesLib.SAUNAKUNNIA:
             res[k] = 0.0
     production_modifier = 1.0
     modifier_ticks_remaining = 0
@@ -152,7 +152,7 @@ func gain_saunakunnia() -> void:
     save()
 
 func _apply_speed_for_saunakunnia() -> void:
-    var saunakunnia_level: int = int(res.get(Resources.SAUNAKUNNIA, 0))
+    var saunakunnia_level: int = int(res.get(ResourcesLib.SAUNAKUNNIA, 0))
     GameClock.set_speed(1.0 + saunakunnia_level * SPEED_PER_SAUNAKUNNIA)
 
 func set_hostile(coord: Vector2i, hostile: bool) -> void:
@@ -174,10 +174,10 @@ func update_hostile_tiles() -> void:
             hostile_tiles.append(c)
 
 func add_sisu(amount: float) -> void:
-    var current: float = res.get(Resources.SISU, 0.0)
-    res[Resources.SISU] = min(10.0, current + amount)
+    var current: float = res.get(ResourcesLib.SISU, 0.0)
+    res[ResourcesLib.SISU] = min(10.0, current + amount)
 
 func decrease_saunatunnelma(amount: float) -> void:
-    var current: float = res.get(Resources.SAUNATUNNELMA, 0.0)
-    res[Resources.SAUNATUNNELMA] = max(0.0, current - amount)
+    var current: float = res.get(ResourcesLib.SAUNATUNNELMA, 0.0)
+    res[ResourcesLib.SAUNATUNNELMA] = max(0.0, current - amount)
 
