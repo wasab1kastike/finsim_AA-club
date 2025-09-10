@@ -47,3 +47,55 @@ func test_event_inherits_action(res):
         res.fail("Event effect not applied")
     gs.res = orig
 
+func test_sauna_diplomacy(res):
+    var gs = Engine.get_main_loop().root.get_node("GameState")
+    var orig_res = gs.res.duplicate()
+    gs.res[Resources.WOOD] = 50.0
+    gs.res[Resources.STEAM] = 1.0
+    gs.res[Resources.INFLUENCE] = 0.0
+    var ev: GameEvent = load("res://resources/events/sauna_diplomacy.tres")
+    if not ev.can_trigger():
+        res.fail("Sauna Diplomacy cannot trigger")
+        gs.res = orig_res
+        return
+    if not ev.apply():
+        res.fail("Sauna Diplomacy failed to apply")
+        gs.res = orig_res
+        return
+    if int(gs.res[Resources.WOOD]) != 0 or int(gs.res[Resources.STEAM]) != 0 or int(gs.res[Resources.INFLUENCE]) != 10:
+        res.fail("Sauna Diplomacy costs or effects not applied")
+    gs.res = orig_res
+
+func test_cold_snap(res):
+    var gs = Engine.get_main_loop().root.get_node("GameState")
+    var orig_res = gs.res.duplicate()
+    var orig_mod = gs.production_modifier
+    var orig_ticks = gs.modifier_ticks_remaining
+    gs.res[Resources.STEAM] = 0.0
+    gs.production_modifier = 1.0
+    gs.modifier_ticks_remaining = 0
+    var ev = load("res://resources/events/cold_snap.tres")
+    if not ev.apply():
+        res.fail("Cold Snap failed to apply without steam")
+        _restore(gs, orig_res, orig_mod, orig_ticks)
+        return
+    if abs(gs.production_modifier - 0.8) > 0.01 or gs.modifier_ticks_remaining != 30:
+        res.fail("Cold Snap penalty not applied")
+        _restore(gs, orig_res, orig_mod, orig_ticks)
+        return
+    gs.res[Resources.STEAM] = 2.0
+    gs.production_modifier = 1.0
+    gs.modifier_ticks_remaining = 0
+    if not ev.apply():
+        res.fail("Cold Snap failed to apply with steam")
+        _restore(gs, orig_res, orig_mod, orig_ticks)
+        return
+    if gs.res[Resources.STEAM] != 0.0 or abs(gs.production_modifier - 1.0) > 0.01 or gs.modifier_ticks_remaining != 30:
+        res.fail("Cold Snap cost or effect incorrect")
+    _restore(gs, orig_res, orig_mod, orig_ticks)
+
+func _restore(gs, res_dict, mod, ticks):
+    gs.res = res_dict
+    gs.production_modifier = mod
+    gs.modifier_ticks_remaining = ticks
+

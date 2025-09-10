@@ -18,6 +18,9 @@ var res := {
     Resources.GOLD: 0.0,
 }
 
+var production_modifier: float = 1.0
+var modifier_ticks_remaining: int = 0
+
 var last_timestamp: int = 0
 
 var tiles: Dictionary = {}
@@ -30,9 +33,13 @@ func _ready() -> void:
     GameClock.tick.connect(_on_tick)
 
 func _on_tick() -> void:
-    res[Resources.WOOD] += WOOD_PER_TICK
-    res[Resources.FOOD] += FOOD_PER_TICK
-    res[Resources.STEAM] += STEAM_PER_TICK
+    res[Resources.WOOD] += WOOD_PER_TICK * production_modifier
+    res[Resources.FOOD] += FOOD_PER_TICK * production_modifier
+    res[Resources.STEAM] += STEAM_PER_TICK * production_modifier
+    if modifier_ticks_remaining > 0:
+        modifier_ticks_remaining -= 1
+        if modifier_ticks_remaining <= 0:
+            production_modifier = 1.0
 
 func save() -> void:
     last_timestamp = Time.get_unix_time_from_system()
@@ -87,7 +94,7 @@ func load_state() -> void:
         var pos_arr: Array = u.get("pos_qr", [0, 0])
         var uid: String = u.get("id", "")
         if uid == "":
-            uid = UUID.new_uuid_string()
+            uid = str(Time.get_unix_time_from_system())
         units.append({
             "id": uid,
             "type": u.get("type", ""),
