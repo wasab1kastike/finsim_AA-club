@@ -2,13 +2,15 @@
 
 A 4X strategy autobattler with idle elements.
 
+See [codex](codex.md) for detailed design notes, including the hex-grid combat model.
+
 ## Gameplay
 - Start with a single sauna in Finland.
 - Gain units over time or by clicking the löyly.
-- Finnish drunken warriors automatically battle enemies and build new saunas.
+- Finnish drunken warriors automatically battle enemies on a hex-grid battlefield and build new saunas.
 
 ## Status
-Vertical slice WIP: 3 buildings, 3 units, 3 lanes, 1 neighbor AI, prestige stub, events.
+Vertical slice WIP: 3 buildings, 3 units, hex-grid combat, 1 neighbor AI, prestige stub, events.
 
 ## Tech
 - Godot 4.x (GDScript), Desktop + Web
@@ -30,9 +32,8 @@ godot4 --headless -s tests/test_runner.gd
 ```
 
 ## Controls
-Mouse-only prototype:  
-- Left panel: build  
-- Center: map  
-- Bottom: battle lanes  
-- Right: policies/events  
+Mouse-only prototype:
+- Left panel: build
+- Center: hex-grid map & battle
+- Right: policies/events
 - Sisu button: clutch play

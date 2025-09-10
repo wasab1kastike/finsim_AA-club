@@ -1,5 +1,7 @@
 # Codex
 
+For a feature overview and setup instructions, see the [README](README.md).
+
 ## World Map
 - The world is built on a hexagonal grid.
 - Tiles can hold resources, player structures, or PvE encounters.
