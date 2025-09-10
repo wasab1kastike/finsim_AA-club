@@ -9,6 +9,8 @@ var selected_unit: Node = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 const Pathing = preload("res://scripts/world/Pathing.gd")
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
+const AutoResolve = preload("res://scripts/battle/AutoResolve.gd")
+const Resources = preload("res://scripts/core/Resources.gd")
 @onready var raider_data: UnitData = preload("res://resources/units/raider.tres")
 var tick_count: int = 0
 
