@@ -36,3 +36,6 @@ text = "No events"
 text = "Build"
 
 [node name="BuildingSelector" type="OptionButton" parent="."]
+
+[node name="SisuButton" type="Button" parent="."]
+text = "Spend Sisu: Heal 20%"

@@ -23,6 +23,8 @@ func apply() -> bool:
         GameState.res[key] = GameState.res.get(key, 0) - costs[key]
     for key in effects.keys():
         GameState.res[key] = GameState.res.get(key, 0) + effects[key]
+    if GameState.has_method("clamp_resources"):
+        GameState.clamp_resources()
     last_used = Time.get_unix_time_from_system()
     return true
 

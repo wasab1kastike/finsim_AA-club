@@ -3,6 +3,7 @@ extends Node
 const WOOD_PER_TICK := 0.2
 const FOOD_PER_TICK := 0.1
 const STEAM_PER_TICK := 0.2
+const SISU_MAX := 10.0
 
 const Resources = preload("res://scripts/core/Resources.gd")
 
@@ -17,6 +18,9 @@ var res := {
     Resources.MORALE: 100.0,
     Resources.GOLD: 0.0,
 }
+
+func clamp_resources() -> void:
+    res[Resources.SISU] = min(res.get(Resources.SISU, 0.0), SISU_MAX)
 
 var last_timestamp: int = 0
 
@@ -33,6 +37,7 @@ func _on_tick() -> void:
     res[Resources.WOOD] += WOOD_PER_TICK
     res[Resources.FOOD] += FOOD_PER_TICK
     res[Resources.STEAM] += STEAM_PER_TICK
+    clamp_resources()
 
 func save() -> void:
     last_timestamp = Time.get_unix_time_from_system()
@@ -104,6 +109,7 @@ func load_state() -> void:
             res[Resources.WOOD] += WOOD_PER_TICK * ticks
             res[Resources.FOOD] += FOOD_PER_TICK * ticks
             res[Resources.STEAM] += STEAM_PER_TICK * ticks
+        clamp_resources()
     last_timestamp = now
     save()
 

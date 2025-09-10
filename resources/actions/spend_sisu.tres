@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script="res://scripts/actions/SpendSisu.gd"]
+
+[resource]
+name = "Spend Sisu"
+costs = {"sisu": 1}
+effects = {}
+cooldown = 10.0
+heal_ratio = 0.2

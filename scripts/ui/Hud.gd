@@ -17,9 +17,11 @@ signal building_selected
 @onready var building_selector: OptionButton = $BuildingSelector
 @onready var policy_selector: OptionButton = $PolicySelector
 @onready var event_selector: OptionButton = $EventSelector
+@onready var sisu_button: Button = $SisuButton
 
 var _policies: Array[Policy] = []
 var _events: Array[GameEvent] = []
+var _sisu_action = load("res://resources/actions/spend_sisu.tres")
 
 const Building = preload("res://scripts/core/Building.gd")
 const Policy = preload("res://scripts/policies/Policy.gd")
@@ -31,6 +33,7 @@ func _ready() -> void:
     policy_button.pressed.connect(_on_policy_pressed)
     event_button.pressed.connect(_on_event_pressed)
     build_button.pressed.connect(func(): build_pressed.emit())
+    sisu_button.pressed.connect(_on_sisu_pressed)
     _populate_buildings()
     _populate_policies()
     _populate_events()
@@ -78,6 +81,10 @@ func _on_event_pressed() -> void:
             event_label.text = "%s occurred!" % ev.name
         else:
             event_label.text = "%s on cooldown" % ev.name
+
+func _on_sisu_pressed() -> void:
+    if _sisu_action and _sisu_action.apply():
+        update_resources(GameState.res)
 
 func _on_building_selected(index: int) -> void:
     building_selected.emit(building_selector.get_item_text(index))
