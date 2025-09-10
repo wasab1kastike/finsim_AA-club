@@ -2,7 +2,7 @@ extends Node2D
 
 signal tile_clicked(qr: Vector2i)
 
-@onready var hex_map: TileMap = $TileMap
+@onready var hex_map: TileMap = $HexMap/TileMap
 @onready var units_root: Node2D = $Units
 @onready var battle_manager: Node = $BattleManager
 
