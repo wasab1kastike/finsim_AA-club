@@ -107,7 +107,6 @@ func _resolve_combat(pos: Vector2i) -> void:
     if selected_unit and not ids.has(selected_unit.id):
         selected_unit = null
     tile["hostiles"] = enemy_left
-    tile["hostile"] = not enemy_left.is_empty()
     if enemy_left.is_empty() and survivors.size() > 0:
         tile["owner"] = "player"
         GameState.res[Resources.INFLUENCE] = GameState.res.get(Resources.INFLUENCE, 0.0) + 0.5
@@ -117,3 +116,4 @@ func _resolve_combat(pos: Vector2i) -> void:
     if casualties > 0:
         GameState.res[Resources.SISU] = GameState.res.get(Resources.SISU, 0.0) + casualties
     GameState.tiles[pos] = tile
+    GameState.set_hostile(pos, not enemy_left.is_empty())
