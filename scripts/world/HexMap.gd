@@ -10,7 +10,7 @@ const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 var _terrain_sources: Dictionary = {}
 var _building_sources: Dictionary = {}
-var fog_map: TileMap = null
+var fog_map: FogMap = null
 var _markers: Dictionary = {}
 var marker_root: Node2D
 var _state: Node
@@ -25,11 +25,9 @@ func _ensure_singletons() -> void:
 
 func _ready() -> void:
     _setup_tileset()
-    set_layer_z_index(2, 2)
     marker_root = Node2D.new()
     add_child(marker_root)
-    if get_parent() != null:
-        fog_map = get_parent().get_node_or_null("FogMap")
+    fog_map = get_node_or_null("Fog")
     _ensure_singletons()
     if _state.tiles.is_empty():
         _generate_tiles()
@@ -124,9 +122,9 @@ func _set_tile(coord: Vector2i) -> void:
     set_cell(0, coord, source_id, Vector2i.ZERO)
     var bname: String = data.get("building", "")
     if bname != "" and _building_sources.has(bname):
-        set_cell(2, coord, _building_sources[bname], Vector2i.ZERO)
+        set_cell(1, coord, _building_sources[bname], Vector2i.ZERO)
     else:
-        erase_cell(2, coord)
+        erase_cell(1, coord)
     var marker: Node2D = _markers.get(coord, null)
     if data.get("hostile", false):
         if marker == null:
@@ -140,9 +138,9 @@ func _set_tile(coord: Vector2i) -> void:
         _markers.erase(coord)
     if fog_map != null:
         if data.get("explored", false):
-            fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
+            set_cell(2, coord, -1, Vector2i.ZERO)
         else:
-            fog_map.set_cell(0, coord, fog_map.source_id, Vector2i.ZERO)
+            set_cell(2, coord, fog_map.source_id, Vector2i.ZERO)
 
 func _random_terrain() -> String:
     _ensure_singletons()
@@ -170,14 +168,14 @@ func reveal_area(center: Vector2i, radius: int = 2) -> void:
         if HexUtils.axial_distance(coord, center) <= radius:
             _state.tiles[coord]["explored"] = true
             if fog_map != null:
-                fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
+                set_cell(2, coord, -1, Vector2i.ZERO)
 
 func reveal_all() -> void:
     _ensure_singletons()
     for coord in _state.tiles.keys():
         _state.tiles[coord]["explored"] = true
         if fog_map != null:
-            fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
+            set_cell(2, coord, -1, Vector2i.ZERO)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
     var radius := tile_set.tile_size.x / 2.0
