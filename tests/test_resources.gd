@@ -6,16 +6,16 @@ func test_game_state_resources(res) -> void:
     var keys := gs.res.keys()
     keys.sort()
     var expected := [
-        Resources.WOOD,
-        Resources.FOOD,
-        Resources.ORE,
-        Resources.RESEARCH,
-        Resources.INFLUENCE,
+        Resources.HALOT,
+        Resources.MAKKARA,
+        Resources.KIUASKIVET,
+        Resources.SAUNATIETO,
+        Resources.LAUDEVALTA,
         Resources.LOYLY,
         Resources.SISU,
-        Resources.MORALE,
-        Resources.GOLD,
-        Resources.PRESTIGE,
+        Resources.SAUNATUNNELMA,
+        Resources.KULTA,
+        Resources.SAUNAKUNNIA,
     ]
     expected.sort()
     if keys != expected:

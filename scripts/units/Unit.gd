@@ -4,7 +4,7 @@ const UnitData = preload("res://scripts/units/UnitData.gd")
 
 @export var unit_data: UnitData
 var id: String = str(Time.get_unix_time_from_system())
-var type := "conscript"
+var type := "saunoja"
 var hp := 100
 var atk := 10
 var def := 1

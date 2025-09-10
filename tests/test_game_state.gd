@@ -30,14 +30,14 @@ func test_offline_gain(res) -> void:
     file.store_string(JSON.stringify(data))
     file.close()
 
-    gs.res[Resources.WOOD] = 0.0
-    gs.res[Resources.FOOD] = 0.0
+    gs.res[Resources.HALOT] = 0.0
+    gs.res[Resources.MAKKARA] = 0.0
     gs.res[Resources.LOYLY] = 0.0
     gs.load()
 
     var expected_ticks := int(5 / clock.TICK_INTERVAL)
-    var expected: float = gs.WOOD_PER_TICK * expected_ticks
-    if gs.res[Resources.WOOD] < expected - 0.001:
+    var expected: float = gs.HALOT_PER_TICK * expected_ticks
+    if gs.res[Resources.HALOT] < expected - 0.001:
         res.fail("offline gains not applied")
 
 func test_unit_stats_persist(res) -> void:
@@ -51,8 +51,8 @@ func test_unit_stats_persist(res) -> void:
     var uid := "test-unit-id"
     gs.units.append({
         "id": uid,
-        "type": "Footman",
-        "data_path": "res://resources/units/footman.tres",
+        "type": "Saunoja",
+        "data_path": "res://resources/units/saunoja.tres",
         "pos_qr": Vector2i(1, 2),
         "hp": 55,
     })

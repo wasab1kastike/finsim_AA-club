@@ -67,9 +67,9 @@ func _setup_building_tiles() -> void:
     var size := tile_set.tile_size
     var colors := {
         "sauna": Color(0.8, 0.5, 0.3),
-        "farm": Color(0.7, 0.9, 0.4),
+        "alko": Color(0.7, 0.9, 0.4),
         "lumber": Color(0.3, 0.7, 0.2),
-        "mine": Color(0.5, 0.5, 0.5),
+        "kylakauppa": Color(0.5, 0.5, 0.5),
         "school": Color(0.3, 0.5, 0.9),
     }
     for name in colors.keys():

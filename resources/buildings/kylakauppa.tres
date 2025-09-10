@@ -1,0 +1,5 @@
+[gd_resource type="Resource" script="res://scripts/core/Building.gd"]
+[resource]
+name = "Kyläkauppa"
+construction_cost = {"kulta": 100, "halot": 50}
+production_rates = {"kulta": 10}

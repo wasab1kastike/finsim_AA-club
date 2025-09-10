@@ -49,7 +49,7 @@ func test_target_prefers_nearest_building(res) -> void:
     var gs = tree.root.get_node("GameState")
     gs.units.clear()
     gs.tiles.clear()
-    gs.tiles[Vector2i(3,-1)] = {"terrain": "forest", "owner": "player", "building": "farm"}
+    gs.tiles[Vector2i(3,-1)] = {"terrain": "forest", "owner": "player", "building": "alko"}
     gs.tiles[Vector2i(0,0)] = {"terrain": "forest", "owner": "player", "building": "sauna"}
     var rm = load("res://scripts/world/RaiderManager.gd").new()
     var target = rm._find_target(Vector2i(6,-3))

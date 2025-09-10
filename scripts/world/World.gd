@@ -56,7 +56,7 @@ func _on_game_tick() -> void:
 
 func spawn_unit_at_center() -> void:
     var u: Node = unit_scene.instantiate()
-    var data_res: UnitData = load("res://resources/units/footman.tres")
+    var data_res: UnitData = load("res://resources/units/saunoja.tres")
     if data_res:
         u.apply_data(data_res)
     u.id = UUID.new_uuid_string()
@@ -109,9 +109,9 @@ func _resolve_combat(pos: Vector2i) -> void:
     tile["hostiles"] = enemy_left
     if enemy_left.is_empty() and survivors.size() > 0:
         tile["owner"] = "player"
-        GameState.res[Resources.INFLUENCE] = GameState.res.get(Resources.INFLUENCE, 0.0) + 0.5
+        GameState.res[Resources.LAUDEVALTA] = GameState.res.get(Resources.LAUDEVALTA, 0.0) + 0.5
     elif survivors.is_empty():
-        GameState.res[Resources.MORALE] = GameState.res.get(Resources.MORALE, 0.0) - 1.0
+        GameState.res[Resources.SAUNATUNNELMA] = GameState.res.get(Resources.SAUNATUNNELMA, 0.0) - 1.0
     var casualties := initial - survivors.size()
     if casualties > 0:
         GameState.res[Resources.SISU] = GameState.res.get(Resources.SISU, 0.0) + casualties

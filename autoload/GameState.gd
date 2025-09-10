@@ -1,24 +1,24 @@
 extends Node
 
-const WOOD_PER_TICK := 0.2
-const FOOD_PER_TICK := 0.1
+const HALOT_PER_TICK := 0.2
+const MAKKARA_PER_TICK := 0.1
 const LOYLY_PER_TICK := 0.2
-const SPEED_PER_PRESTIGE := 0.25
+const SPEED_PER_SAUNAKUNNIA := 0.25
 
 const Resources = preload("res://scripts/core/Resources.gd")
-const Prestige = preload("res://scripts/core/Prestige.gd")
+const SaunaKunnia = preload("res://scripts/core/SaunaKunnia.gd")
 
 var res := {
-    Resources.WOOD: 0.0,
-    Resources.FOOD: 0.0,
-    Resources.ORE: 0.0,
-    Resources.RESEARCH: 0.0,
-    Resources.INFLUENCE: 0.0,
+    Resources.HALOT: 0.0,
+    Resources.MAKKARA: 0.0,
+    Resources.KIUASKIVET: 0.0,
+    Resources.SAUNATIETO: 0.0,
+    Resources.LAUDEVALTA: 0.0,
     Resources.LOYLY: 0.0,
     Resources.SISU: 0.0,
-    Resources.MORALE: 100.0,
-    Resources.GOLD: 0.0,
-    Resources.PRESTIGE: 0.0,
+    Resources.SAUNATUNNELMA: 100.0,
+    Resources.KULTA: 0.0,
+    Resources.SAUNAKUNNIA: 0.0,
 }
 
 var production_modifier: float = 1.0
@@ -38,9 +38,9 @@ func _ready() -> void:
     GameClock.tick.connect(_on_tick)
 
 func _on_tick() -> void:
-    var mult := production_modifier * Prestige.production_bonus(int(res.get(Resources.PRESTIGE, 0)))
-    res[Resources.WOOD] += WOOD_PER_TICK * mult
-    res[Resources.FOOD] += FOOD_PER_TICK * mult
+    var mult := production_modifier * SaunaKunnia.production_bonus(int(res.get(Resources.SAUNAKUNNIA, 0)))
+    res[Resources.HALOT] += HALOT_PER_TICK * mult
+    res[Resources.MAKKARA] += MAKKARA_PER_TICK * mult
     res[Resources.LOYLY] += LOYLY_PER_TICK * mult
     if modifier_ticks_remaining > 0:
         modifier_ticks_remaining -= 1
@@ -122,30 +122,30 @@ func load_state() -> void:
     if elapsed > 0:
         var ticks := int(elapsed / GameClock.TICK_INTERVAL)
         if ticks > 0:
-            var mult := Prestige.production_bonus(int(res.get(Resources.PRESTIGE, 0)))
-            res[Resources.WOOD] += WOOD_PER_TICK * ticks * mult
-            res[Resources.FOOD] += FOOD_PER_TICK * ticks * mult
+            var mult := SaunaKunnia.production_bonus(int(res.get(Resources.SAUNAKUNNIA, 0)))
+            res[Resources.HALOT] += HALOT_PER_TICK * ticks * mult
+            res[Resources.MAKKARA] += MAKKARA_PER_TICK * ticks * mult
             res[Resources.LOYLY] += LOYLY_PER_TICK * ticks * mult
     last_timestamp = now
-    _apply_speed_for_prestige()
+    _apply_speed_for_saunakunnia()
     save()
 
 func load() -> void:
     load_state()
 
-func prestige() -> void:
-    res[Resources.PRESTIGE] += 1
+func gain_saunakunnia() -> void:
+    res[Resources.SAUNAKUNNIA] += 1
     for k in res.keys():
-        if k != Resources.PRESTIGE:
+        if k != Resources.SAUNAKUNNIA:
             res[k] = 0.0
     production_modifier = 1.0
     modifier_ticks_remaining = 0
-    _apply_speed_for_prestige()
+    _apply_speed_for_saunakunnia()
     save()
 
-func _apply_speed_for_prestige() -> void:
-    var prestige_level: int = int(res.get(Resources.PRESTIGE, 0))
-    GameClock.set_speed(1.0 + prestige_level * SPEED_PER_PRESTIGE)
+func _apply_speed_for_saunakunnia() -> void:
+    var saunakunnia_level: int = int(res.get(Resources.SAUNAKUNNIA, 0))
+    GameClock.set_speed(1.0 + saunakunnia_level * SPEED_PER_SAUNAKUNNIA)
 
 func set_hostile(coord: Vector2i, hostile: bool) -> void:
     var tile: Dictionary = tiles.get(coord, {})

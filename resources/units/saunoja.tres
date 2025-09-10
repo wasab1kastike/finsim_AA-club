@@ -3,7 +3,7 @@
 
 [resource]
 script = ExtResource("1")
-name = "Footman"
+name = "Saunoja"
 max_health = 120
 attack = 20
 defense = 8

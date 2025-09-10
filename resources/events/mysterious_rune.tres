@@ -6,13 +6,13 @@ description = "A glowing rune is discovered."
 choices = [
 {
 "text": "Study the rune",
-"costs": {"research": 5},
-"effects": {"prestige": 1},
+"costs": {"saunatieto": 5},
+"effects": {"saunakunnia": 1},
 "next_event": "res://resources/events/rune_power.tres",
 },
 {
 "text": "Ignore it",
 "costs": {},
-"effects": {"morale": -5},
+"effects": {"saunatunnelma": -5},
 }
 ]

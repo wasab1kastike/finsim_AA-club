@@ -7,6 +7,6 @@ choices = [
 {
 "text": "Embrace power",
 "costs": {},
-"effects": {"research": 10},
+"effects": {"saunatieto": 10},
 }
 ]

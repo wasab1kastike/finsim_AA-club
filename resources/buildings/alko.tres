@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script="res://scripts/core/Building.gd"]
+
+[resource]
+name = "Alko"
+construction_cost = {"kulta": 50, "halot": 20}
+production_rates = {"makkara": 5}
