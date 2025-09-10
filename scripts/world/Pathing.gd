@@ -1,15 +1,16 @@
 extends Object
 class_name Pathing
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
-const HexMap = preload("res://scripts/world/HexMap.gd")
 
 static func bfs_path(start: Vector2i, goal: Vector2i, passable: Callable) -> Array[Vector2i]:
     if start == goal:
         return [start]
     var frontier: Array[Vector2i] = [start]
+    var head := 0
     var came_from: Dictionary = {start: start}
-    while frontier.size() > 0:
-        var current: Vector2i = frontier.pop_front()
+    while head < frontier.size():
+        var current: Vector2i = frontier[head]
+        head += 1
         if current == goal:
             break
         for dir in HexUtils.HEX_DIRS:
