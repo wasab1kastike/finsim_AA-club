@@ -9,10 +9,12 @@ signal tile_clicked(qr:Vector2i)
 const HEX_DIRS = [Vector2i(1,0), Vector2i(1,-1), Vector2i(0,-1), Vector2i(-1,0), Vector2i(-1,1), Vector2i(0,1)]
 
 var _terrain_sources: Dictionary = {}
-var _fog_source_id := -1
+var fog_map: TileMap = null
 
 func _ready() -> void:
     _setup_tileset()
+    if get_parent() != null:
+        fog_map = get_parent().get_node_or_null("FogMap")
     if GameState.tiles.is_empty():
         _generate_tiles()
         reveal_area(Vector2i.ZERO, 2)
@@ -23,26 +25,26 @@ func _setup_tileset() -> void:
     if tile_set == null:
         tile_set = TileSet.new()
         tile_set.tile_shape = TileSet.TILE_SHAPE_HEXAGON
-    self.layers = max(self.layers, 2)
-    var size := Vector2i(64, 64)
-    var colors := {
-        "forest": Color(0.1,0.5,0.1),
-        "taiga": Color(0.2,0.6,0.2),
-        "hill": Color(0.5,0.5,0.5),
-        "lake": Color(0,0.3,0.8),
-        "fog": Color(0,0,0,0.75),
-    }
-    for name in ["forest","taiga","hill","lake","fog"]:
-        var img := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
-        img.fill(colors[name])
-        var tex := ImageTexture.create_from_image(img)
-        var src := TileSetAtlasSource.new()
-        src.texture = tex
-        var sid := tile_set.add_source(src)
-        if name == "fog":
-            _fog_source_id = sid
-        else:
+        var size := Vector2i(64, 64)
+        var colors := {
+            "forest": Color(0.1,0.5,0.1),
+            "taiga": Color(0.2,0.6,0.2),
+            "hill": Color(0.5,0.5,0.5),
+            "lake": Color(0,0.3,0.8),
+        }
+        for name in ["forest","taiga","hill","lake"]:
+            var img := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+            img.fill(colors[name])
+            var tex := ImageTexture.create_from_image(img)
+            var src := TileSetAtlasSource.new()
+            src.texture = tex
+            var sid := tile_set.add_source(src)
             _terrain_sources[name] = sid
+    else:
+        var names := ["forest","taiga","hill","lake"]
+        var ids := tile_set.get_source_id_list()
+        for i in range(min(names.size(), ids.size())):
+            _terrain_sources[names[i]] = ids[i]
 
 func _generate_tiles() -> void:
     var rng := RandomNumberGenerator.new()
@@ -66,10 +68,11 @@ func _set_tile(coord: Vector2i) -> void:
     var terrain: String = data.get("terrain", "forest")
     var source_id: int = _terrain_sources.get(terrain, _terrain_sources.get("forest"))
     set_cell(0, coord, source_id, Vector2i.ZERO)
-    if data.get("explored", false):
-        set_cell(1, coord, -1, Vector2i.ZERO)
-    else:
-        set_cell(1, coord, _fog_source_id, Vector2i.ZERO)
+    if fog_map != null:
+        if data.get("explored", false):
+            fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
+        else:
+            fog_map.set_cell(0, coord, fog_map.source_id, Vector2i.ZERO)
 
 func _random_terrain(rng: RandomNumberGenerator) -> String:
     var roll := rng.randf()
@@ -105,12 +108,14 @@ func reveal_area(center: Vector2i, radius: int = 2) -> void:
     for coord in GameState.tiles.keys():
         if axial_distance(coord, center) <= radius:
             GameState.tiles[coord]["explored"] = true
-            set_cell(1, coord, -1, Vector2i.ZERO)
+            if fog_map != null:
+                fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
 
 func reveal_all() -> void:
     for coord in GameState.tiles.keys():
         GameState.tiles[coord]["explored"] = true
-        set_cell(1, coord, -1, Vector2i.ZERO)
+        if fog_map != null:
+            fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
     return to_global(map_to_local(qr))
