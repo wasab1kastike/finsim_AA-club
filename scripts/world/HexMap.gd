@@ -52,8 +52,7 @@ func _generate_tiles() -> void:
             var terrain := _random_terrain()
             var is_hostile := terrain != "lake" and RNG.randf() < 0.09
             var is_wildlife := terrain != "lake" and RNG.randf() < 0.05
-            var coord := Vector2i(q, r)
-            GameState.tiles[coord] = {
+            GameState.tiles[Vector2i(q, r)] = {
                 "terrain": terrain,
                 "owner": "none",
                 "building": null,
@@ -62,8 +61,8 @@ func _generate_tiles() -> void:
                 "is_wildlife": is_wildlife,
             }
             if is_hostile:
-                GameState.camps.append(coord)
-            _set_tile(coord)
+                GameState.camps.append(Vector2i(q, r))
+            _set_tile(Vector2i(q, r))
 
 func _load_tiles() -> void:
     for coord in GameState.tiles.keys():
