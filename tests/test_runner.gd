@@ -14,6 +14,7 @@ var test_script_paths := [
     "res://tests/test_game_state.gd",
     "res://tests/test_hexmap.gd",
     "res://tests/test_pathing.gd",
+    "res://tests/test_action.gd",
 ]
 
 func _init() -> void:
