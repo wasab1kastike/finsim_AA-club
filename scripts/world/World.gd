@@ -4,7 +4,6 @@ signal tile_clicked(qr: Vector2i)
 
 @onready var hex_map: TileMap = $HexMap
 @onready var units_root: Node2D = $Units
-@onready var battle_manager: Node = $BattleManager
 
 var selected_unit: Node = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
@@ -50,8 +49,6 @@ func _on_game_tick() -> void:
     if _tick_counter % 20 == 0:
         _spawn_raiders()
     _move_raiders()
-    if battle_manager:
-        battle_manager.process_tick()
 
 func _spawn_raiders() -> void:
     for coord in GameState.tiles.keys():
