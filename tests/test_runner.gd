@@ -23,6 +23,7 @@ var test_script_paths := [
     "res://tests/test_world.gd",
     "res://tests/test_battle.gd",
     "res://tests/test_raiders.gd",
+    "res://tests/test_sisu.gd",
 ]
 
 func _init() -> void:

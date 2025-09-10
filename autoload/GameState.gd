@@ -88,6 +88,8 @@ func load_state() -> void:
         last_timestamp = Time.get_unix_time_from_system()
         return
     res = data.get("res", res)
+    res[Resources.SISU] = min(10.0, res.get(Resources.SISU, 0.0))
+    res[Resources.MORALE] = max(0.0, res.get(Resources.MORALE, 0.0))
     tutorial_done = bool(data.get("tutorial_done", false))
     last_timestamp = int(data.get("last_timestamp", Time.get_unix_time_from_system()))
     tiles.clear()
@@ -164,4 +166,12 @@ func update_hostile_tiles() -> void:
     for c in tiles.keys():
         if tiles[c].get("hostile", false):
             hostile_tiles.append(c)
+
+func add_sisu(amount: float) -> void:
+    var current: float = res.get(Resources.SISU, 0.0)
+    res[Resources.SISU] = min(10.0, current + amount)
+
+func decrease_morale(amount: float) -> void:
+    var current: float = res.get(Resources.MORALE, 0.0)
+    res[Resources.MORALE] = max(0.0, current - amount)
 
