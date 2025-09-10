@@ -3,6 +3,7 @@ extends Node
 const WOOD_PER_TICK := 0.2
 const FOOD_PER_TICK := 0.1
 const LOYLY_PER_TICK := 0.2
+const SPEED_PER_PRESTIGE := 0.25
 
 const Resources = preload("res://scripts/core/Resources.gd")
 const Prestige = preload("res://scripts/core/Prestige.gd")
@@ -116,6 +117,7 @@ func load_state() -> void:
             res[Resources.FOOD] += FOOD_PER_TICK * ticks * mult
             res[Resources.LOYLY] += LOYLY_PER_TICK * ticks * mult
     last_timestamp = now
+    _apply_speed_for_prestige()
     save()
 
 func load() -> void:
@@ -128,5 +130,10 @@ func prestige() -> void:
             res[k] = 0.0
     production_modifier = 1.0
     modifier_ticks_remaining = 0
+    _apply_speed_for_prestige()
     save()
+
+func _apply_speed_for_prestige() -> void:
+    var prestige_level: int = int(res.get(Resources.PRESTIGE, 0))
+    GameClock.set_speed(1.0 + prestige_level * SPEED_PER_PRESTIGE)
 
