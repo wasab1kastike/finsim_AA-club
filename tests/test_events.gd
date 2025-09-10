@@ -1,6 +1,7 @@
 extends Node
 var Resources = preload("res://scripts/core/Resources.gd")
 var GameEvent = preload("res://scripts/events/Event.gd")
+var ColdSnapEvent = preload("res://scripts/events/ColdSnap.gd")
 
 func _cleanup_overlays(tree):
     for child in tree.root.get_children():
@@ -29,3 +30,39 @@ func test_branching_event(res) -> void:
         res.fail("event chain did not resolve")
     if gs.res[Resources.FOOD] < 15 or gs.res[Resources.WOOD] > 10:
         res.fail("event effects not applied")
+
+func test_cold_snap_event(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    # Sufficient loyly: should spend loyly and avoid penalty
+    gs.res[Resources.LOYLY] = 3.0
+    gs.production_modifier = 0.0
+    gs.modifier_ticks_remaining = 0
+    var ev: ColdSnapEvent = ColdSnapEvent.new()
+    if not ev.apply():
+        res.fail("apply returned false with sufficient loyly")
+        return
+    if gs.res[Resources.LOYLY] != 1.0 or gs.production_modifier != 1.0:
+        res.fail("cold snap did not consume loyly or reset modifier")
+        return
+    if gs.modifier_ticks_remaining != ev.duration_ticks:
+        res.fail("duration not applied")
+        return
+    # Insufficient loyly: should apply penalty
+    gs.res[Resources.LOYLY] = 0.0
+    gs.production_modifier = 1.0
+    gs.modifier_ticks_remaining = 0
+    ev = ColdSnapEvent.new()
+    if not ev.apply():
+        res.fail("apply returned false with insufficient loyly")
+        return
+    if gs.production_modifier != ev.penalty_multiplier:
+        res.fail("penalty modifier not applied")
+        return
+    if gs.modifier_ticks_remaining != ev.duration_ticks:
+        res.fail("duration not set on penalty")
+        return
+    gs.res[Resources.LOYLY] = 0.0
+    gs.production_modifier = 1.0
+    gs.modifier_ticks_remaining = 0
+        
