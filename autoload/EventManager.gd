@@ -36,6 +36,8 @@ func start_event(ev: GameEvent) -> void:
     if current_event:
         return
     current_event = ev
+    if ev.has_method("apply"):
+        ev.apply()
     GameClock.stop()
     var overlay = OVERLAY_SCENE.instantiate()
     overlay.show_event(ev)
@@ -49,6 +51,11 @@ func _on_choice_selected(choice: Dictionary) -> void:
     var effects: Dictionary = choice.get("effects", {})
     for k in effects.keys():
         GameState.res[k] = GameState.res.get(k, 0) + effects[k]
+    var next_path: String = choice.get("next_event", "")
     current_event = null
-    GameClock.start()
-    _schedule_next_event()
+    if next_path != "":
+        var next_ev: GameEvent = load(next_path)
+        start_event(next_ev)
+    else:
+        GameClock.start()
+        _schedule_next_event()

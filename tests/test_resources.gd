@@ -15,6 +15,7 @@ func test_game_state_resources(res) -> void:
         Resources.SISU,
         Resources.MORALE,
         Resources.GOLD,
+        Resources.PRESTIGE,
     ]
     expected.sort()
     if keys != expected:

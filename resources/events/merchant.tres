@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script="res://scripts/events/Trader.gd"]
+
+[resource]
+name = "Traveling Merchant"
+description = "A merchant offers to trade."
+choices = [
+{
+"text": "Trade 10 wood for 15 food",
+"costs": {"wood": 10},
+"effects": {"food": 15},
+"next_event": "res://resources/events/merchant_return.tres",
+},
+{
+"text": "Decline",
+"costs": {},
+"effects": {},
+}
+]
