@@ -22,6 +22,7 @@ var last_timestamp: int = 0
 
 var tiles: Dictionary = {}
 var units: Array = []
+var camps: Array = []
 
 const SAVE_PATH := "user://save.json"
 
@@ -48,11 +49,15 @@ func save() -> void:
             "pos_qr": [u.get("pos_qr", Vector2i.ZERO).x, u.get("pos_qr", Vector2i.ZERO).y],
             "hp": u.get("hp", 0),
         })
+    var camp_data: Array = []
+    for c in camps:
+        camp_data.append([c.x, c.y])
     var data := {
         "res": res,
         "last_timestamp": last_timestamp,
         "tiles": tile_data,
         "units": unit_data,
+        "camps": camp_data,
     }
     var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
     if file:
@@ -95,6 +100,10 @@ func load_state() -> void:
             "pos_qr": Vector2i(int(pos_arr[0]), int(pos_arr[1])),
             "hp": int(u.get("hp", 0)),
         })
+    camps.clear()
+    for arr in data.get("camps", []):
+        if typeof(arr) == TYPE_ARRAY and arr.size() == 2:
+            camps.append(Vector2i(int(arr[0]), int(arr[1])))
 
     var now := Time.get_unix_time_from_system()
     var elapsed := now - last_timestamp

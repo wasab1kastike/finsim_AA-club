@@ -8,9 +8,13 @@ signal tile_clicked(qr: Vector2i)
 var selected_unit: Node = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 const Pathing = preload("res://scripts/world/Pathing.gd")
+const HexUtils = preload("res://scripts/world/HexUtils.gd")
+@onready var raider_data: UnitData = preload("res://resources/units/raider.tres")
+var tick_count: int = 0
 
 func _ready() -> void:
     hex_map.tile_clicked.connect(_on_tile_clicked)
+    GameClock.tick.connect(_on_tick)
     for data in GameState.units:
         var u = unit_scene.instantiate()
         u.from_dict(data)
@@ -49,6 +53,55 @@ func spawn_unit_at_center() -> void:
     selected_unit = u
     hex_map.reveal_area(u.pos_qr, 1)
     GameState.save()
+
+func _on_tick() -> void:
+    tick_count += 1
+    if tick_count % 20 == 0:
+        _spawn_raiders()
+    _move_raiders()
+
+func _spawn_raiders() -> void:
+    for camp in GameState.camps:
+        var u: Node = unit_scene.instantiate()
+        if raider_data:
+            u.apply_data(raider_data)
+        u.id = UUID.new_uuid_string()
+        units_root.add_child(u)
+        u.pos_qr = camp
+        u.position = hex_map.axial_to_world(camp)
+        GameState.units.append(u.to_dict())
+
+func _move_raiders() -> void:
+    for u in units_root.get_children():
+        if u.type.to_lower() == "raider":
+            var target := _get_player_target(u.pos_qr)
+            var path: Array[Vector2i] = Pathing.bfs_path(u.pos_qr, target, func(p: Vector2i):
+                return GameState.tiles.has(p) and GameState.tiles[p]["terrain"] != "lake"
+            )
+            if path.size() > 1:
+                var next: Vector2i = path[1]
+                u.pos_qr = next
+                u.position = hex_map.axial_to_world(next)
+                _update_unit_state(u)
+
+func _get_player_target(from_pos: Vector2i) -> Vector2i:
+    var target := Vector2i.ZERO
+    var best := HexUtils.axial_distance(from_pos, target)
+    for coord in GameState.tiles.keys():
+        var data: Dictionary = GameState.tiles[coord]
+        if data.get("owner", "") == "player" and data.get("building") != null:
+            var d := HexUtils.axial_distance(from_pos, coord)
+            if d < best:
+                best = d
+                target = coord
+    return target
+
+func _update_unit_state(u: Node) -> void:
+    for i in range(GameState.units.size()):
+        var d: Dictionary = GameState.units[i]
+        if d.get("id", "") == u.id:
+            GameState.units[i] = u.to_dict()
+            break
 
 func reveal_all() -> void:
     hex_map.reveal_all()
