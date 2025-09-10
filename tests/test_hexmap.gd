@@ -1,9 +1,8 @@
 extends Node
 
-const HexMapBase = preload("res://scripts/world/HexMap.gd")
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
-class DummyHexMap extends HexMapBase:
+class DummyHexMap extends "res://scripts/world/HexMap.gd":
     func _init():
         tile_set = TileSet.new()
     func _set_tile(coord: Vector2i) -> void:

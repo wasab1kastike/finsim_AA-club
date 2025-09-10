@@ -92,7 +92,7 @@ func load_state() -> void:
         var pos_arr: Array = u.get("pos_qr", [0, 0])
         var uid: String = u.get("id", "")
         if uid == "":
-            uid = UUID.new_uuid_string()
+            uid = "%s_%s" % [str(Time.get_unix_time_from_system()), str(randi())]
         units.append({
             "id": uid,
             "type": u.get("type", ""),

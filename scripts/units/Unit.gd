@@ -3,7 +3,7 @@ extends Node2D
 const UnitData = preload("res://scripts/units/UnitData.gd")
 
 @export var unit_data: UnitData
-var id: String = UUID.new_uuid_string()
+var id: String = "%s_%s" % [str(Time.get_unix_time_from_system()), str(randi())]
 var type := "conscript"
 var hp := 100
 var atk := 10

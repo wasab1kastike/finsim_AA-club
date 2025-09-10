@@ -42,7 +42,7 @@ func _setup_tileset() -> void:
             _terrain_sources[name] = sid
     else:
         var names := ["forest","taiga","hill","lake"]
-        var ids := tile_set.get_source_id_list()
+        var ids = tile_set.get_source_id_list()
         for i in range(min(names.size(), ids.size())):
             _terrain_sources[names[i]] = ids[i]
 

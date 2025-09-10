@@ -1,8 +1,6 @@
 extends Node
 
-var Action = preload("res://scripts/core/Action.gd")
-var Policy = preload("res://scripts/policies/Policy.gd")
-var GameEvent = preload("res://scripts/events/Event.gd")
+const ActionScript = preload("res://scripts/core/Action.gd")
 var Resources = preload("res://scripts/core/Resources.gd")
 
 func test_policy_apply_and_cooldown(res):
@@ -11,8 +9,8 @@ func test_policy_apply_and_cooldown(res):
     gs.res[Resources.GOLD] = 100.0
     gs.res[Resources.MORALE] = 0.0
     gs.res[Resources.FOOD] = 0.0
-    var policy: Policy = load("res://resources/policies/tax_relief.tres")
-    if not (policy is Action):
+    var policy = load("res://resources/policies/tax_relief.tres")
+    if not (policy is ActionScript):
         res.fail("Policy does not inherit Action")
         return
     if not policy.apply():
@@ -31,8 +29,8 @@ func test_event_inherits_action(res):
     gs.res[Resources.GOLD] = 100.0
     gs.res[Resources.MORALE] = 0.0
     gs.res[Resources.FOOD] = 0.0
-    var ev: GameEvent = load("res://resources/events/rain.tres")
-    if not (ev is Action):
+    var ev = load("res://resources/events/rain.tres")
+    if not (ev is ActionScript):
         res.fail("Event does not inherit Action")
         return
     if not ev.can_trigger():

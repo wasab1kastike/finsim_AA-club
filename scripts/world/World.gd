@@ -8,6 +8,7 @@ signal tile_clicked(qr: Vector2i)
 var selected_unit: Node = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 const Pathing = preload("res://scripts/world/Pathing.gd")
+const UnitData = preload("res://scripts/units/UnitData.gd")
 
 func _ready() -> void:
     hex_map.tile_clicked.connect(_on_tile_clicked)
@@ -41,7 +42,7 @@ func spawn_unit_at_center() -> void:
     var data_res: UnitData = load("res://resources/units/footman.tres")
     if data_res:
         u.apply_data(data_res)
-    u.id = UUID.new_uuid_string()
+    u.id = "%s_%s" % [str(Time.get_unix_time_from_system()), str(randi())]
     units_root.add_child(u)
     u.pos_qr = Vector2i.ZERO
     u.position = hex_map.axial_to_world(u.pos_qr)
