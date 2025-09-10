@@ -2,7 +2,9 @@ extends Node2D
 
 signal tile_clicked(qr: Vector2i)
 
-@onready var hex_map: TileMap = $TileMap
+@onready var cam: Camera2D = $Camera2D
+@onready var grid: TileMap = $HexMap/TileMap
+@onready var hex_map: HexMap = $HexMap
 @onready var units_root: Node2D = $Units
 @onready var battle_manager: Node = $BattleManager
 
@@ -17,6 +19,7 @@ const RaiderManager = preload("res://scripts/world/RaiderManager.gd")
 var raider_manager: RaiderManager
 
 func _ready() -> void:
+    cam.position = grid.map_to_local(Vector2i(0, 0))
     raider_manager = RaiderManager.new()
     add_child(raider_manager)
     raider_manager.setup(hex_map, units_root, unit_scene)
