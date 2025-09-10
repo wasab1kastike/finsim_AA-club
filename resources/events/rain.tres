@@ -3,6 +3,8 @@
 [resource]
 name = "Rain"
 description = "Bountiful rain increases food production."
-effects = {"food": 20}
-costs = {}
-cooldown = 0.0
+choices = [{
+"text": "Collect water",
+"effects": {"food": 20},
+"costs": {}
+}]
