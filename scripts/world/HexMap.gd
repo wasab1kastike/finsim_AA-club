@@ -1,4 +1,4 @@
-extends TileMap
+extends Node2D
 class_name HexMap
 
 @export var radius := 8
@@ -8,9 +8,13 @@ signal tile_clicked(qr:Vector2i)
 
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
+@onready var grid: TileMap = $TileMap
+@onready var terrain: TileMapLayer = $TileMap/Terrain
+@onready var buildings: TileMapLayer = $TileMap/Buildings
+@onready var fog: FogMap = $TileMap/Fog
+
 var _terrain_sources: Dictionary = {}
 var _building_sources: Dictionary = {}
-var fog_map: FogMap = null
 var _markers: Dictionary = {}
 var marker_root: Node2D
 var _state: Node
@@ -27,7 +31,6 @@ func _ready() -> void:
     _setup_tileset()
     marker_root = Node2D.new()
     add_child(marker_root)
-    fog_map = get_node_or_null("Fog")
     _ensure_singletons()
     if _state.tiles.is_empty():
         _generate_tiles()
@@ -36,9 +39,9 @@ func _ready() -> void:
         _draw_from_saved(_state.tiles)
 
 func _setup_tileset() -> void:
-    if tile_set == null:
-        tile_set = TileSet.new()
-        tile_set.tile_shape = TileSet.TILE_SHAPE_HEXAGON
+    if grid.tile_set == null:
+        grid.tile_set = TileSet.new()
+        grid.tile_set.tile_shape = TileSet.TILE_SHAPE_HEXAGON
         var size := Vector2i(64, 64)
         var colors := {
             "forest": Color(0.1,0.5,0.1),
@@ -52,17 +55,17 @@ func _setup_tileset() -> void:
             var tex := ImageTexture.create_from_image(img)
             var src := TileSetAtlasSource.new()
             src.texture = tex
-            var sid := tile_set.add_source(src)
+            var sid := grid.tile_set.add_source(src)
             _terrain_sources[name] = sid
     else:
         var names := ["forest","taiga","hill","lake"]
-        var ids: Array[int] = tile_set.get_source_id_list()
+        var ids: Array[int] = grid.tile_set.get_source_id_list()
         for i in range(min(names.size(), ids.size())):
             _terrain_sources[names[i]] = ids[i]
     _setup_building_tiles()
 
 func _setup_building_tiles() -> void:
-    var size := tile_set.tile_size
+    var size := grid.tile_set.tile_size
     var colors := {
         "sauna": Color(0.8, 0.5, 0.3),
         "farm": Color(0.7, 0.9, 0.4),
@@ -84,7 +87,7 @@ func _setup_building_tiles() -> void:
         var src := TileSetAtlasSource.new()
         src.texture = tex
         src.texture_region_size = size
-        var sid := tile_set.add_source(src)
+        var sid := grid.tile_set.add_source(src)
         _building_sources[name] = sid
 
 func _generate_tiles() -> void:
@@ -119,12 +122,12 @@ func _set_tile(coord: Vector2i) -> void:
     var data: Dictionary = _state.tiles.get(coord, {})
     var terrain: String = data.get("terrain", "forest")
     var source_id: int = _terrain_sources.get(terrain, _terrain_sources.get("forest"))
-    set_cell(0, coord, source_id, Vector2i.ZERO)
+    terrain.set_cell(coord, source_id)
     var bname: String = data.get("building", "")
     if bname != "" and _building_sources.has(bname):
-        set_cell(1, coord, _building_sources[bname], Vector2i.ZERO)
+        buildings.set_cell(coord, _building_sources[bname])
     else:
-        erase_cell(1, coord)
+        buildings.erase_cell(coord)
     var marker: Node2D = _markers.get(coord, null)
     if data.get("hostile", false):
         if marker == null:
@@ -136,11 +139,11 @@ func _set_tile(coord: Vector2i) -> void:
     elif marker != null:
         marker.queue_free()
         _markers.erase(coord)
-    if fog_map != null:
+    if fog != null:
         if data.get("explored", false):
-            set_cell(2, coord, -1, Vector2i.ZERO)
+            fog.erase_cell(coord)
         else:
-            set_cell(2, coord, fog_map.source_id, Vector2i.ZERO)
+            fog.set_cell(coord, fog.source_id)
 
 func _random_terrain() -> String:
     _ensure_singletons()
@@ -156,7 +159,7 @@ func _unhandled_input(event: InputEvent) -> void:
     _ensure_singletons()
     if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
         var local_pos := to_local(event.position)
-        var cell := local_to_map(local_pos)
+        var cell := grid.local_to_map(local_pos)
         if _state.tiles.has(cell):
             var terrain: String = _state.tiles[cell]["terrain"]
             print("Hex %d,%d terrain %s" % [cell.x, cell.y, terrain])
@@ -167,20 +170,23 @@ func reveal_area(center: Vector2i, radius: int = 2) -> void:
     for coord in _state.tiles.keys():
         if HexUtils.axial_distance(coord, center) <= radius:
             _state.tiles[coord]["explored"] = true
-            if fog_map != null:
-                set_cell(2, coord, -1, Vector2i.ZERO)
+            if fog != null:
+                fog.erase_cell(coord)
 
 func reveal_all() -> void:
     _ensure_singletons()
     for coord in _state.tiles.keys():
         _state.tiles[coord]["explored"] = true
-        if fog_map != null:
-            set_cell(2, coord, -1, Vector2i.ZERO)
+        if fog != null:
+            fog.erase_cell(coord)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
-    var radius := tile_set.tile_size.x / 2.0
+    var radius := grid.tile_set.tile_size.x / 2.0
     return HexUtils.axial_to_world(qr.x, qr.y, radius)
 
 func world_to_axial(pos: Vector2) -> Vector2i:
-    var radius := tile_set.tile_size.x / 2.0
+    var radius := grid.tile_set.tile_size.x / 2.0
     return HexUtils.world_to_axial(pos, radius)
+
+func map_to_pos(cell: Vector2i) -> Vector2:
+    return grid.map_to_local(cell)
