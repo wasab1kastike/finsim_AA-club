@@ -7,17 +7,21 @@ class TestResult:
         failed = true
         message = msg
 
-var test_scripts := [
-    preload("res://tests/test_rng.gd"),
-    preload("res://tests/test_game_clock.gd"),
-    preload("res://tests/test_building.gd"),
-    preload("res://tests/test_game_state.gd"),
+var test_script_paths := [
+    "res://tests/test_rng.gd",
+    "res://tests/test_game_clock.gd",
+    "res://tests/test_building.gd",
+    "res://tests/test_game_state.gd",
 ]
 
 func _init() -> void:
+    call_deferred("_run_tests")
+
+func _run_tests() -> void:
     var total := 0
     var failed_count := 0
-    for script in test_scripts:
+    for path in test_script_paths:
+        var script = load(path)
         var obj = script.new()
         for method in obj.get_method_list():
             var name = method.name
@@ -27,7 +31,7 @@ func _init() -> void:
                 obj.call(name, res)
                 if res.failed:
                     failed_count += 1
-                    print("FAIL: %s.%s - %s" % [script.resource_path, name, res.message])
+                    print("FAIL: %s.%s - %s" % [path, name, res.message])
     if failed_count == 0:
         print("All %d tests passed" % total)
     else:
