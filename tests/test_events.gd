@@ -65,4 +65,25 @@ func test_cold_snap_event(res) -> void:
     gs.res[Resources.LOYLY] = 0.0
     gs.production_modifier = 1.0
     gs.modifier_ticks_remaining = 0
+
+func test_event_fails_prerequisites(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    var em = tree.root.get_node("EventManager")
+    var orig = gs.res.duplicate()
+    gs.res[Resources.WOOD] = 0.0
+    var ev: GameEvent = load("res://resources/events/merchant.tres")
+    if ev.can_trigger():
+        res.fail("event unexpectedly triggerable")
+        gs.res = orig
+        return
+    em.start_event(ev)
+    var overlay_present := false
+    for child in tree.root.get_children():
+        if child.name == "EventOverlay":
+            overlay_present = true
+    _cleanup_overlays(tree)
+    gs.res = orig
+    if em.current_event != null or overlay_present:
+        res.fail("event started despite failing prerequisites")
         
