@@ -7,9 +7,11 @@ static func nearest_hostile_path(start: Vector2i, tiles: Dictionary) -> Array[Ve
     if tiles.is_empty():
         return []
     var frontier: Array[Vector2i] = [start]
+    var head := 0
     var came_from: Dictionary = {start: start}
-    while frontier.size() > 0:
-        var current: Vector2i = frontier.pop_front()
+    while head < frontier.size():
+        var current: Vector2i = frontier[head]
+        head += 1
         var tile: Dictionary = tiles.get(current, {})
         if tile.get("hostile", false):
             var path: Array[Vector2i] = [current]
