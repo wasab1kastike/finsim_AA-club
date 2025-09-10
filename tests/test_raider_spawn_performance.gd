@@ -9,8 +9,7 @@ func _setup_tiles(tile_count: int, hostile_count: int) -> void:
         gs.tiles[coord] = {"terrain": "forest", "owner": "none", "building": null, "explored": true}
     for i in range(hostile_count):
         var coord := Vector2i(i * 10, 0)
-        gs.tiles[coord]["hostile"] = true
-        gs.hostile_tiles.append(coord)
+        gs.set_hostile(coord, true)
 
 func _naive_spawn_loop() -> void:
     for coord in GameState.tiles.keys():
