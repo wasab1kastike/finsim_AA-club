@@ -1,11 +1,9 @@
 extends Node
-class_name EventManager
 
 var events: Array = []
-var current_event: GameEvent = null
+var current_event = null
 var _ticks_until_event: int = 0
 
-const GameEvent = preload("res://scripts/events/Event.gd")
 const OVERLAY_SCENE := preload("res://scenes/ui/EventOverlay.tscn")
 
 func _ready() -> void:
@@ -17,7 +15,7 @@ func _load_events() -> void:
     events.clear()
     for file in DirAccess.get_files_at("res://resources/events"):
         if file.get_extension() == "tres":
-            var ev: GameEvent = load("res://resources/events/%s" % file)
+            var ev = load("res://resources/events/%s" % file)
             events.append(ev)
 
 func _schedule_next_event() -> void:
@@ -30,7 +28,7 @@ func _on_tick() -> void:
     if _ticks_until_event <= 0:
         if events.size() > 0:
             var idx := int(RNG.randf() * events.size())
-            var ev: GameEvent = events[idx]
+            var ev = events[idx]
             if ev.can_trigger():
                 start_event(ev)
             else:
@@ -38,7 +36,7 @@ func _on_tick() -> void:
         else:
             _schedule_next_event()
 
-func start_event(ev: GameEvent) -> void:
+func start_event(ev) -> void:
     if current_event:
         return
     current_event = ev
@@ -60,7 +58,7 @@ func _on_choice_selected(choice: Dictionary) -> void:
     var next_path: String = choice.get("next_event", "")
     current_event = null
     if next_path != "":
-        var next_ev: GameEvent = load(next_path)
+        var next_ev = load(next_path)
         start_event(next_ev)
     else:
         GameClock.start()
