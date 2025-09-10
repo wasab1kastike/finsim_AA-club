@@ -1,3 +1,4 @@
+# Tests for edge-rule behavior and Sisu mechanics
 extends Node
 
 const Resources = preload("res://scripts/core/Resources.gd")
