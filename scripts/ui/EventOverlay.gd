@@ -15,5 +15,12 @@ func show_event(ev: GameEvent) -> void:
     for c in ev.choices:
         var btn := Button.new()
         btn.text = c.get("text", "Choice")
+        var affordable := true
+        var costs: Dictionary = c.get("costs", {})
+        for k in costs.keys():
+            if GameState.res.get(k, 0) < costs[k]:
+                affordable = false
+                break
+        btn.disabled = not affordable
         btn.pressed.connect(func(): choice_selected.emit(c); queue_free())
         choices_container.add_child(btn)
