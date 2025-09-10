@@ -12,8 +12,7 @@ func _ready() -> void:
     hex_map.tile_clicked.connect(_on_tile_clicked)
     for data in GameState.units:
         var u = unit_scene.instantiate()
-        u.type = data.get("type", "conscript")
-        u.pos_qr = data.get("pos_qr", Vector2i.ZERO)
+        u.from_dict(data)
         u.position = hex_map.axial_to_world(u.pos_qr)
         units_root.add_child(u)
         selected_unit = u
@@ -28,9 +27,10 @@ func _on_tile_clicked(qr: Vector2i) -> void:
             var next := path[1]
             selected_unit.pos_qr = next
             selected_unit.position = hex_map.axial_to_world(next)
-            for u in GameState.units:
+            for i in range(GameState.units.size()):
+                var u = GameState.units[i]
                 if u.get("type", "") == selected_unit.type:
-                    u["pos_qr"] = next
+                    GameState.units[i] = selected_unit.to_dict()
                     break
             hex_map.reveal_area(next, 1)
             GameState.save()
@@ -40,7 +40,7 @@ func spawn_unit_at_center() -> void:
     units_root.add_child(u)
     u.pos_qr = Vector2i.ZERO
     u.position = hex_map.axial_to_world(u.pos_qr)
-    GameState.units.append({"type": u.type, "pos_qr": u.pos_qr})
+    GameState.units.append(u.to_dict())
     selected_unit = u
     hex_map.reveal_area(u.pos_qr, 1)
     GameState.save()
