@@ -91,21 +91,9 @@ func _unhandled_input(event: InputEvent) -> void:
             print("Hex %d,%d terrain %s" % [cell.x, cell.y, terrain])
             emit_signal("tile_clicked", cell)
 
-static func axial_neighbors(q: int, r: int) -> Array[Vector2i]:
-    var res: Array[Vector2i] = []
-    for d in HexUtils.HEX_DIRS:
-        res.append(Vector2i(q + d.x, r + d.y))
-    return res
-
-static func axial_distance(a: Vector2i, b: Vector2i) -> int:
-    var dq := a.x - b.x
-    var dr := a.y - b.y
-    var ds := -dq - dr
-    return max(abs(dq), abs(dr), abs(ds))
-
 func reveal_area(center: Vector2i, radius: int = 2) -> void:
     for coord in GameState.tiles.keys():
-        if axial_distance(coord, center) <= radius:
+        if HexUtils.axial_distance(coord, center) <= radius:
             GameState.tiles[coord]["explored"] = true
             if fog_map != null:
                 fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
