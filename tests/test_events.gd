@@ -85,5 +85,5 @@ func test_unaffordable_choice(res) -> void:
         res.fail("event advanced despite insufficient resources")
         return
     em.current_event = null
-    GameClock.start()
+    clock.set_process(true)
         
