@@ -86,4 +86,24 @@ func test_event_fails_prerequisites(res) -> void:
     gs.res = orig
     if em.current_event != null or overlay_present:
         res.fail("event started despite failing prerequisites")
+
+func test_unaffordable_choice_keeps_resources(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    var em = tree.root.get_node("EventManager")
+    var clock = tree.root.get_node("GameClock")
+    clock.set_process(false)
+    var orig = gs.res.duplicate()
+    gs.res[Resources.WOOD] = 0.0
+    var ev: GameEvent = load("res://resources/events/merchant.tres")
+    em.start_event(ev)
+    var before := gs.res.duplicate()
+    em._on_choice_selected(ev.choices[0])
+    _cleanup_overlays(tree)
+    if gs.res != before:
+        res.fail("resources changed despite unaffordable choice")
+    gs.res = orig
+    em.current_event = null
+    clock.start()
+    clock.set_process(true)
         
