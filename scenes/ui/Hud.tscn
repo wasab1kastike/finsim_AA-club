@@ -4,6 +4,7 @@
 [ext_resource path="res://scenes/ui/InfoBox.tscn" type="PackedScene" id="2"]
 
 [node name="Hud" type="CanvasLayer" script=ExtResource("1")]
+layer = 1
 
 [node name="ResourcesLabel" type="Label" parent="."]
 text = "Money: 0 Ammo: 0"

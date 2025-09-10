@@ -10,7 +10,9 @@ const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 var _terrain_sources: Dictionary = {}
 var _building_sources: Dictionary = {}
-var fog_map: FogMap = null
+@onready var terrain_layer: TileMapLayer = get_node_or_null("Terrain")
+@onready var building_layer: TileMapLayer = get_node_or_null("Buildings")
+@onready var fog_map: FogMap = get_node_or_null("Fog")
 var _markers: Dictionary = {}
 var marker_root: Node2D
 var _state: Node
@@ -27,7 +29,6 @@ func _ready() -> void:
     _setup_tileset()
     marker_root = Node2D.new()
     add_child(marker_root)
-    fog_map = get_node_or_null("Fog")
     _ensure_singletons()
     if _state.tiles.is_empty():
         _generate_tiles()
@@ -119,12 +120,15 @@ func _set_tile(coord: Vector2i) -> void:
     var data: Dictionary = _state.tiles.get(coord, {})
     var terrain: String = data.get("terrain", "forest")
     var source_id: int = _terrain_sources.get(terrain, _terrain_sources.get("forest"))
-    set_cell(0, coord, source_id, Vector2i.ZERO)
+    if terrain_layer:
+        terrain_layer.set_cell(coord, source_id, Vector2i.ZERO)
     var bname: String = data.get("building", "")
     if bname != "" and _building_sources.has(bname):
-        set_cell(1, coord, _building_sources[bname], Vector2i.ZERO)
+        if building_layer:
+            building_layer.set_cell(coord, _building_sources[bname], Vector2i.ZERO)
     else:
-        erase_cell(1, coord)
+        if building_layer:
+            building_layer.erase_cell(coord)
     var marker: Node2D = _markers.get(coord, null)
     if data.get("hostile", false):
         if marker == null:
@@ -136,11 +140,11 @@ func _set_tile(coord: Vector2i) -> void:
     elif marker != null:
         marker.queue_free()
         _markers.erase(coord)
-    if fog_map != null:
+    if fog_map:
         if data.get("explored", false):
-            set_cell(2, coord, -1, Vector2i.ZERO)
+            fog_map.erase_cell(coord)
         else:
-            set_cell(2, coord, fog_map.source_id, Vector2i.ZERO)
+            fog_map.set_cell(coord, fog_map.source_id, Vector2i.ZERO)
 
 func _random_terrain() -> String:
     _ensure_singletons()
@@ -167,15 +171,15 @@ func reveal_area(center: Vector2i, radius: int = 2) -> void:
     for coord in _state.tiles.keys():
         if HexUtils.axial_distance(coord, center) <= radius:
             _state.tiles[coord]["explored"] = true
-            if fog_map != null:
-                set_cell(2, coord, -1, Vector2i.ZERO)
+            if fog_map:
+                fog_map.erase_cell(coord)
 
 func reveal_all() -> void:
     _ensure_singletons()
     for coord in _state.tiles.keys():
         _state.tiles[coord]["explored"] = true
-        if fog_map != null:
-            set_cell(2, coord, -1, Vector2i.ZERO)
+        if fog_map:
+            fog_map.erase_cell(coord)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
     var radius := tile_set.tile_size.x / 2.0
@@ -184,3 +188,6 @@ func axial_to_world(qr: Vector2i) -> Vector2:
 func world_to_axial(pos: Vector2) -> Vector2i:
     var radius := tile_set.tile_size.x / 2.0
     return HexUtils.world_to_axial(pos, radius)
+
+func map_to_pos(qr: Vector2i) -> Vector2:
+    return axial_to_world(qr)
