@@ -10,9 +10,13 @@ const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 var _terrain_sources: Dictionary = {}
 var fog_map: TileMap = null
+var _markers: Dictionary = {}
+var marker_root: Node2D
 
 func _ready() -> void:
     _setup_tileset()
+    marker_root = Node2D.new()
+    add_child(marker_root)
     if get_parent() != null:
         fog_map = get_parent().get_node_or_null("FogMap")
     if GameState.tiles.is_empty():
@@ -50,11 +54,15 @@ func _generate_tiles() -> void:
     for q in range(-radius, radius + 1):
         for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
             var terrain := _random_terrain()
+            var is_hostile := terrain != "lake" and RNG.randf() < 0.09
+            var is_wildlife := terrain != "lake" and RNG.randf() < 0.05
             GameState.tiles[Vector2i(q, r)] = {
                 "terrain": terrain,
                 "owner": "none",
                 "building": null,
                 "explored": false,
+                "hostile": is_hostile,
+                "wildlife": is_wildlife,
             }
             _set_tile(Vector2i(q, r))
 
@@ -67,6 +75,17 @@ func _set_tile(coord: Vector2i) -> void:
     var terrain: String = data.get("terrain", "forest")
     var source_id: int = _terrain_sources.get(terrain, _terrain_sources.get("forest"))
     set_cell(0, coord, source_id, Vector2i.ZERO)
+    var marker := _markers.get(coord, null)
+    if data.get("hostile", false):
+        if marker == null:
+            marker = preload("res://scripts/world/HostileMarker.gd").new()
+            marker.position = axial_to_world(coord)
+            marker.z_index = 10
+            marker_root.add_child(marker)
+            _markers[coord] = marker
+    elif marker != null:
+        marker.queue_free()
+        _markers.erase(coord)
     if fog_map != null:
         if data.get("explored", false):
             fog_map.set_cell(0, coord, -1, Vector2i.ZERO)
