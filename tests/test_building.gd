@@ -1,5 +1,6 @@
 extends Node
 var Building = preload("res://scripts/core/Building.gd")
+var Resources = preload("res://scripts/core/Resources.gd")
 
 func test_upgrade_increments_level(res):
     var building = Building.new()
@@ -10,9 +11,9 @@ func test_upgrade_increments_level(res):
 
 func test_getters_return_values(res):
     var building = Building.new()
-    building.construction_cost = {"gold": 100}
-    building.production_rates = {"wood": 10}
-    if building.get_construction_cost().get("gold", 0) != 100:
+    building.construction_cost = {Resources.GOLD: 100}
+    building.production_rates = {Resources.WOOD: 10}
+    if building.get_construction_cost().get(Resources.GOLD, 0) != 100:
         res.fail("Construction cost incorrect")
-    if building.get_production_rates().get("wood", 0) != 10:
+    if building.get_production_rates().get(Resources.WOOD, 0) != 10:
         res.fail("Production rate incorrect")
