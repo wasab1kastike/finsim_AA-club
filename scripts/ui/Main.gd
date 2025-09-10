@@ -59,7 +59,9 @@ func _on_build_pressed() -> void:
 func _on_tile_clicked(qr: Vector2i) -> void:
     _last_clicked = qr
     var data: Dictionary = GameState.tiles.get(qr, {})
-    hud.update_tile(qr, data.get("building", null))
+    var building = data.get("building", null)
+    hud.update_tile(qr, building)
+    hud.show_building_info(building)
     print("Main: clicked %s terrain %s" % [qr, data.get("terrain", "")])
 
 func _on_reveal_all() -> void:

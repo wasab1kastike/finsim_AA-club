@@ -17,9 +17,11 @@ signal building_selected
 @onready var building_selector: OptionButton = $BuildingSelector
 @onready var policy_selector: OptionButton = $PolicySelector
 @onready var event_selector: OptionButton = $EventSelector
+@onready var info_box: InfoBox = $InfoBox
 
 var _policies: Array[Policy] = []
 var _events: Array[GameEvent] = []
+var _buildings_info: Array[Building] = []
 
 const Building = preload("res://scripts/core/Building.gd")
 const Policy = preload("res://scripts/policies/Policy.gd")
@@ -35,6 +37,10 @@ func _ready() -> void:
     _populate_policies()
     _populate_events()
     building_selector.item_selected.connect(_on_building_selected)
+    var popup := building_selector.get_popup()
+    popup.id_focused.connect(_on_building_hovered)
+    popup.mouse_exited.connect(func(): info_box.hide())
+    popup.popup_hide.connect(func(): info_box.hide())
     if building_selector.item_count > 0:
         building_selector.select(0)
         building_selected.emit(building_selector.get_item_text(0))
@@ -81,12 +87,26 @@ func _on_event_pressed() -> void:
 
 func _on_building_selected(index: int) -> void:
     building_selected.emit(building_selector.get_item_text(index))
+    info_box.hide()
+
+func _on_building_hovered(id: int) -> void:
+    if id >= 0 and id < _buildings_info.size():
+        info_box.show_building(_buildings_info[id])
+
+func show_building_info(building: Building) -> void:
+    if building:
+        info_box.show_building(building)
+    else:
+        info_box.hide()
 
 func _populate_buildings() -> void:
+    _buildings_info.clear()
+    building_selector.clear()
     for file in DirAccess.get_files_at("res://resources/buildings"):
         if file.get_extension() == "tres":
             var b: Building = load("res://resources/buildings/%s" % file)
             building_selector.add_item(b.name)
+            _buildings_info.append(b)
 
 func _populate_policies() -> void:
     _policies.clear()
