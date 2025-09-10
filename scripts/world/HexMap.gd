@@ -49,10 +49,10 @@ func _setup_tileset() -> void:
 func _generate_tiles() -> void:
     for q in range(-radius, radius + 1):
         for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
-            var coord := Vector2i(q, r)
             var terrain := _random_terrain()
             var is_hostile := terrain != "lake" and RNG.randf() < 0.09
             var is_wildlife := terrain != "lake" and RNG.randf() < 0.05
+            var coord := Vector2i(q, r)
             GameState.tiles[coord] = {
                 "terrain": terrain,
                 "owner": "none",
