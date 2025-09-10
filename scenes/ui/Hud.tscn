@@ -22,8 +22,12 @@ text = "Time: 0"
 [node name="PolicyButton" type="Button" parent="."]
 text = "Use Policy"
 
+[node name="PolicySelector" type="OptionButton" parent="."]
+
 [node name="EventButton" type="Button" parent="."]
 text = "Trigger Event"
+
+[node name="EventSelector" type="OptionButton" parent="."]
 
 [node name="EventLabel" type="Label" parent="."]
 text = "No events"
