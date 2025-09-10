@@ -12,12 +12,12 @@ func apply() -> bool:
     for i in range(GameState.units.size()):
         var u: Dictionary = GameState.units[i]
         var path: String = u.get("data_path", "")
-        var max_hp := u.get("hp", 0)
+        var max_hp: int = int(u.get("hp", 0))
         if path != "":
             var ud: UnitData = load(path) as UnitData
             if ud:
                 max_hp = ud.max_health
-        var heal := int(max_hp * heal_ratio)
+        var heal: int = int(max_hp * heal_ratio)
         u["hp"] = min(max_hp, int(u.get("hp", 0)) + heal)
         GameState.units[i] = u
     var world: Node = GameState.get_tree().root.get_node_or_null("World")
