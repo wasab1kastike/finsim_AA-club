@@ -14,9 +14,9 @@ func _ready() -> void:
     _setup_tileset()
     if GameState.tiles.is_empty():
         _generate_tiles()
+        reveal_area(Vector2i.ZERO, 2)
     else:
         _load_tiles()
-    reveal_area(Vector2i.ZERO, 2)
 
 func _setup_tileset() -> void:
     if tile_set == null:

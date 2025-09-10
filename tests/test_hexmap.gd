@@ -30,6 +30,15 @@ func test_generate_tiles(res) -> void:
                 res.fail("Unexpected terrain %s" % t.get("terrain"))
                 break
 
+func test_ready_uses_saved_tiles(res) -> void:
+    _reset_tiles()
+    var gs = Engine.get_main_loop().root.get_node("GameState")
+    gs.tiles[Vector2i(0,0)] = {"terrain": "forest", "owner": "none", "building": null, "explored": false}
+    var map = DummyHexMap.new()
+    map._ready()
+    if gs.tiles.size() != 1 or not gs.tiles.has(Vector2i(0,0)):
+        res.fail("Expected existing tiles to persist after _ready")
+
 func test_reveal_area(res) -> void:
     _reset_tiles()
     var map = DummyHexMap.new()
