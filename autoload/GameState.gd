@@ -54,6 +54,7 @@ func _check_raider_base() -> void:
         res[Resources.MORALE] = res.get(Resources.MORALE, 0.0) - 5.0
         tile["hostiles"] = []
         tiles[origin] = tile
+        save()
 
 func save() -> void:
     last_timestamp = Time.get_unix_time_from_system()
