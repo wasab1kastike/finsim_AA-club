@@ -25,41 +25,53 @@ func _setup_tileset() -> void:
     if tile_set == null:
         tile_set = TileSet.new()
         tile_set.tile_shape = TileSet.TILE_SHAPE_HEXAGON
+        var size := Vector2i(64, 64)
+        var colors := {
+            "forest": Color(0.1,0.5,0.1),
+            "taiga": Color(0.2,0.6,0.2),
+            "hill": Color(0.5,0.5,0.5),
+            "lake": Color(0,0.3,0.8),
+            "fog": Color(0,0,0,0.75),
+        }
+        for name in ["forest","taiga","hill","lake","fog"]:
+            var img := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+            img.fill(colors[name])
+            var tex := ImageTexture.create_from_image(img)
+            var src := TileSetAtlasSource.new()
+            src.texture = tex
+            var sid := tile_set.add_source(src)
+            if name == "fog":
+                _fog_source_id = sid
+            else:
+                _terrain_sources[name] = sid
+        # load building icons from base64 strings
+        for name in ["sauna", "farm", "lumber", "mine", "school"]:
+            var b64: String = BuildingIcons.ICONS.get(name, "")
+            if b64 != "":
+                var img48 := Image.new()
+                var data: PackedByteArray = @GDScript.base64_to_bytes(b64)
+                if img48.load_png_from_buffer(data) == OK:
+                    var img64 := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+                    img64.fill(Color(0,0,0,0))
+                    img64.blit_rect(img48, Rect2i(Vector2i.ZERO, img48.get_size()), Vector2i(8,8))
+                    var tex := ImageTexture.create_from_image(img64)
+                    var src := TileSetAtlasSource.new()
+                    src.texture = tex
+                    var sid := tile_set.add_source(src)
+                    _building_sources[name] = sid
+    else:
+        var terrain_names := ["forest","taiga","hill","lake"]
+        var ids := tile_set.get_source_id_list()
+        for i in range(min(terrain_names.size(), ids.size())):
+            _terrain_sources[terrain_names[i]] = ids[i]
+        if ids.size() > terrain_names.size():
+            _fog_source_id = ids[terrain_names.size()]
+        var building_names := ["sauna", "farm", "lumber", "mine", "school"]
+        for j in range(building_names.size()):
+            var idx := terrain_names.size() + 1 + j
+            if ids.size() > idx:
+                _building_sources[building_names[j]] = ids[idx]
     self.layers = max(self.layers, 3)
-    var size := Vector2i(64, 64)
-    var colors := {
-        "forest": Color(0.1,0.5,0.1),
-        "taiga": Color(0.2,0.6,0.2),
-        "hill": Color(0.5,0.5,0.5),
-        "lake": Color(0,0.3,0.8),
-        "fog": Color(0,0,0,0.75),
-    }
-    for name in ["forest","taiga","hill","lake","fog"]:
-        var img := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
-        img.fill(colors[name])
-        var tex := ImageTexture.create_from_image(img)
-        var src := TileSetAtlasSource.new()
-        src.texture = tex
-        var sid := tile_set.add_source(src)
-        if name == "fog":
-            _fog_source_id = sid
-        else:
-            _terrain_sources[name] = sid
-    # load building icons from base64 strings
-    for name in ["sauna", "farm", "lumber", "mine", "school"]:
-        var b64: String = BuildingIcons.ICONS.get(name, "")
-        if b64 != "":
-            var img48 := Image.new()
-            var data: PackedByteArray = @GDScript.base64_to_bytes(b64)
-            if img48.load_png_from_buffer(data) == OK:
-                var img64 := Image.create(64, 64, false, Image.FORMAT_RGBA8)
-                img64.fill(Color(0,0,0,0))
-                img64.blit_rect(img48, Rect2i(Vector2i.ZERO, img48.get_size()), Vector2i(8,8))
-                var tex := ImageTexture.create_from_image(img64)
-                var src := TileSetAtlasSource.new()
-                src.texture = tex
-                var sid := tile_set.add_source(src)
-                _building_sources[name] = sid
     set_layer_z_index(2, 1)
 
 func _generate_tiles() -> void:
