@@ -5,6 +5,7 @@ const FOOD_PER_TICK := 0.1
 const LOYLY_PER_TICK := 0.2
 
 const Resources = preload("res://scripts/core/Resources.gd")
+const Prestige = preload("res://scripts/core/Prestige.gd")
 
 var res := {
     Resources.WOOD: 0.0,
@@ -16,6 +17,7 @@ var res := {
     Resources.SISU: 0.0,
     Resources.MORALE: 100.0,
     Resources.GOLD: 0.0,
+    Resources.PRESTIGE: 0.0,
 }
 
 var production_modifier: float = 1.0
@@ -33,9 +35,10 @@ func _ready() -> void:
     GameClock.tick.connect(_on_tick)
 
 func _on_tick() -> void:
-    res[Resources.WOOD] += WOOD_PER_TICK * production_modifier
-    res[Resources.FOOD] += FOOD_PER_TICK * production_modifier
-    res[Resources.LOYLY] += LOYLY_PER_TICK * production_modifier
+    var mult := production_modifier * Prestige.production_bonus(int(res.get(Resources.PRESTIGE, 0)))
+    res[Resources.WOOD] += WOOD_PER_TICK * mult
+    res[Resources.FOOD] += FOOD_PER_TICK * mult
+    res[Resources.LOYLY] += LOYLY_PER_TICK * mult
     if modifier_ticks_remaining > 0:
         modifier_ticks_remaining -= 1
         if modifier_ticks_remaining <= 0:
@@ -108,12 +111,22 @@ func load_state() -> void:
     if elapsed > 0:
         var ticks := int(elapsed / GameClock.TICK_INTERVAL)
         if ticks > 0:
-            res[Resources.WOOD] += WOOD_PER_TICK * ticks
-            res[Resources.FOOD] += FOOD_PER_TICK * ticks
-            res[Resources.LOYLY] += LOYLY_PER_TICK * ticks
+            var mult := Prestige.production_bonus(int(res.get(Resources.PRESTIGE, 0)))
+            res[Resources.WOOD] += WOOD_PER_TICK * ticks * mult
+            res[Resources.FOOD] += FOOD_PER_TICK * ticks * mult
+            res[Resources.LOYLY] += LOYLY_PER_TICK * ticks * mult
     last_timestamp = now
     save()
 
 func load() -> void:
     load_state()
+
+func prestige() -> void:
+    res[Resources.PRESTIGE] += 1
+    for k in res.keys():
+        if k != Resources.PRESTIGE:
+            res[k] = 0.0
+    production_modifier = 1.0
+    modifier_ticks_remaining = 0
+    save()
 
