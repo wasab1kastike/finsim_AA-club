@@ -4,6 +4,7 @@ signal tile_clicked(qr: Vector2i)
 
 @onready var hex_map: TileMap = $HexMap
 @onready var units_root: Node2D = $Units
+@onready var season_tint: CanvasModulate = $SeasonTint
 
 var selected_unit: Node = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
@@ -49,6 +50,10 @@ func spawn_unit_at_center() -> void:
 func reveal_all() -> void:
     hex_map.reveal_all()
     GameState.save()
-
+    
 func center_on(qr: Vector2i) -> void:
     position = -hex_map.axial_to_world(qr)
+
+func set_season(season: String) -> void:
+    season_tint.set_season(season)
+
