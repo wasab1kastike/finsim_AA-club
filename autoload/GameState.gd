@@ -28,6 +28,7 @@ var last_timestamp: int = 0
 
 var tiles: Dictionary = {}
 var units: Array = []
+var tutorial_done: bool = false
 
 const SAVE_PATH := "user://save.json"
 
@@ -64,6 +65,7 @@ func save() -> void:
         "last_timestamp": last_timestamp,
         "tiles": tile_data,
         "units": unit_data,
+        "tutorial_done": tutorial_done,
     }
     var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
     if file:
@@ -85,6 +87,7 @@ func load_state() -> void:
         last_timestamp = Time.get_unix_time_from_system()
         return
     res = data.get("res", res)
+    tutorial_done = bool(data.get("tutorial_done", false))
     last_timestamp = int(data.get("last_timestamp", Time.get_unix_time_from_system()))
     tiles.clear()
     var tile_data: Dictionary = data.get("tiles", {})
