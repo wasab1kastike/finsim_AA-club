@@ -1,0 +1,5 @@
+[gd_resource type="Resource" script="res://scripts/events/ColdSnap.gd"]
+
+[resource]
+name = "Cold Snap"
+description = "Early winter bites."

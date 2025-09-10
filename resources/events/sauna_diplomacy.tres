@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script="res://scripts/events/Event.gd"]
+
+[resource]
+name = "Sauna Diplomacy"
+description = "Host a delegation in the sauna."
+effects = {"influence": 10}
+costs = {"wood": 50, "steam": 1}
+cooldown = 0.0
