@@ -10,7 +10,7 @@ See [codex](codex.md) for detailed design notes, including the hex-grid combat m
 - Finnish drunken warriors automatically battle enemies on a hex-grid battlefield and build new saunas.
 
 ## Status
-Vertical slice WIP: 3 buildings, 3 units, hex-grid combat, 1 neighbor AI, saunakunnia stub, events.
+Vertical slice WIP: 3 buildings, 1 unit, hex-grid combat, 1 neighbor AI, saunakunnia stub, events.
 
 ## Tech
 - Godot 4.x (GDScript), Desktop + Web
@@ -36,7 +36,7 @@ Vertical slice WIP: 3 buildings, 3 units, hex-grid combat, 1 neighbor AI, saunak
 4. To export a standalone build, use the included **Windows Desktop** export preset.
 
 ## Runbook
-Open the project in Godot 4.x (Standard). In Project Settings, confirm the Main Scene is `scenes/ui/Main.tscn` and AutoLoads include `GameClock` (`res://autoload/GameClock.gd`) and `GameState` (`res://autoload/GameState.gd`). Press ▶ to run, then use the Save/Load demo to test persistence.
+Open the project in Godot 4.x (Standard). In Project Settings, confirm the Main Scene is `scenes/ui/Main.tscn` and AutoLoads include `GameClock` (`res://autoload/GameClock.gd`), `GameState` (`res://autoload/GameState.gd`), `RNG` (`res://autoload/RNG.gd`), and `EventManager` (`res://autoload/EventManager.gd`). Press ▶ to run, then use the Save/Load demo to test persistence.
 
 ## Testing
 Run automated tests in headless mode:
