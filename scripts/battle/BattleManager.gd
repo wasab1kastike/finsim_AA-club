@@ -10,7 +10,7 @@ var units_root: Node2D = null
 func _ready() -> void:
     world = get_parent()
     if world:
-        hex_map = world.get_node("HexMap")
+        hex_map = world.get_node("TileMap")
         units_root = world.get_node("Units")
 
 func process_tick() -> void:
