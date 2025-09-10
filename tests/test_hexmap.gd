@@ -3,13 +3,18 @@ extends Node
 const HexMapBase = preload("res://scripts/world/HexMap.gd")
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
-class DummyHexMap extends HexMapBase:
+class DummyHexMap:
+    extends HexMapBase
+
     func _init():
         tile_set = TileSet.new()
+
     func _set_tile(coord: Vector2i) -> void:
         pass
+
     func _setup_tileset() -> void:
         pass
+
     func reveal_area(center: Vector2i, radius: int = 2) -> void:
         for coord in GameState.tiles.keys():
             if HexUtils.axial_distance(coord, center) <= radius:
