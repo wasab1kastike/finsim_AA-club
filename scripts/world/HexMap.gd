@@ -13,9 +13,9 @@ var _fog_source_id := -1
 func _ready() -> void:
     _setup_tileset()
     if GameState.tiles.is_empty():
-        _generate_tiles()
+        _generate_map()
     else:
-        _load_tiles()
+        _draw_from_saved(GameState.tiles)
     reveal_area(Vector2i.ZERO, 2)
 
 func _setup_tileset() -> void:
@@ -42,7 +42,7 @@ func _setup_tileset() -> void:
         else:
             _terrain_sources[name] = sid
 
-func _generate_tiles() -> void:
+func _generate_map() -> void:
     var rng := RandomNumberGenerator.new()
     for q in range(-radius, radius + 1):
         for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
@@ -55,14 +55,14 @@ func _generate_tiles() -> void:
             }
             _set_tile(Vector2i(q, r))
 
-func _load_tiles() -> void:
-    for coord in GameState.tiles.keys():
+func _draw_from_saved(tiles: Dictionary) -> void:
+    for coord in tiles.keys():
         _set_tile(coord)
 
 func _set_tile(coord: Vector2i) -> void:
-    var data := GameState.tiles.get(coord, {})
-    var terrain := data.get("terrain", "forest")
-    var source_id := _terrain_sources.get(terrain, _terrain_sources.get("forest"))
+    var data: Dictionary = GameState.tiles.get(coord, {})
+    var terrain: String = data.get("terrain", "forest")
+    var source_id: int = _terrain_sources.get(terrain, _terrain_sources.get("forest"))
     set_cell(0, coord, source_id, Vector2i.ZERO)
     if data.get("explored", false):
         set_cell(1, coord, -1, Vector2i.ZERO)
@@ -83,7 +83,7 @@ func _unhandled_input(event: InputEvent) -> void:
         var local_pos := to_local(event.position)
         var cell := local_to_map(local_pos)
         if GameState.tiles.has(cell):
-            var terrain := GameState.tiles[cell]["terrain"]
+            var terrain: String = GameState.tiles[cell]["terrain"]
             print("Hex %d,%d terrain %s" % [cell.x, cell.y, terrain])
             emit_signal("tile_clicked", cell)
 

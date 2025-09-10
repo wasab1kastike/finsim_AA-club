@@ -1,26 +1,19 @@
 extends Node
 
-var HexMapBase = preload("res://scripts/world/HexMap.gd")
-
-class DummyHexMap extends HexMapBase:
-    func _init():
-        tile_set = TileSet.new()
-    func _set_tile(coord: Vector2i) -> void:
-        pass
-    func _setup_tileset() -> void:
-        pass
-
 func _reset_tiles() -> void:
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
     gs.tiles.clear()
 
-func test_generate_tiles(res) -> void:
+func test_generate_map(res) -> void:
     _reset_tiles()
-    var map = DummyHexMap.new()
+    var HexMap = load("res://scripts/world/HexMap.gd")
+    var map = HexMap.new()
+    map.add_layer(1)
     map.radius = 2
     map.terrain_weights = {"forest": 1.0}
-    map._generate_tiles()
+    map._setup_tileset()
+    map._generate_map()
     var gs = Engine.get_main_loop().root.get_node("GameState")
     if gs.tiles.size() != 19:
         res.fail("Expected 19 tiles, got %d" % gs.tiles.size())
@@ -32,10 +25,13 @@ func test_generate_tiles(res) -> void:
 
 func test_reveal_area(res) -> void:
     _reset_tiles()
-    var map = DummyHexMap.new()
+    var HexMap = load("res://scripts/world/HexMap.gd")
+    var map = HexMap.new()
+    map.add_layer(1)
     map.radius = 2
     map.terrain_weights = {"forest": 1.0}
-    map._generate_tiles()
+    map._setup_tileset()
+    map._generate_map()
     map.reveal_area(Vector2i.ZERO, 1)
     var gs = Engine.get_main_loop().root.get_node("GameState")
     var explored: Array[Vector2i] = []
@@ -57,3 +53,28 @@ func test_reveal_area(res) -> void:
         if coord not in expected and gs.tiles[coord]["explored"]:
             res.fail("Tile %s explored outside radius" % coord)
             break
+
+func _remove_save(gs) -> void:
+    if FileAccess.file_exists(gs.SAVE_PATH):
+        DirAccess.remove_absolute(gs.SAVE_PATH)
+
+func test_tiles_persist_across_save(res) -> void:
+    _reset_tiles()
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    var HexMap = load("res://scripts/world/HexMap.gd")
+    var map = HexMap.new()
+    map.add_layer(1)
+    map.radius = 1
+    map.terrain_weights = {"forest": 1.0}
+    map._setup_tileset()
+    map._generate_map()
+    _remove_save(gs)
+    gs.save()
+    var before := JSON.stringify(gs.tiles)
+    gs.tiles.clear()
+    gs.load()
+    var after := JSON.stringify(gs.tiles)
+    if before != after:
+        res.fail("tiles did not persist across save/load")
+    _remove_save(gs)

@@ -1,5 +1,7 @@
 extends Object
 
+const HexMap = preload("res://scripts/world/HexMap.gd")
+
 static func bfs_path(start: Vector2i, goal: Vector2i, passable: Callable) -> Array[Vector2i]:
     if start == goal:
         return [start]
