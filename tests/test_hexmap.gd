@@ -5,7 +5,7 @@ func _reset_tiles() -> void:
     var gs = tree.root.get_node("GameState")
     gs.tiles.clear()
 
-func test_generate_map(res) -> void:
+func test_generate_tiles(res) -> void:
     _reset_tiles()
     var HexMap = load("res://scripts/world/HexMap.gd")
     var map = HexMap.new()
@@ -13,7 +13,7 @@ func test_generate_map(res) -> void:
     map.radius = 2
     map.terrain_weights = {"forest": 1.0}
     map._setup_tileset()
-    map._generate_map()
+    map._generate_tiles()
     var gs = Engine.get_main_loop().root.get_node("GameState")
     if gs.tiles.size() != 19:
         res.fail("Expected 19 tiles, got %d" % gs.tiles.size())
@@ -31,7 +31,7 @@ func test_reveal_area(res) -> void:
     map.radius = 2
     map.terrain_weights = {"forest": 1.0}
     map._setup_tileset()
-    map._generate_map()
+    map._generate_tiles()
     map.reveal_area(Vector2i.ZERO, 1)
     var gs = Engine.get_main_loop().root.get_node("GameState")
     var explored: Array[Vector2i] = []
@@ -68,7 +68,7 @@ func test_tiles_persist_across_save(res) -> void:
     map.radius = 1
     map.terrain_weights = {"forest": 1.0}
     map._setup_tileset()
-    map._generate_map()
+    map._generate_tiles()
     _remove_save(gs)
     gs.save()
     var before := JSON.stringify(gs.tiles)

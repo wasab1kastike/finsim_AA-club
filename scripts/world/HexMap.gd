@@ -13,10 +13,10 @@ var _fog_source_id := -1
 func _ready() -> void:
     _setup_tileset()
     if GameState.tiles.is_empty():
-        _generate_map()
+        _generate_tiles()
+        reveal_area(Vector2i.ZERO, 2)
     else:
-        _draw_from_saved(GameState.tiles)
-    reveal_area(Vector2i.ZERO, 2)
+        _load_tiles()
 
 func _setup_tileset() -> void:
     if tile_set == null:
@@ -42,7 +42,7 @@ func _setup_tileset() -> void:
         else:
             _terrain_sources[name] = sid
 
-func _generate_map() -> void:
+func _generate_tiles() -> void:
     var rng := RandomNumberGenerator.new()
     for q in range(-radius, radius + 1):
         for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
@@ -55,8 +55,8 @@ func _generate_map() -> void:
             }
             _set_tile(Vector2i(q, r))
 
-func _draw_from_saved(tiles: Dictionary) -> void:
-    for coord in tiles.keys():
+func _load_tiles() -> void:
+    for coord in GameState.tiles.keys():
         _set_tile(coord)
 
 func _set_tile(coord: Vector2i) -> void:
