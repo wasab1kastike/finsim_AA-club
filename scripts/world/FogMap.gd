@@ -1,4 +1,4 @@
-extends TileMapLayer
+extends RefCounted
 class_name FogMap
 
 ## Name used to identify the fog source within the TileSet.
@@ -6,8 +6,7 @@ const FOG_SOURCE_NAME := "fog"
 
 var source_id: int = -1
 
-func _ready() -> void:
-    var tile_map: TileMap = get_parent() as TileMap
+func _init(tile_map: TileMap) -> void:
     var tset: TileSet = tile_map.tile_set
     if tset == null:
         tset = TileSet.new()
