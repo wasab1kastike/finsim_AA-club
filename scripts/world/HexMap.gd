@@ -50,17 +50,20 @@ func _ready() -> void:
 func _setup_layers() -> void:
     terrain_layer = grid.get_layer_by_name("Terrain")
     if terrain_layer == -1:
-        terrain_layer = grid.add_layer()
+        grid.add_layer(-1)
+        terrain_layer = grid.get_layers_count() - 1
         grid.set_layer_name(terrain_layer, "Terrain")
     grid.set_layer_z_index(terrain_layer, 0)
     buildings_layer = grid.get_layer_by_name("Buildings")
     if buildings_layer == -1:
-        buildings_layer = grid.add_layer()
+        grid.add_layer(-1)
+        buildings_layer = grid.get_layers_count() - 1
         grid.set_layer_name(buildings_layer, "Buildings")
     grid.set_layer_z_index(buildings_layer, 2)
     fog_layer = grid.get_layer_by_name("Fog")
     if fog_layer == -1:
-        fog_layer = grid.add_layer()
+        grid.add_layer(-1)
+        fog_layer = grid.get_layers_count() - 1
         grid.set_layer_name(fog_layer, "Fog")
     grid.set_layer_z_index(fog_layer, 1)
     fog = FogMap.new(grid, fog_layer)
