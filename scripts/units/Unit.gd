@@ -1,8 +1,8 @@
 extends Node2D
 
-const UnitData = preload("res://scripts/units/UnitData.gd")
+const UnitDataBase = preload("res://scripts/units/UnitData.gd")
 
-@export var unit_data: UnitData
+@export var unit_data: UnitDataBase
 var id: String = str(Time.get_unix_time_from_system())
 var type := "kiuasvartija"
 var hp := 100
@@ -15,7 +15,7 @@ func _ready() -> void:
     if unit_data:
         apply_data(unit_data)
 
-func apply_data(d: UnitData) -> void:
+func apply_data(d: UnitDataBase) -> void:
     unit_data = d
     if unit_data:
         type = unit_data.name
@@ -38,7 +38,7 @@ func from_dict(data: Dictionary) -> void:
     pos_qr = data.get("pos_qr", pos_qr)
     var path: String = data.get("data_path", "")
     if path != "":
-        var ud: UnitData = load(path) as UnitData
+        var ud: UnitDataBase = load(path) as UnitDataBase
         if ud:
             apply_data(ud)
     hp = data.get("hp", hp)

@@ -20,12 +20,12 @@ signal building_selected
 @onready var info_box: InfoBox = $InfoBox
 
 var _policies: Array[Policy] = []
-var _events: Array[GameEvent] = []
+var _events: Array[GameEventBase] = []
 var _buildings_info: Array[Building] = []
 
 const Building = preload("res://scripts/core/Building.gd")
 const Policy = preload("res://scripts/policies/Policy.gd")
-const GameEvent = preload("res://scripts/events/Event.gd")
+const GameEventBase = preload("res://scripts/events/Event.gd")
 
 func _ready() -> void:
     start_button.pressed.connect(func(): start_pressed.emit())
@@ -78,7 +78,7 @@ func _on_policy_pressed() -> void:
 func _on_event_pressed() -> void:
     var idx := event_selector.get_selected()
     if idx >= 0 and idx < _events.size():
-        var ev: GameEvent = _events[idx]
+        var ev: GameEventBase = _events[idx]
         if ev.can_trigger():
             EventManager.start_event(ev)
             event_label.text = "%s triggered" % ev.name
@@ -122,6 +122,6 @@ func _populate_events() -> void:
     event_selector.clear()
     for file in DirAccess.get_files_at("res://resources/events"):
         if file.get_extension() == "tres":
-            var e: GameEvent = load("res://resources/events/%s" % file)
+            var e: GameEventBase = load("res://resources/events/%s" % file)
             event_selector.add_item(e.name)
             _events.append(e)

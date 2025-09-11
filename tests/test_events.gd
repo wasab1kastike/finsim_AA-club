@@ -1,10 +1,10 @@
 extends Node
 const Resources = preload("res://scripts/core/Resources.gd")
-const GameEvent = preload("res://scripts/events/Event.gd")
 const ColdSnapEvent = preload("res://scripts/events/ColdSnap.gd")
+const GameEventBase = preload("res://scripts/events/Event.gd")
 
 class DummyEvent:
-    extends GameEvent
+    extends GameEventBase
 
     func apply() -> bool:
         return false
@@ -22,11 +22,11 @@ func test_branching_event(res) -> void:
     clock.set_process(false)
     gs.res[Resources.HALOT] = 20.0
     gs.res[Resources.MAKKARA] = 0.0
-    var ev: GameEvent = load("res://resources/events/merchant.tres")
+    var ev: GameEventBase = load("res://resources/events/merchant.tres")
     em.start_event(ev)
     em._on_choice_selected(ev.choices[0])
     _cleanup_overlays(tree)
-    var follow_up: GameEvent = em.current_event
+    var follow_up: GameEventBase = em.current_event
     if follow_up == null or follow_up.name != "Merchant Returns":
         res.fail("follow-up event not started")
         return
@@ -78,7 +78,7 @@ func test_event_fails_prerequisites(res) -> void:
     var em = tree.root.get_node("EventManager")
     var orig = gs.res.duplicate()
     gs.res[Resources.HALOT] = 0.0
-    var ev: GameEvent = load("res://resources/events/merchant.tres")
+    var ev: GameEventBase = load("res://resources/events/merchant.tres")
     if ev.can_trigger():
         res.fail("event unexpectedly triggerable")
         gs.res = orig
@@ -101,7 +101,7 @@ func test_unaffordable_choice_keeps_resources(res) -> void:
     clock.set_process(false)
     var orig = gs.res.duplicate()
     gs.res[Resources.HALOT] = 0.0
-    var ev: GameEvent = load("res://resources/events/merchant.tres")
+    var ev: GameEventBase = load("res://resources/events/merchant.tres")
     em.start_event(ev)
     var before := gs.res.duplicate()
     em._on_choice_selected(ev.choices[0])

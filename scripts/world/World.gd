@@ -15,6 +15,7 @@ const AutoResolve = preload("res://scripts/battle/AutoResolve.gd")
 const Resources = preload("res://scripts/core/Resources.gd")
 
 const RaiderManager = preload("res://scripts/world/RaiderManager.gd")
+const UnitDataBase = preload("res://scripts/units/UnitData.gd")
 
 var raider_manager: RaiderManager
 
@@ -59,7 +60,7 @@ func _on_game_tick() -> void:
 
 func spawn_unit_at_center() -> void:
     var u: Node = unit_scene.instantiate()
-    var data_res: UnitData = load("res://resources/units/saunoja.tres")
+    var data_res: UnitDataBase = load("res://resources/units/saunoja.tres")
     if data_res:
         u.apply_data(data_res)
     u.id = UUID.new_uuid_string()
