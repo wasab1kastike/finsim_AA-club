@@ -6,7 +6,29 @@ class DummyHexMap:
     extends HexMapBase
 
     func _init():
-        tile_set = TileSet.new()
+        grid = TileMap.new()
+        grid.name = "TileMap"
+        grid.tile_set = TileSet.new()
+        grid.tile_set.tile_size = TILE_SIZE
+        grid.tile_set.tile_shape = TileSet.TILE_SHAPE_HEXAGON
+        add_child(grid)
+
+        var terrain_layer := TileMapLayer.new()
+        terrain_layer.name = "Terrain"
+        grid.add_child(terrain_layer)
+
+        var buildings_layer := TileMapLayer.new()
+        buildings_layer.name = "Buildings"
+        grid.add_child(buildings_layer)
+
+        var fog_layer := TileMapLayer.new()
+        fog_layer.name = "Fog"
+        grid.add_child(fog_layer)
+
+        self.grid = grid
+        self.terrain = terrain_layer
+        self.buildings = buildings_layer
+        self.fog = fog_layer
 
     func _set_tile(coord: Vector2i) -> void:
         pass
