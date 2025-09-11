@@ -1,17 +1,17 @@
 extends Node
+class_name RaiderManager
 
-
-var hex_map: HexMap
-var units_root: Node2D
-var unit_scene: PackedScene
+var _hex: HexMap
+var _units_root: Node2D
+var _unit_scene: PackedScene
 
 var raiders: Array = []
 var _tick_counter: int = 0
 
-func setup(hmap: HexMap, units: Node2D, scene: PackedScene) -> void:
-    hex_map = hmap
-    units_root = units
-    unit_scene = scene
+func setup(hex_map: HexMap, units_root: Node2D, unit_scene: PackedScene) -> void:
+    _hex = hex_map
+    _units_root = units_root
+    _unit_scene = unit_scene
 
 func process_tick() -> void:
     _tick_counter += 1
@@ -26,13 +26,13 @@ func _spawn_raiders() -> void:
             return GameState.tiles.has(p) and GameState.tiles[p].get("terrain") != "lake"
         )
         if path.size() >= 2:
-            var r: Node = unit_scene.instantiate()
+            var r: Node = _unit_scene.instantiate()
             r.pos_qr = coord
-            r.position = hex_map.axial_to_world(coord)
+            r.position = _hex.axial_to_world(coord)
             var vis = r.get_node_or_null("Visual")
             if vis:
                 vis.color = Color(0,0,0)
-            units_root.add_child(r)
+            _units_root.add_child(r)
             raiders.append({"node": r, "path": path, "step": 0})
 
 func _move_raiders() -> void:
@@ -45,7 +45,7 @@ func _move_raiders() -> void:
             step += 1
             var next: Vector2i = path[step]
             node.pos_qr = next
-            node.position = hex_map.axial_to_world(next)
+            node.position = _hex.axial_to_world(next)
             if step >= path.size() - 1:
                 _raider_reached(node)
                 node.queue_free()
