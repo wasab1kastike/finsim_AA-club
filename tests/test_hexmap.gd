@@ -14,6 +14,16 @@ class DummyHexMap:
     func _setup_tileset() -> void:
         pass
 
+    func _setup_layers() -> void:
+        pass
+
+    func _ready() -> void:
+        _ensure_singletons()
+        if GameState.tiles.is_empty():
+            _generate_tiles()
+        else:
+            _draw_from_saved(GameState.tiles)
+
     func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
         for coord in GameState.tiles.keys():
             if HexUtils.axial_distance(coord, center) <= reveal_radius:

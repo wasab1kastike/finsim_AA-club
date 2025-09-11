@@ -12,9 +12,9 @@ signal tile_clicked(qr:Vector2i)
 
 
 @onready var grid: TileMap = $TileMap
-var terrain_layer: int = -1
-var buildings_layer: int = -1
-var fog_layer: int = -1
+@onready var terrain_layer: TileMapLayer = $TileMap/Terrain
+@onready var buildings_layer: TileMapLayer = $TileMap/Buildings
+@onready var fog_layer: TileMapLayer = $TileMap/Fog
 var fog: FogMap
 
 var _terrain_sources: Dictionary = {}
@@ -42,30 +42,11 @@ func _ready() -> void:
     else:
         _draw_from_saved(_state.tiles)
     reveal_area(Vector2i.ZERO, 2)
-    if fog != null:
-        for coord in _state.tiles.keys():
-            if HexUtils.axial_distance(coord, Vector2i.ZERO) <= 2:
-                fog.clear_fog(coord)
 
 func _setup_layers() -> void:
-    terrain_layer = grid.get_layer_by_name("Terrain")
-    if terrain_layer == -1:
-        grid.add_layer(-1)
-        terrain_layer = grid.get_layers_count() - 1
-        grid.set_layer_name(terrain_layer, "Terrain")
-    grid.set_layer_z_index(terrain_layer, 0)
-    buildings_layer = grid.get_layer_by_name("Buildings")
-    if buildings_layer == -1:
-        grid.add_layer(-1)
-        buildings_layer = grid.get_layers_count() - 1
-        grid.set_layer_name(buildings_layer, "Buildings")
-    grid.set_layer_z_index(buildings_layer, 2)
-    fog_layer = grid.get_layer_by_name("Fog")
-    if fog_layer == -1:
-        grid.add_layer(-1)
-        fog_layer = grid.get_layers_count() - 1
-        grid.set_layer_name(fog_layer, "Fog")
-    grid.set_layer_z_index(fog_layer, 1)
+    terrain_layer.z_index = 0
+    buildings_layer.z_index = 2
+    fog_layer.z_index = 1
     fog = FogMap.new(grid, fog_layer)
 
 func _setup_tileset() -> void:
@@ -160,12 +141,12 @@ func _set_tile(coord: Vector2i) -> void:
     var data: Dictionary = _state.tiles.get(coord, {})
     var terrain_name: String = data.get("terrain", "forest")
     var source_id: int = _terrain_sources.get(terrain_name, _terrain_sources.get("forest"))
-    grid.set_cell(terrain_layer, coord, source_id)
+    terrain_layer.set_cell(coord, source_id)
     var bname: String = data.get("building", "")
     if bname != "" and _building_sources.has(bname):
-        grid.set_cell(buildings_layer, coord, _building_sources[bname])
+        buildings_layer.set_cell(coord, _building_sources[bname])
     else:
-        grid.erase_cell(buildings_layer, coord)
+        buildings_layer.erase_cell(coord)
     var marker: Node2D = _markers.get(coord, null)
     if data.get("hostile", false):
         if marker == null:
