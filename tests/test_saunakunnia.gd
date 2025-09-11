@@ -20,6 +20,6 @@ func test_saunakunnia_bonus(res) -> void:
     gs.res[Resources.HALOT] = 0.0
     gs.res[Resources.SAUNAKUNNIA] = 2.0
     gs._on_tick()
-    var expected := gs.HALOT_PER_TICK * (1.0 + 0.2)
+    var expected: float = gs.HALOT_PER_TICK * (1.0 + 0.2)
     if abs(gs.res[Resources.HALOT] - expected) > 0.001:
         res.fail("saunakunnia bonus not applied")

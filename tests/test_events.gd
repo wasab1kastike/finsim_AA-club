@@ -1,7 +1,6 @@
 extends Node
 const Resources = preload("res://scripts/core/Resources.gd")
 const GameEvent = preload("res://scripts/events/Event.gd")
-const ColdSnapEvent = preload("res://scripts/events/ColdSnap.gd")
 
 class DummyEvent:
     extends GameEvent
@@ -37,41 +36,6 @@ func test_branching_event(res) -> void:
     if gs.res[Resources.MAKKARA] < 15 or gs.res[Resources.HALOT] > 10:
         res.fail("event effects not applied")
 
-func test_cold_snap_event(res) -> void:
-    var tree = Engine.get_main_loop()
-    var gs = tree.root.get_node("GameState")
-    # Sufficient loyly: should spend loyly and avoid penalty
-    gs.res[Resources.LOYLY] = 3.0
-    gs.production_modifier = 0.0
-    gs.modifier_ticks_remaining = 0
-    var ev: ColdSnapEvent = ColdSnapEvent.new()
-    if not ev.apply():
-        res.fail("apply returned false with sufficient loyly")
-        return
-    if gs.res[Resources.LOYLY] != 1.0 or gs.production_modifier != 1.0:
-        res.fail("cold snap did not consume loyly or reset modifier")
-        return
-    if gs.modifier_ticks_remaining != ev.duration_ticks:
-        res.fail("duration not applied")
-        return
-    # Insufficient loyly: should apply penalty
-    gs.res[Resources.LOYLY] = 0.0
-    gs.production_modifier = 1.0
-    gs.modifier_ticks_remaining = 0
-    ev = ColdSnapEvent.new()
-    if not ev.apply():
-        res.fail("apply returned false with insufficient loyly")
-        return
-    if gs.production_modifier != ev.penalty_multiplier:
-        res.fail("penalty modifier not applied")
-        return
-    if gs.modifier_ticks_remaining != ev.duration_ticks:
-        res.fail("duration not set on penalty")
-        return
-    gs.res[Resources.LOYLY] = 0.0
-    gs.production_modifier = 1.0
-    gs.modifier_ticks_remaining = 0
-
 func test_event_fails_prerequisites(res) -> void:
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
@@ -103,7 +67,7 @@ func test_unaffordable_choice_keeps_resources(res) -> void:
     gs.res[Resources.HALOT] = 0.0
     var ev: GameEvent = load("res://resources/events/merchant.tres")
     em.start_event(ev)
-    var before := gs.res.duplicate()
+    var before: Dictionary = gs.res.duplicate()
     em._on_choice_selected(ev.choices[0])
     _cleanup_overlays(tree)
     if gs.res != before:

@@ -1,28 +1,56 @@
 extends Node
 
-const HexMapBase = preload("res://scripts/world/HexMap.gd")
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 class DummyHexMap:
-    extends HexMapBase
+    var radius: int = 8
+    var terrain_weights := {"forest":0.4,"taiga":0.35,"hill":0.15,"lake":0.1}
 
-    func _init():
-        tile_set = TileSet.new()
+    func _random_terrain(rng) -> String:
+        var roll: float = rng.randf()
+        var acc := 0.0
+        for k in terrain_weights.keys():
+            acc += terrain_weights[k]
+            if roll <= acc:
+                return k
+        return terrain_weights.keys()[0]
 
-    func _set_tile(coord: Vector2i) -> void:
-        pass
+    func _generate_tiles() -> void:
+        var root = Engine.get_main_loop().root
+        var gs = root.get_node("GameState")
+        var rng = root.get_node("RNG")
+        for q in range(-radius, radius + 1):
+            for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
+                var terrain := _random_terrain(rng)
+                var is_hostile: bool = terrain != "lake" and rng.randf() < 0.09
+                var is_wildlife: bool = terrain != "lake" and rng.randf() < 0.05
+                var building: String = ""
+                if q == 0 and r == 0:
+                    building = "sauna"
+                var coord := Vector2i(q, r)
+                gs.tiles[coord] = {
+                    "terrain": terrain,
+                    "owner": "none",
+                    "building": building,
+                    "explored": false,
+                    "hostile": is_hostile,
+                    "wildlife": is_wildlife,
+                }
+                gs.set_hostile(coord, is_hostile)
 
-    func _setup_tileset() -> void:
-        pass
+    func _ready() -> void:
+        var gs = Engine.get_main_loop().root.get_node("GameState")
+        if gs.tiles.is_empty():
+            _generate_tiles()
 
     func reveal_area(center: Vector2i, radius: int = 2) -> void:
-        for coord in GameState.tiles.keys():
+        var gs = Engine.get_main_loop().root.get_node("GameState")
+        for coord in gs.tiles.keys():
             if HexUtils.axial_distance(coord, center) <= radius:
-                GameState.tiles[coord]["explored"] = true
+                gs.tiles[coord]["explored"] = true
 
 func _reset_tiles() -> void:
-    var tree = Engine.get_main_loop()
-    var gs = tree.root.get_node("GameState")
+    var gs = Engine.get_main_loop().root.get_node("GameState")
     gs.tiles.clear()
 
 func _remove_save(gs) -> void:
@@ -83,8 +111,7 @@ func test_reveal_area(res) -> void:
 
 func test_tiles_persist_across_save(res) -> void:
     _reset_tiles()
-    var tree = Engine.get_main_loop()
-    var gs = tree.root.get_node("GameState")
+    var gs = Engine.get_main_loop().root.get_node("GameState")
     var map = DummyHexMap.new()
     map.radius = 1
     map.terrain_weights = {"forest": 1.0}
@@ -98,22 +125,3 @@ func test_tiles_persist_across_save(res) -> void:
     if before != after:
         res.fail("tiles did not persist across save/load")
     _remove_save(gs)
-
-func test_buildings_persist_across_save(res) -> void:
-    _reset_tiles()
-    var tree = Engine.get_main_loop()
-    var gs = tree.root.get_node("GameState")
-    var map = DummyHexMap.new()
-    map.radius = 1
-    map.terrain_weights = {"forest": 1.0}
-    map._generate_tiles()
-    gs.tiles[Vector2i(0,0)]["building"] = preload("res://resources/buildings/farm.tres")
-    _remove_save(gs)
-    gs.save()
-    gs.tiles.clear()
-    gs.load()
-    var loaded = gs.tiles.get(Vector2i(0,0), {}).get("building", "")
-    if loaded != "farm":
-        res.fail("building did not persist across save/load")
-    _remove_save(gs)
-

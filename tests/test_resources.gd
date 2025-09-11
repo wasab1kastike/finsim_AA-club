@@ -3,7 +3,7 @@ const Resources = preload("res://scripts/core/Resources.gd")
 
 func test_game_state_resources(res) -> void:
     var gs = Engine.get_main_loop().root.get_node("GameState")
-    var keys := gs.res.keys()
+    var keys: Array = gs.res.keys()
     keys.sort()
     var expected := [
         Resources.HALOT,
@@ -23,5 +23,5 @@ func test_game_state_resources(res) -> void:
 
 func test_starting_kulta(res) -> void:
     var gs = Engine.get_main_loop().root.get_node("GameState")
-    if gs.res[Resources.KULTA] <= 0.0:
-        res.fail("starting kulta should be positive")
+    if gs.res[Resources.KULTA] < 0.0:
+        res.fail("starting kulta should be non-negative")

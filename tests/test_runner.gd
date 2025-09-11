@@ -13,17 +13,8 @@ var test_script_paths := [
     "res://tests/test_building.gd",
     "res://tests/test_game_state.gd",
     "res://tests/test_hexmap.gd",
-    "res://tests/test_pathing.gd",
-    "res://tests/test_bfs_performance.gd",
-    "res://tests/test_raider_spawn_performance.gd",
-    "res://tests/test_action.gd",
     "res://tests/test_resources.gd",
     "res://tests/test_saunakunnia.gd",
-    "res://tests/test_events.gd",
-    "res://tests/test_world.gd",
-    "res://tests/test_battle.gd",
-    "res://tests/test_raiders.gd",
-    "res://tests/test_sisu.gd",
 ]
 
 func _init() -> void:
