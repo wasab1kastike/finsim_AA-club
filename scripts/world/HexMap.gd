@@ -1,6 +1,10 @@
 extends Node2D
 class_name HexMap
 
+## Default hex tile size. Must stay in sync with TileMap.cell_tile_size
+## and TileSet.tile_size so tests and runtime use the same dimensions.
+const TILE_SIZE := Vector2i(96, 84)
+
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
 const FogMap = preload("res://scripts/world/FogMap.gd")
 
@@ -48,7 +52,9 @@ func _setup_tileset() -> void:
     if grid.tile_set == null:
         grid.tile_set = TileSet.new()
         grid.tile_set.tile_shape = TileSet.TILE_SHAPE_HEXAGON
-        var size := Vector2i(64, 64)
+        grid.tile_set.tile_size = TILE_SIZE
+        grid.cell_tile_size = TILE_SIZE
+        var size := TILE_SIZE
         var colors := {
             "forest": Color(0.1,0.5,0.1),
             "taiga": Color(0.2,0.6,0.2),
