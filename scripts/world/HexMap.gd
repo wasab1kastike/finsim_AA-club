@@ -21,7 +21,7 @@ var _state: Node
 var _rng: Node
 
 func _ensure_singletons() -> void:
-    var root: Node = Engine.get_main_loop().root
+    var root: Node = get_tree().root
     if _state == null:
         _state = root.get_node("GameState")
     if _rng == null:
