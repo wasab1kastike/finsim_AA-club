@@ -25,10 +25,14 @@ func spend() -> bool:
     return true
 
 func _heal_units() -> void:
+    var units_root: Node = null
+    if world:
+        units_root = world.get_node_or_null("Units")
+    if units_root == null:
+        return
     var nodes_by_id: Dictionary = {}
-    if world and world.has_node("Units"):
-        for child in world.units_root.get_children():
-            nodes_by_id[child.id] = child
+    for child in units_root.get_children():
+        nodes_by_id[child.id] = child
     for i in range(GameState.units.size()):
         var data: Dictionary = GameState.units[i]
         var uid: String = data.get("id", "")

@@ -52,3 +52,30 @@ func test_spend_sisu_heals(res) -> void:
         _cleanup(world, sisu, gs, orig)
         return
     _cleanup(world, sisu, gs, orig)
+
+func test_spend_sisu_without_units(res) -> void:
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    _remove_save(gs)
+    var orig = gs.res.duplicate()
+    gs.units.clear()
+    gs.tiles.clear()
+    gs.res[Resources.SISU] = 5.0
+    var world = Node.new()
+    var SisuSystem = load("res://scripts/systems/SisuSystem.gd")
+    var sisu = SisuSystem.new()
+    sisu.world = world
+    tree.root.add_child(sisu)
+    if not sisu.spend():
+        res.fail("Spend failed")
+        _cleanup(world, sisu, gs, orig)
+        return
+    if gs.res[Resources.SISU] != 0.0:
+        res.fail("Sisu not deducted")
+        _cleanup(world, sisu, gs, orig)
+        return
+    if sisu.cooldown_ticks_remaining <= 0:
+        res.fail("Cooldown not active")
+        _cleanup(world, sisu, gs, orig)
+        return
+    _cleanup(world, sisu, gs, orig)
