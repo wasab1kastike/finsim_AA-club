@@ -50,7 +50,7 @@ static func resolve(friendly: Array, enemies: Array, terrain: String) -> Diction
         var ehp := 0
         for e in enemies:
             ehp += e.get("hp", 0)
-        winner = fhp >= ehp ? "friendly" : "enemy"
+        winner = "friendly" if fhp >= ehp else "enemy"
     return {
         "friendly": friendly,
         "enemies": enemies,
