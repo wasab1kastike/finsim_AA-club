@@ -12,9 +12,10 @@ signal tile_clicked(qr:Vector2i)
 
 
 @onready var grid: TileMap = $TileMap
-@onready var terrain: TileMapLayer = $TileMap/Terrain
-@onready var buildings: TileMapLayer = $TileMap/Buildings
-@onready var fog: FogMap = $TileMap/Fog
+var terrain_layer: int = -1
+var buildings_layer: int = -1
+var fog_layer: int = -1
+var fog: FogMap
 
 var _terrain_sources: Dictionary = {}
 var _building_sources: Dictionary = {}
@@ -32,6 +33,7 @@ func _ensure_singletons() -> void:
 
 func _ready() -> void:
     _setup_tileset()
+    _setup_layers()
     marker_root = Node2D.new()
     add_child(marker_root)
     _ensure_singletons()
@@ -43,7 +45,25 @@ func _ready() -> void:
     if fog != null:
         for coord in _state.tiles.keys():
             if HexUtils.axial_distance(coord, Vector2i.ZERO) <= 2:
-                fog.erase_cell(coord)
+                grid.erase_cell(fog_layer, coord)
+
+func _setup_layers() -> void:
+    terrain_layer = grid.get_layer_by_name("Terrain")
+    if terrain_layer == -1:
+        terrain_layer = grid.add_layer()
+        grid.set_layer_name(terrain_layer, "Terrain")
+    grid.set_layer_z_index(terrain_layer, 0)
+    buildings_layer = grid.get_layer_by_name("Buildings")
+    if buildings_layer == -1:
+        buildings_layer = grid.add_layer()
+        grid.set_layer_name(buildings_layer, "Buildings")
+    grid.set_layer_z_index(buildings_layer, 2)
+    fog_layer = grid.get_layer_by_name("Fog")
+    if fog_layer == -1:
+        fog_layer = grid.add_layer()
+        grid.set_layer_name(fog_layer, "Fog")
+    grid.set_layer_z_index(fog_layer, 1)
+    fog = FogMap.new(grid)
 
 func _setup_tileset() -> void:
     if grid.tile_set == null:
@@ -137,12 +157,12 @@ func _set_tile(coord: Vector2i) -> void:
     var data: Dictionary = _state.tiles.get(coord, {})
     var terrain_name: String = data.get("terrain", "forest")
     var source_id: int = _terrain_sources.get(terrain_name, _terrain_sources.get("forest"))
-    terrain.set_cell(coord, source_id)
+    grid.set_cell(terrain_layer, coord, source_id)
     var bname: String = data.get("building", "")
     if bname != "" and _building_sources.has(bname):
-        buildings.set_cell(coord, _building_sources[bname])
+        grid.set_cell(buildings_layer, coord, _building_sources[bname])
     else:
-        buildings.erase_cell(coord)
+        grid.erase_cell(buildings_layer, coord)
     var marker: Node2D = _markers.get(coord, null)
     if data.get("hostile", false):
         if marker == null:
@@ -156,9 +176,9 @@ func _set_tile(coord: Vector2i) -> void:
         _markers.erase(coord)
     if fog != null:
         if data.get("explored", false):
-            fog.erase_cell(coord)
+            grid.erase_cell(fog_layer, coord)
         else:
-            fog.set_cell(coord, fog.source_id)
+            grid.set_cell(fog_layer, coord, fog.source_id)
 
 func _random_terrain() -> String:
     _ensure_singletons()
@@ -186,14 +206,14 @@ func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
         if HexUtils.axial_distance(coord, center) <= reveal_radius:
             _state.tiles[coord]["explored"] = true
             if fog != null:
-                fog.erase_cell(coord)
+                grid.erase_cell(fog_layer, coord)
 
 func reveal_all() -> void:
     _ensure_singletons()
     for coord in _state.tiles.keys():
         _state.tiles[coord]["explored"] = true
         if fog != null:
-            fog.erase_cell(coord)
+            grid.erase_cell(fog_layer, coord)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
     var hex_radius := grid.tile_set.tile_size.x / 2.0
