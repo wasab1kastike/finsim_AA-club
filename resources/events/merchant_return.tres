@@ -1,12 +1,3 @@
-[gd_resource type="Resource" script="res://scripts/events/Event.gd"]
+[gd_resource type="Resource" format=3 uid="uid://b8ecm46kwtudd"]
 
 [resource]
-name = "Merchant Returns"
-description = "The merchant thanks you and departs."
-choices = [
-{
-"text": "Farewell",
-"costs": {},
-"effects": {},
-}
-]
