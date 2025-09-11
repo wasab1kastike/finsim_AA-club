@@ -5,10 +5,10 @@ class_name FogMap
 const FOG_SOURCE_NAME := "fog"
 
 var tile_map: TileMap
-var layer: int
+var layer: TileMapLayer
 var source_id: int = -1
 
-func _init(tile_map: TileMap, fog_layer: int) -> void:
+func _init(tile_map: TileMap, fog_layer: TileMapLayer) -> void:
     self.tile_map = tile_map
     self.layer = fog_layer
     var tset: TileSet = tile_map.tile_set
@@ -19,10 +19,10 @@ func _init(tile_map: TileMap, fog_layer: int) -> void:
     source_id = _get_or_create_fog_source(tset)
 
 func set_fog(coord: Vector2i) -> void:
-    tile_map.set_cell(layer, coord, source_id)
+    layer.set_cell(coord, source_id)
 
 func clear_fog(coord: Vector2i) -> void:
-    tile_map.erase_cell(layer, coord)
+    layer.erase_cell(coord)
 
 ## Generates a fog texture based on the TileSet tile size.
 func _generate_fog_texture(size: Vector2i) -> Texture2D:
