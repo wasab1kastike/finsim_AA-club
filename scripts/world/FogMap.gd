@@ -1,10 +1,13 @@
-extends TileMapLayer
+extends RefCounted
 class_name FogMap
 
+var tile_map: TileMap
+var layer: int = -1
 var source_id: int = -1
 
-func _ready() -> void:
-    var tile_map: TileMap = get_parent() as TileMap
+func setup(p_tile_map: TileMap, p_layer: int) -> void:
+    tile_map = p_tile_map
+    layer = p_layer
     var tset: TileSet = tile_map.tile_set
     if tset == null:
         tset = TileSet.new()
@@ -18,3 +21,9 @@ func _ready() -> void:
     src.texture = tex
     src.texture_region_size = size
     source_id = tset.add_source(src)
+
+func set_cell(coord: Vector2i, sid: int = source_id) -> void:
+    tile_map.set_cell(layer, coord, sid)
+
+func erase_cell(coord: Vector2i) -> void:
+    tile_map.erase_cell(layer, coord)
