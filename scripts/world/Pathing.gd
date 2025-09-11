@@ -1,6 +1,5 @@
 extends Object
 class_name Pathing
-const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 static func bfs_path(start: Vector2i, goal: Vector2i, passable: Callable) -> Array[Vector2i]:
     if start == goal:

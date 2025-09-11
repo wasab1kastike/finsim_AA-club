@@ -10,7 +10,6 @@ const HEX_DIRS = [
     Vector2i(0,1),
 ]
 
-const RNG = preload("res://autoload/RNG.gd")
 
 static func axial_to_world(q: int, r: int, hex_radius: float) -> Vector2:
     var x := hex_radius * sqrt(3.0) * (q + r / 2.0)

@@ -23,8 +23,6 @@ var _policies: Array[Policy] = []
 var _events: Array[GameEventBase] = []
 var _buildings_info: Array[Building] = []
 
-const Building = preload("res://scripts/core/Building.gd")
-const Policy = preload("res://scripts/policies/Policy.gd")
 const GameEventBase = preload("res://scripts/events/Event.gd")
 
 func _ready() -> void:

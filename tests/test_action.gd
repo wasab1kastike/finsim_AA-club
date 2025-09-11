@@ -1,8 +1,5 @@
 extends Node
 
-const Action = preload("res://scripts/core/Action.gd")
-const Policy = preload("res://scripts/policies/Policy.gd")
-const Resources = preload("res://scripts/core/Resources.gd")
 const GameEventBase = preload("res://scripts/events/Event.gd")
 
 func test_policy_apply_and_cooldown(res):

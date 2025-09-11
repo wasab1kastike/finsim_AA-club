@@ -6,7 +6,6 @@ class_name HexMap
 
 signal tile_clicked(qr:Vector2i)
 
-const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 @onready var grid: TileMap = $TileMap
 @onready var terrain: TileMapLayer = $TileMap/Terrain
@@ -53,14 +52,14 @@ func _setup_tileset() -> void:
             "hill": Color(0.5,0.5,0.5),
             "lake": Color(0,0.3,0.8),
         }
-        for name in ["forest","taiga","hill","lake"]:
+        for terrain_name in ["forest","taiga","hill","lake"]:
             var img := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
-            img.fill(colors[name])
+            img.fill(colors[terrain_name])
             var tex := ImageTexture.create_from_image(img)
             var src := TileSetAtlasSource.new()
             src.texture = tex
             var sid := grid.tile_set.add_source(src)
-            _terrain_sources[name] = sid
+            _terrain_sources[terrain_name] = sid
     else:
         var names := ["forest","taiga","hill","lake"]
         var ids: Array[int] = grid.tile_set.get_source_id_list()
@@ -77,22 +76,22 @@ func _setup_building_tiles() -> void:
         "mine": Color(0.5, 0.5, 0.5),
         "school": Color(0.3, 0.5, 0.9),
     }
-    for name in colors.keys():
+    for bname in colors.keys():
         var img := Image.create(48, 48, false, Image.FORMAT_RGBA8)
-        img.fill(colors[name])
+        img.fill(colors[bname])
         var inner := Image.create(24, 24, false, Image.FORMAT_RGBA8)
         inner.fill(Color.WHITE)
         img.blit_rect(inner, Rect2i(Vector2i.ZERO, inner.get_size()), Vector2i(12, 12))
         var big := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
         big.fill(Color(0, 0, 0, 0))
-        var off := Vector2i((size.x - img.get_width()) / 2, (size.y - img.get_height()) / 2)
+        var off := Vector2i((size.x - img.get_width()) // 2, (size.y - img.get_height()) // 2)
         big.blit_rect(img, Rect2i(Vector2i.ZERO, img.get_size()), off)
         var tex := ImageTexture.create_from_image(big)
         var src := TileSetAtlasSource.new()
         src.texture = tex
         src.texture_region_size = size
         var sid := grid.tile_set.add_source(src)
-        _building_sources[name] = sid
+        _building_sources[bname] = sid
 
 func _generate_tiles() -> void:
     _ensure_singletons()
@@ -169,10 +168,10 @@ func _unhandled_input(event: InputEvent) -> void:
             print("Hex %d,%d terrain %s" % [cell.x, cell.y, terrain_name])
             emit_signal("tile_clicked", cell)
 
-func reveal_area(center: Vector2i, radius: int = 2) -> void:
+func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
     _ensure_singletons()
     for coord in _state.tiles.keys():
-        if HexUtils.axial_distance(coord, center) <= radius:
+        if HexUtils.axial_distance(coord, center) <= reveal_radius:
             _state.tiles[coord]["explored"] = true
             if fog != null:
                 fog.erase_cell(coord)
@@ -185,12 +184,12 @@ func reveal_all() -> void:
             fog.erase_cell(coord)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
-    var radius := grid.tile_set.tile_size.x / 2.0
-    return HexUtils.axial_to_world(qr.x, qr.y, radius)
+    var hex_radius := grid.tile_set.tile_size.x / 2.0
+    return HexUtils.axial_to_world(qr.x, qr.y, hex_radius)
 
 func world_to_axial(pos: Vector2) -> Vector2i:
-    var radius := grid.tile_set.tile_size.x / 2.0
-    return HexUtils.world_to_axial(pos, radius)
+    var hex_radius := grid.tile_set.tile_size.x / 2.0
+    return HexUtils.world_to_axial(pos, hex_radius)
 
 func map_to_pos(cell: Vector2i) -> Vector2:
     return grid.map_to_local(cell)

@@ -1,6 +1,4 @@
 extends Node
-const Resources = preload("res://scripts/core/Resources.gd")
-const ColdSnapEvent = preload("res://scripts/events/ColdSnap.gd")
 const GameEventBase = preload("res://scripts/events/Event.gd")
 
 class DummyEvent:

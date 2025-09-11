@@ -1,7 +1,5 @@
 extends Node
 
-const Pathing = preload("res://scripts/world/Pathing.gd")
-const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 var hex_map: HexMap
 var units_root: Node2D
