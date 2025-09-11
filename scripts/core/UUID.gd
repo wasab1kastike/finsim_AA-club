@@ -10,5 +10,10 @@ static func new_uuid_string() -> String:
         for i in range(length):
             part += chars[RNG.randi() % chars.length()]
         parts.append(part)
-    return parts.join("-")
+    var result: String = ""
+    for i in range(parts.size()):
+        if i > 0:
+            result += "-"
+        result += parts[i]
+    return result
 
