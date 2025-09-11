@@ -45,7 +45,7 @@ func _ready() -> void:
     if fog != null:
         for coord in _state.tiles.keys():
             if HexUtils.axial_distance(coord, Vector2i.ZERO) <= 2:
-                grid.erase_cell(fog_layer, coord)
+                fog.clear_fog(coord)
 
 func _setup_layers() -> void:
     terrain_layer = grid.get_layer_by_name("Terrain")
@@ -63,7 +63,7 @@ func _setup_layers() -> void:
         fog_layer = grid.add_layer()
         grid.set_layer_name(fog_layer, "Fog")
     grid.set_layer_z_index(fog_layer, 1)
-    fog = FogMap.new(grid)
+    fog = FogMap.new(grid, fog_layer)
 
 func _setup_tileset() -> void:
     if grid.tile_set == null:
@@ -176,9 +176,9 @@ func _set_tile(coord: Vector2i) -> void:
         _markers.erase(coord)
     if fog != null:
         if data.get("explored", false):
-            grid.erase_cell(fog_layer, coord)
+            fog.clear_fog(coord)
         else:
-            grid.set_cell(fog_layer, coord, fog.source_id)
+            fog.set_fog(coord)
 
 func _random_terrain() -> String:
     _ensure_singletons()
@@ -206,14 +206,14 @@ func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
         if HexUtils.axial_distance(coord, center) <= reveal_radius:
             _state.tiles[coord]["explored"] = true
             if fog != null:
-                grid.erase_cell(fog_layer, coord)
+                fog.clear_fog(coord)
 
 func reveal_all() -> void:
     _ensure_singletons()
     for coord in _state.tiles.keys():
         _state.tiles[coord]["explored"] = true
         if fog != null:
-            grid.erase_cell(fog_layer, coord)
+            fog.clear_fog(coord)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
     var hex_radius := grid.tile_set.tile_size.x / 2.0

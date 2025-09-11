@@ -4,15 +4,25 @@ class_name FogMap
 ## Name used to identify the fog source within the TileSet.
 const FOG_SOURCE_NAME := "fog"
 
+var tile_map: TileMap
+var layer: int
 var source_id: int = -1
 
-func _init(tile_map: TileMap) -> void:
+func _init(tile_map: TileMap, fog_layer: int) -> void:
+    self.tile_map = tile_map
+    self.layer = fog_layer
     var tset: TileSet = tile_map.tile_set
     if tset == null:
         tset = TileSet.new()
         tset.tile_shape = TileSet.TILE_SHAPE_HEXAGON
         tile_map.tile_set = tset
     source_id = _get_or_create_fog_source(tset)
+
+func set_fog(coord: Vector2i) -> void:
+    tile_map.set_cell(layer, coord, source_id)
+
+func clear_fog(coord: Vector2i) -> void:
+    tile_map.erase_cell(layer, coord)
 
 ## Generates a fog texture based on the TileSet tile size.
 func _generate_fog_texture(size: Vector2i) -> Texture2D:
