@@ -95,11 +95,9 @@ func _setup_building_tiles() -> void:
         img.blit_rect(inner, Rect2i(Vector2i.ZERO, inner.get_size()), Vector2i(12, 12))
         var big := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
         big.fill(Color(0, 0, 0, 0))
-        # Godot 4 uses "//" for integer division, but some tooling may not
-        # recognize it, causing parse errors. Use explicit casts to ensure
-        # compatibility with environments that only support "/".
-        var off_x := int((size.x - img.get_width()) / 2)
-        var off_y := int((size.y - img.get_height()) / 2)
+        # integer division: center building icon
+        var off_x := (size.x - img.get_width()) // 2
+        var off_y := (size.y - img.get_height()) // 2
         var off := Vector2i(off_x, off_y)
         big.blit_rect(img, Rect2i(Vector2i.ZERO, img.get_size()), off)
         var tex := ImageTexture.create_from_image(big)

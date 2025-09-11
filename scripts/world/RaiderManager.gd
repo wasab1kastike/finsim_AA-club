@@ -21,7 +21,6 @@ func process_tick() -> void:
 
 func _spawn_raiders() -> void:
     for coord in GameState.hostile_tiles:
-        var tile: Dictionary = GameState.tiles.get(coord, {})
         var target: Vector2i = _find_target(coord)
         var path: Array[Vector2i] = Pathing.bfs_path(coord, target, func(p: Vector2i):
             return GameState.tiles.has(p) and GameState.tiles[p].get("terrain") != "lake"
