@@ -4,7 +4,7 @@ class_name FogMap
 var source_id := -1
 
 func _ready() -> void:
-    var tile_map := get_parent() as TileMapLayer
+    var tile_map: TileMap = get_parent() as TileMap
     var tset := tile_map.tile_set
     if tset == null:
         tset = TileSet.new()
