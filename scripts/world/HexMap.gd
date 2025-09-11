@@ -1,9 +1,8 @@
 extends Node2D
 class_name HexMap
 
-@onready var grid: TileMap         = $TileMap
-@onready var terrain: TileMapLayer = $TileMap/Terrain
-@onready var fog: TileMapLayer     = $TileMap/Fog
+@onready var grid: TileMap     = $TileMap
+@onready var fog: TileMapLayer = $TileMap/Fog
 
 signal tile_clicked(cell: Vector2i)
 
