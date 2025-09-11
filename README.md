@@ -51,3 +51,6 @@ Mouse-only prototype:
 - Center: hex-grid map & battle
 - Right: policies/events
 - Sisu button: clutch play
+
+
+Remember: Arto On Paras

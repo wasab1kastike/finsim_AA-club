@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://djamqvuynsu85"]
 
 [ext_resource type="Script" uid="uid://b3msilba05ji1" path="res://scripts/world/World.gd" id="1"]
-[ext_resource type="TileSet" path="res://resources/TileSet.tres" id="2"]
+[ext_resource type="TileSet" uid="uid://b0trfwugmpd4t" path="res://resources/TileSet.tres" id="2"]
 [ext_resource type="Script" uid="uid://caqyke8u6tx63" path="res://scripts/world/HexMap.gd" id="4"]
 [ext_resource type="PackedScene" uid="uid://cystqlef34u0c" path="res://scenes/battle/BattleManager.tscn" id="5"]
 
@@ -11,9 +11,8 @@ script = ExtResource("1")
 [node name="HexMap" type="Node2D" parent="."]
 script = ExtResource("4")
 
-[node name="TileMap" type="TileMap" parent="HexMap"]
+[node name="TileMap" type="TileMapLayer" parent="HexMap"]
 tile_set = ExtResource("2")
-cell_tile_size = Vector2i(96, 84)
 
 [node name="Terrain" type="TileMapLayer" parent="HexMap/TileMap"]
 
@@ -26,4 +25,3 @@ cell_tile_size = Vector2i(96, 84)
 [node name="BattleManager" parent="." instance=ExtResource("5")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-current = true
