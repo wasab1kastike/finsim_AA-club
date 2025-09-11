@@ -72,6 +72,36 @@ func reveal_all() -> void:
 func center_on(qr: Vector2i) -> void:
     position = -hex_map.axial_to_world(qr)
 
+func torille() -> void:
+    var sauna_tiles: Array[Vector2i] = []
+    for c in GameState.tiles.keys():
+        if GameState.tiles[c].get("building", "") == "sauna":
+            sauna_tiles.append(c)
+    if sauna_tiles.is_empty():
+        return
+    var passable := func(p: Vector2i):
+        return GameState.tiles.has(p) and GameState.tiles[p].get("terrain", "") != "lake"
+    for unit in units_root.get_children():
+        var best_dest: Vector2i = unit.pos_qr
+        var best_len := 1_000_000
+        for sauna in sauna_tiles:
+            var path: Array[Vector2i] = Pathing.bfs_path(unit.pos_qr, sauna, passable)
+            if path.size() > 0 and path.size() < best_len:
+                best_len = path.size()
+                best_dest = sauna
+        if best_len < 1_000_000:
+            unit.pos_qr = best_dest
+            unit.position = hex_map.axial_to_world(best_dest)
+            for i in range(GameState.units.size()):
+                var data: Dictionary = GameState.units[i]
+                if data.get("id", "") == unit.id:
+                    data["pos_qr"] = best_dest
+                    GameState.units[i] = data
+                    break
+            hex_map.reveal_area(best_dest, 1)
+            _resolve_combat(best_dest)
+    GameState.save()
+
 func _resolve_combat(pos: Vector2i) -> void:
     var tile: Dictionary = GameState.tiles.get(pos, {})
     var enemies: Array = tile.get("hostiles", [])

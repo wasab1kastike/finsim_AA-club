@@ -47,3 +47,8 @@ position = Vector2(0,60)
 text = "Spend Sisu"
 tooltip_text = "Heal team 20% (5 Sisu, 10s cd)"
 
+[node name="TorilleButton" type="Button" parent="DebugUI"]
+position = Vector2(0,90)
+text = "Torille!"
+tooltip_text = "Recall units to nearest sauna (5 Sisu, 10s cd)"
+

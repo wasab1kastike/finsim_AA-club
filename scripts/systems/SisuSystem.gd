@@ -24,6 +24,15 @@ func spend() -> bool:
     _heal_units()
     return true
 
+func torille() -> bool:
+    if not can_spend():
+        return false
+    GameState.res[Resources.SISU] = GameState.res.get(Resources.SISU, 0.0) - 5.0
+    cooldown_ticks_remaining = COOLDOWN_TICKS
+    if world and world.has_method("torille"):
+        world.torille()
+    return true
+
 func _heal_units() -> void:
     var units_root: Node = null
     if world:
