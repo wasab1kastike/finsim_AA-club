@@ -22,5 +22,6 @@ cell_tile_size = Vector2i(96, 84)
 [node name="Buildings" type="TileMapLayer" parent="HexMap/TileMap"]
 
 [node name="Fog" type="TileMapLayer" parent="HexMap/TileMap"]
+modulate = Color(1, 1, 1, 0.55)
 
 [node name="Units" type="Node2D" parent="."]
