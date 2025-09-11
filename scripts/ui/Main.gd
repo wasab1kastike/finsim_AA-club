@@ -48,7 +48,7 @@ func _on_build_pressed() -> void:
     if not GameState.tiles.has(_last_clicked):
         return
     var tile: Dictionary = GameState.tiles[_last_clicked]
-    if tile.get("building") != null:
+    if tile.get("building", "") != "":
         return
     var cost: Dictionary = _selected_building.get_construction_cost()
     for res in cost.keys():
