@@ -27,7 +27,7 @@ func clear_fog(coord: Vector2i) -> void:
 ## Generates a fog texture based on the TileSet tile size.
 func _generate_fog_texture(size: Vector2i) -> Texture2D:
     var img := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
-    img.fill(Color(0, 0, 0, 0.75))
+    img.fill(Color(0, 0, 0, 0.55))
     return ImageTexture.create_from_image(img)
 
 ## Returns an existing fog source or creates one if absent.
@@ -40,5 +40,6 @@ func _get_or_create_fog_source(tset: TileSet) -> int:
     var src := TileSetAtlasSource.new()
     src.resource_name = FOG_SOURCE_NAME
     src.texture = _generate_fog_texture(size)
+    src.modulate = Color(1, 1, 1, 0.55)
     src.texture_region_size = size
     return tset.add_source(src)
