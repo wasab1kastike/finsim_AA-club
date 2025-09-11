@@ -1,9 +1,9 @@
-[gd_scene load_steps=5]
+[gd_scene load_steps=5 format=3 uid="uid://djamqvuynsu85"]
 
-[ext_resource path="res://scripts/world/World.gd" type="Script" id="1"]
-[ext_resource path="res://resources/TileSet.tres" type="TileSet" id="2"]
-[ext_resource path="res://scripts/world/HexMap.gd" type="Script" id="4"]
-[ext_resource path="res://scenes/battle/BattleManager.tscn" type="PackedScene" id="5"]
+[ext_resource type="Script" uid="uid://b3msilba05ji1" path="res://scripts/world/World.gd" id="1"]
+[ext_resource type="TileSet" path="res://resources/TileSet.tres" id="2"]
+[ext_resource type="Script" uid="uid://caqyke8u6tx63" path="res://scripts/world/HexMap.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://cystqlef34u0c" path="res://scenes/battle/BattleManager.tscn" id="5"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1")

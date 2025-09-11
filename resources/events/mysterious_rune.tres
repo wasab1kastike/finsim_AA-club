@@ -1,18 +1,3 @@
-[gd_resource type="Resource" script="res://scripts/events/RuneDiscovery.gd"]
+[gd_resource type="Resource" format=3 uid="uid://bi41a0okng14c"]
 
 [resource]
-name = "Mysterious Rune"
-description = "A glowing rune is discovered."
-choices = [
-{
-"text": "Study the rune",
-"costs": {"saunatieto": 5},
-"effects": {"saunakunnia": 1},
-"next_event": "res://resources/events/rune_power.tres",
-},
-{
-"text": "Ignore it",
-"costs": {},
-"effects": {"saunatunnelma": -5},
-}
-]

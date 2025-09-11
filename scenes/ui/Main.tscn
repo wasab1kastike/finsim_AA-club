@@ -1,11 +1,9 @@
-[gd_scene load_steps=6]
+[gd_scene load_steps=5 format=3 uid="uid://ceinkpdag6vvy"]
 
-[ext_resource path="res://scenes/ui/Hud.tscn" type="PackedScene" id="1"]
-[ext_resource path="res://scenes/world/World.tscn" type="PackedScene" id="2"]
-[ext_resource path="res://scripts/ui/Main.gd" type="Script" id="3"]
-
-[ext_resource path="res://resources/GrainNoise.tres" type="Texture2D" id="4"]
-[ext_resource path="res://scripts/systems/SisuSystem.gd" type="Script" id="5"]
+[ext_resource type="PackedScene" uid="uid://bq3rn5vbuvwxx" path="res://scenes/ui/Hud.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://djamqvuynsu85" path="res://scenes/world/World.tscn" id="2"]
+[ext_resource type="Script" uid="uid://b5wy68h8u1lm4" path="res://scripts/ui/Main.gd" id="3"]
+[ext_resource type="Script" uid="uid://0eicnxv2muef" path="res://scripts/systems/SisuSystem.gd" id="5"]
 
 [node name="Main" type="Node"]
 script = ExtResource("3")
@@ -18,32 +16,32 @@ script = ExtResource("3")
 script = ExtResource("5")
 
 [node name="GrainOverlay" type="CanvasLayer" parent="."]
-layer = 1
 
 [node name="Grain" type="ColorRect" parent="GrainOverlay"]
+modulate = Color(1, 1, 1, 0.07)
+texture_repeat = 2
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-texture = ExtResource("4")
-texture_repeat = 2
-blend_mode = 3
-modulate = Color(1,1,1,0.07)
 mouse_filter = 2
 
 [node name="DebugUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
 
 [node name="RevealAllButton" type="Button" parent="DebugUI"]
+layout_mode = 0
 text = "Reveal All"
 
 [node name="SpawnButton" type="Button" parent="DebugUI"]
-position = Vector2(0,30)
+layout_mode = 0
+offset_top = 30.0
+offset_bottom = 30.0
 text = "Spawn Kiuasvartija at Center"
 
 [node name="SpendSisuButton" type="Button" parent="DebugUI"]
-position = Vector2(0,60)
-text = "Spend Sisu"
+layout_mode = 0
+offset_top = 60.0
+offset_bottom = 60.0
 tooltip_text = "Heal team 20% (5 Sisu, 10s cd)"
-
+text = "Spend Sisu"

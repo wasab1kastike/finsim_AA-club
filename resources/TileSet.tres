@@ -1,11 +1,11 @@
-[gd_resource type="TileSet" load_steps=13 format=3]
+[gd_resource type="TileSet" load_steps=13 format=3 uid="uid://b0trfwugmpd4t"]
 
-[ext_resource path="res://assets/tiles/forest.svg" type="Texture2D" id="1"]
-[ext_resource path="res://assets/tiles/taiga.svg" type="Texture2D" id="2"]
-[ext_resource path="res://assets/tiles/hill.svg" type="Texture2D" id="3"]
-[ext_resource path="res://assets/tiles/lake.svg" type="Texture2D" id="4"]
-[ext_resource path="res://assets/tiles/town.svg" type="Texture2D" id="5"]
-[ext_resource path="res://assets/tiles/ruins.svg" type="Texture2D" id="6"]
+[ext_resource type="Texture2D" uid="uid://d077xeigtxq3l" path="res://assets/tiles/forest.svg" id="1"]
+[ext_resource type="Texture2D" uid="uid://cmn3pp0qlo3hq" path="res://assets/tiles/taiga.svg" id="2"]
+[ext_resource type="Texture2D" uid="uid://c4q1g3fo2tieo" path="res://assets/tiles/hill.svg" id="3"]
+[ext_resource type="Texture2D" uid="uid://cspb1tu3070px" path="res://assets/tiles/lake.svg" id="4"]
+[ext_resource type="Texture2D" uid="uid://cphgxhew4gk8k" path="res://assets/tiles/town.svg" id="5"]
+[ext_resource type="Texture2D" uid="uid://c7yx0v2vt87u8" path="res://assets/tiles/ruins.svg" id="6"]
 
 [sub_resource type="TileSetAtlasSource" id="1"]
 texture = ExtResource("1")
