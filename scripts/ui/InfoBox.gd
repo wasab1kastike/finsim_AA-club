@@ -23,5 +23,5 @@ func show_building(building: Building) -> void:
     var cost: Dictionary = building.get_construction_cost()
     for key in cost.keys():
         cost_parts.append("%s: %s" % [key.capitalize(), str(cost[key])])
-    cost_label.text = cost_parts.size() > 0 ? "Cost: " + ", ".join(cost_parts) : ""
+    cost_label.text = ("Cost: " + ", ".join(cost_parts)) if cost_parts.size() > 0 else ""
     show()
