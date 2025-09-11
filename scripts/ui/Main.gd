@@ -89,7 +89,7 @@ func _on_torille_pressed() -> void:
     _update_sisu_buttons()
 
 func _update_sisu_buttons() -> void:
-    var disabled := not sisu_system.can_spend()
+    var disabled: bool = not sisu_system.can_spend()
     sisu_btn.disabled = disabled
     torille_btn.disabled = disabled
 
