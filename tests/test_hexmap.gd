@@ -1,12 +1,13 @@
 extends Node
 
 const HexMapBase = preload("res://scripts/world/HexMap.gd")
+const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 class DummyHexMap:
     extends HexMapBase
 
     func _init():
-        tile_set = TileSet.new()
+        pass
 
     func _set_tile(coord: Vector2i) -> void:
         pass
@@ -106,13 +107,13 @@ func test_buildings_persist_across_save(res) -> void:
     map.radius = 1
     map.terrain_weights = {"forest": 1.0}
     map._generate_tiles()
-    gs.tiles[Vector2i(0,0)]["building"] = preload("res://resources/buildings/farm.tres")
+    gs.tiles[Vector2i(0,0)]["building"] = preload("res://resources/buildings/sauna.tres")
     _remove_save(gs)
     gs.save()
     gs.tiles.clear()
     gs.load()
     var loaded = gs.tiles.get(Vector2i(0,0), {}).get("building", "")
-    if loaded != "farm":
+    if loaded != "sauna":
         res.fail("building did not persist across save/load")
     _remove_save(gs)
 

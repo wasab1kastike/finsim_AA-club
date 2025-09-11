@@ -1,6 +1,9 @@
 extends Node2D
 class_name HexMap
 
+const HexUtils = preload("res://scripts/world/HexUtils.gd")
+const FogMap = preload("res://scripts/world/FogMap.gd")
+
 @export var radius := 8
 @export var terrain_weights := {"forest":0.4,"taiga":0.35,"hill":0.15,"lake":0.1}
 
@@ -84,7 +87,9 @@ func _setup_building_tiles() -> void:
         img.blit_rect(inner, Rect2i(Vector2i.ZERO, inner.get_size()), Vector2i(12, 12))
         var big := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
         big.fill(Color(0, 0, 0, 0))
-        var off := Vector2i((size.x - img.get_width()) // 2, (size.y - img.get_height()) // 2)
+        var off_x := int((size.x - img.get_width()) / 2)
+        var off_y := int((size.y - img.get_height()) / 2)
+        var off := Vector2i(off_x, off_y)
         big.blit_rect(img, Rect2i(Vector2i.ZERO, img.get_size()), off)
         var tex := ImageTexture.create_from_image(big)
         var src := TileSetAtlasSource.new()

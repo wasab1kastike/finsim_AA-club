@@ -10,7 +10,9 @@ func _ready() -> void:
         tset = TileSet.new()
         tset.tile_shape = TileSet.TILE_SHAPE_HEXAGON
         tile_map.tile_set = tset
-    var size: Vector2i = tile_map.cell_tile_size
+    if source_id != -1 and tset.has_source(source_id):
+        return
+    var size: Vector2i = tile_map.tile_set.tile_size
     var img := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
     img.fill(Color(0,0,0,0.75))
     var tex := ImageTexture.create_from_image(img)
