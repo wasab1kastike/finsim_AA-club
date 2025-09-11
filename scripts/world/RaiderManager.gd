@@ -77,7 +77,7 @@ func _find_target(start: Vector2i) -> Vector2i:
     if candidates.is_empty():
         for coord in GameState.tiles.keys():
             var tile: Dictionary = GameState.tiles[coord]
-            if tile.get("owner", "") == "player" and tile.get("building") != null:
+            if tile.get("owner", "") == "player" and tile.get("building", "") != "":
                 candidates.append(coord)
     if candidates.is_empty():
         return Vector2i.ZERO
