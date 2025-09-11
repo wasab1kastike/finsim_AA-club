@@ -6,6 +6,11 @@ class_name HexMap
 
 signal tile_clicked(cell: Vector2i)
 
+func _unhandled_input(event: InputEvent) -> void:
+    if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+        var cell := grid.local_to_map(grid.to_local(event.position))
+        emit_signal("tile_clicked", cell)
+
 func axial_to_world(qr: Vector2i) -> Vector2:
     return grid.map_to_local(qr)
 
