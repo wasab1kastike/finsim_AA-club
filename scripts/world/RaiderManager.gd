@@ -14,6 +14,8 @@ func setup(hex_map: HexMap, units_root: Node2D, unit_scene: PackedScene) -> void
     _unit_scene = unit_scene
 
 func process_tick() -> void:
+    if _hex == null or _units_root == null or _unit_scene == null:
+        return
     _tick_counter += 1
     if _tick_counter % 20 == 0:
         _spawn_raiders()

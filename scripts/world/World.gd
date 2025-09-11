@@ -6,12 +6,10 @@ signal tile_clicked(qr: Vector2i)
 @onready var grid: TileMap = $HexMap/TileMap
 @onready var hex_map: HexMap = $HexMap
 @onready var units_root: Node2D = $Units
-@onready var battle_manager: Node = $BattleManager
 
 var selected_unit: Node = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 
-const RaiderManager = preload("res://scripts/world/RaiderManager.gd")
 const UnitDataBase = preload("res://scripts/units/UnitData.gd")
 
 var raider_manager: RaiderManager
@@ -51,8 +49,6 @@ func _on_tile_clicked(qr: Vector2i) -> void:
 
 func _on_game_tick() -> void:
     raider_manager.process_tick()
-    if battle_manager:
-        battle_manager.process_tick()
 
 
 func spawn_unit_at_center() -> void:
