@@ -1,6 +1,5 @@
 extends Node
 
-const Resources = preload("res://scripts/core/Resources.gd")
 
 const COOLDOWN_TICKS := 20 # 10 seconds at 0.5s per tick
 

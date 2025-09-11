@@ -1,7 +1,6 @@
 extends Panel
 class_name InfoBox
 
-const Building = preload("res://scripts/core/Building.gd")
 
 @onready var name_label: Label = $VBoxContainer/NameLabel
 @onready var description_label: Label = $VBoxContainer/DescriptionLabel

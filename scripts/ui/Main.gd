@@ -1,7 +1,6 @@
 extends Node
 
-const Building = preload("res://scripts/core/Building.gd")
-const TutorialOverlay = preload("res://scenes/ui/TutorialOverlay.tscn")
+const TutorialOverlayScene = preload("res://scenes/ui/TutorialOverlay.tscn")
 
 @onready var world: Node = $World
 @onready var hud: CanvasLayer = $Hud
@@ -40,8 +39,8 @@ func _on_game_tick() -> void:
     hud.update_resources(GameState.res)
     _update_sisu_button()
 
-func _on_building_selected(name: String) -> void:
-    _selected_building = _buildings.get(name, null)
+func _on_building_selected(building_name: String) -> void:
+    _selected_building = _buildings.get(building_name, null)
 
 func _on_build_pressed() -> void:
     if _selected_building == null:
@@ -88,7 +87,7 @@ func _update_sisu_button() -> void:
 func start_tutorial() -> void:
     if _tutorial_overlay:
         _tutorial_overlay.queue_free()
-    _tutorial_overlay = TutorialOverlay.instantiate()
+    _tutorial_overlay = TutorialOverlayScene.instantiate()
     add_child(_tutorial_overlay)
     _tutorial_overlay.tutorial_completed.connect(_on_tutorial_completed)
 

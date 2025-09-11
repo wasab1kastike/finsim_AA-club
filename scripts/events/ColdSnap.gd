@@ -1,7 +1,6 @@
 extends GameEvent
 class_name ColdSnapEvent
 
-const Resources = preload("res://scripts/core/Resources.gd")
 
 @export var duration_ticks: int = 30
 @export var penalty_multiplier: float = 0.8

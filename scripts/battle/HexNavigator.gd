@@ -1,7 +1,6 @@
 extends Object
 class_name HexNavigator
 
-const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
 static func nearest_hostile_path(start: Vector2i, tiles: Dictionary) -> Array[Vector2i]:
     if tiles.is_empty():

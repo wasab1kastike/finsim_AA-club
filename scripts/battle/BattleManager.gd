@@ -1,7 +1,6 @@
 extends Node
 class_name BattleManager
 
-const HexNavigator = preload("res://scripts/battle/HexNavigator.gd")
 
 var world: Node = null
 var hex_map: HexMap = null
