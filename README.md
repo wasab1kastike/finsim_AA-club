@@ -62,3 +62,4 @@ Mouse-only prototype:
 - Center: hex-grid map & battle
 - Right: policies/events
 - Sisu button: clutch play
+- Torille! button: recall units to nearest sauna

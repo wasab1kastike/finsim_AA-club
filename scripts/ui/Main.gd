@@ -7,6 +7,7 @@ const TutorialOverlayScene = preload("res://scenes/ui/TutorialOverlay.tscn")
 @onready var reveal_btn: Button = $DebugUI/RevealAllButton
 @onready var spawn_btn: Button = $DebugUI/SpawnButton
 @onready var sisu_btn: Button = $DebugUI/SpendSisuButton
+@onready var torille_btn: Button = $DebugUI/TorilleButton
 @onready var sisu_system: Node = $SisuSystem
 
 var _selected_building: Building = null
@@ -29,15 +30,16 @@ func _ready() -> void:
     reveal_btn.pressed.connect(_on_reveal_all)
     spawn_btn.pressed.connect(_on_spawn)
     sisu_btn.pressed.connect(_on_sisu_pressed)
+    torille_btn.pressed.connect(_on_torille_pressed)
     sisu_system.world = world
     hud.update_resources(GameState.res)
-    _update_sisu_button()
+    _update_sisu_buttons()
     if not GameState.tutorial_done:
         start_tutorial()
 
 func _on_game_tick() -> void:
     hud.update_resources(GameState.res)
-    _update_sisu_button()
+    _update_sisu_buttons()
 
 func _on_building_selected(building_name: String) -> void:
     _selected_building = _buildings.get(building_name, null)
@@ -79,10 +81,17 @@ func _on_spawn() -> void:
 func _on_sisu_pressed() -> void:
     if sisu_system.spend():
         hud.update_resources(GameState.res)
-    _update_sisu_button()
+    _update_sisu_buttons()
 
-func _update_sisu_button() -> void:
-    sisu_btn.disabled = not sisu_system.can_spend()
+func _on_torille_pressed() -> void:
+    if sisu_system.torille():
+        hud.update_resources(GameState.res)
+    _update_sisu_buttons()
+
+func _update_sisu_buttons() -> void:
+    var disabled := not sisu_system.can_spend()
+    sisu_btn.disabled = disabled
+    torille_btn.disabled = disabled
 
 func start_tutorial() -> void:
     if _tutorial_overlay:
