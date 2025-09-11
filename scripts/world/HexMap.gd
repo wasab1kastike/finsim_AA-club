@@ -21,7 +21,7 @@ var _state: Node
 var _rng: Node
 
 func _ensure_singletons() -> void:
-    var root := Engine.get_main_loop().root
+    var root: Node = Engine.get_main_loop().root
     if _state == null:
         _state = root.get_node("GameState")
     if _rng == null:
@@ -98,15 +98,15 @@ func _generate_tiles() -> void:
     _ensure_singletons()
     for q in range(-radius, radius + 1):
         for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
-            var terrain := _random_terrain()
-            var is_hostile: bool = terrain != "lake" and _rng.randf() < 0.09
-            var is_wildlife: bool = terrain != "lake" and _rng.randf() < 0.05
+            var terrain_name := _random_terrain()
+            var is_hostile: bool = terrain_name != "lake" and _rng.randf() < 0.09
+            var is_wildlife: bool = terrain_name != "lake" and _rng.randf() < 0.05
             var building: String = ""
             if q == 0 and r == 0:
                 building = "sauna"
             var coord := Vector2i(q, r)
             _state.tiles[coord] = {
-                "terrain": terrain,
+                "terrain": terrain_name,
                 "owner": "none",
                 "building": building,
                 "explored": false,
@@ -124,8 +124,8 @@ func _draw_from_saved(tiles: Dictionary) -> void:
 func _set_tile(coord: Vector2i) -> void:
     _ensure_singletons()
     var data: Dictionary = _state.tiles.get(coord, {})
-    var terrain: String = data.get("terrain", "forest")
-    var source_id: int = _terrain_sources.get(terrain, _terrain_sources.get("forest"))
+    var terrain_name: String = data.get("terrain", "forest")
+    var source_id: int = _terrain_sources.get(terrain_name, _terrain_sources.get("forest"))
     terrain.set_cell(coord, source_id)
     var bname: String = data.get("building", "")
     if bname != "" and _building_sources.has(bname):
@@ -165,8 +165,8 @@ func _unhandled_input(event: InputEvent) -> void:
         var local_pos := to_local(event.position)
         var cell := grid.local_to_map(local_pos)
         if _state.tiles.has(cell):
-            var terrain: String = _state.tiles[cell]["terrain"]
-            print("Hex %d,%d terrain %s" % [cell.x, cell.y, terrain])
+            var terrain_name: String = _state.tiles[cell]["terrain"]
+            print("Hex %d,%d terrain %s" % [cell.x, cell.y, terrain_name])
             emit_signal("tile_clicked", cell)
 
 func reveal_area(center: Vector2i, radius: int = 2) -> void:
