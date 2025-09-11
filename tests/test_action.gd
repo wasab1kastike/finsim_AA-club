@@ -2,8 +2,8 @@ extends Node
 
 const Action = preload("res://scripts/core/Action.gd")
 const Policy = preload("res://scripts/policies/Policy.gd")
-const GameEvent = preload("res://scripts/events/Event.gd")
 const Resources = preload("res://scripts/core/Resources.gd")
+const GameEventBase = preload("res://scripts/events/Event.gd")
 
 func test_policy_apply_and_cooldown(res):
     var gs = Engine.get_main_loop().root.get_node("GameState")
@@ -31,7 +31,7 @@ func test_event_inherits_action(res):
     gs.res[Resources.KULTA] = 100.0
     gs.res[Resources.SAUNATUNNELMA] = 0.0
     gs.res[Resources.MAKKARA] = 0.0
-    var ev: GameEvent = load("res://resources/events/rain.tres")
+    var ev: GameEventBase = load("res://resources/events/rain.tres")
     if not (ev is Action):
         res.fail("Event does not inherit Action")
         return
@@ -53,7 +53,7 @@ func test_sauna_diplomacy(res):
     gs.res[Resources.HALOT] = 50.0
     gs.res[Resources.LOYLY] = 1.0
     gs.res[Resources.LAUDEVALTA] = 0.0
-    var ev: GameEvent = load("res://resources/events/sauna_diplomacy.tres")
+    var ev: GameEventBase = load("res://resources/events/sauna_diplomacy.tres")
     if not ev.can_trigger():
         res.fail("Sauna Diplomacy cannot trigger")
         gs.res = orig_res

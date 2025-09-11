@@ -3,13 +3,13 @@ class_name EventOverlay
 
 signal choice_selected(choice: Dictionary)
 
-const GameEvent = preload("res://scripts/events/Event.gd")
+const GameEventBase = preload("res://scripts/events/Event.gd")
 
 @onready var title_label: Label = $Panel/Title
 @onready var description_label: Label = $Panel/Description
 @onready var choices_container: VBoxContainer = $Panel/Choices
 
-func show_event(ev: GameEvent) -> void:
+func show_event(ev: GameEventBase) -> void:
     title_label.text = ev.name
     description_label.text = ev.description
     for c in ev.choices:

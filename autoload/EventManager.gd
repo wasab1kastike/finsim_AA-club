@@ -3,11 +3,12 @@ extends Node
 # The autoload provides the EventManager singleton; avoid registering a global
 # class name that conflicts with the autoload itself.
 
+const GameEventBase := preload("res://scripts/events/Event.gd")
+
 var events: Array = []
-var current_event: GameEvent = null
+var current_event: GameEventBase = null
 var _ticks_until_event: int = 0
 
-const GameEvent = preload("res://scripts/events/Event.gd")
 const OVERLAY_SCENE := preload("res://scenes/ui/EventOverlay.tscn")
 
 func _ready() -> void:
@@ -20,7 +21,7 @@ func _load_events() -> void:
     for file in DirAccess.get_files_at("res://resources/events"):
         if file.get_extension() == "tres":
             var res := load("res://resources/events/%s" % file)
-            if res is GameEvent:
+            if res is GameEventBase:
                 events.append(res)
 
 func _schedule_next_event() -> void:
@@ -33,11 +34,11 @@ func _on_tick() -> void:
     if _ticks_until_event <= 0:
         if events.size() > 0:
             var idx := int(RNG.randf() * events.size())
-            var ev: GameEvent = events[idx]
+            var ev: GameEventBase = events[idx]
             if ev.can_trigger():
                 start_event(ev)
 
-func start_event(ev: GameEvent) -> void:
+func start_event(ev: GameEventBase) -> void:
     if current_event:
         return
     if not ev.can_trigger():
@@ -70,7 +71,7 @@ func _on_choice_selected(choice: Dictionary) -> void:
     var next_path: String = choice.get("next_event", "")
     current_event = null
     if next_path != "":
-        var next_ev: GameEvent = load(next_path)
+        var next_ev: GameEventBase = load(next_path)
         start_event(next_ev)
     else:
         GameClock.start()
