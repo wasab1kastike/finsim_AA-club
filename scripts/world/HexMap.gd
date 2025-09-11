@@ -12,10 +12,10 @@ signal tile_clicked(qr:Vector2i)
 
 
 @onready var grid: TileMap = $TileMap
-@onready var terrain_layer: TileMapLayer = $TileMap/Terrain
-@onready var buildings_layer: TileMapLayer = $TileMap/Buildings
-@onready var fog_layer: TileMapLayer = $TileMap/Fog
-var fog: FogMap
+@onready var terrain: TileMapLayer = $TileMap/Terrain
+@onready var buildings: TileMapLayer = $TileMap/Buildings
+@onready var fog: TileMapLayer = $TileMap/Fog
+var fog_map: FogMap
 
 var _terrain_sources: Dictionary = {}
 var _building_sources: Dictionary = {}
@@ -44,10 +44,10 @@ func _ready() -> void:
     reveal_area(Vector2i.ZERO, 2)
 
 func _setup_layers() -> void:
-    terrain_layer.z_index = 0
-    buildings_layer.z_index = 2
-    fog_layer.z_index = 1
-    fog = FogMap.new(grid, fog_layer)
+    terrain.z_index = 0
+    buildings.z_index = 2
+    fog.z_index = 1
+    fog_map = FogMap.new(grid, fog)
 
 func _setup_tileset() -> void:
     if grid.tile_set == null:
@@ -96,8 +96,8 @@ func _setup_building_tiles() -> void:
         var big := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
         big.fill(Color(0, 0, 0, 0))
         # center building icon with integer division
-        var off_x := int((size.x - img.get_width()) / 2)
-        var off_y := int((size.y - img.get_height()) / 2)
+        var off_x := (size.x - img.get_width()) // 2
+        var off_y := (size.y - img.get_height()) // 2
         var off := Vector2i(off_x, off_y)
         big.blit_rect(img, Rect2i(Vector2i.ZERO, img.get_size()), off)
         var tex := ImageTexture.create_from_image(big)
@@ -139,12 +139,12 @@ func _set_tile(coord: Vector2i) -> void:
     var data: Dictionary = _state.tiles.get(coord, {})
     var terrain_name: String = data.get("terrain", "forest")
     var source_id: int = _terrain_sources.get(terrain_name, _terrain_sources.get("forest"))
-    terrain_layer.set_cell(coord, source_id)
+    terrain.set_cell(coord, source_id)
     var bname: String = data.get("building", "")
     if bname != "" and _building_sources.has(bname):
-        buildings_layer.set_cell(coord, _building_sources[bname])
+        buildings.set_cell(coord, _building_sources[bname])
     else:
-        buildings_layer.erase_cell(coord)
+        buildings.erase_cell(coord)
     var marker: Node2D = _markers.get(coord, null)
     if data.get("hostile", false):
         if marker == null:
@@ -156,11 +156,11 @@ func _set_tile(coord: Vector2i) -> void:
     elif marker != null:
         marker.queue_free()
         _markers.erase(coord)
-    if fog != null:
+    if fog_map != null:
         if data.get("explored", false):
-            fog.clear_fog(coord)
+            fog_map.clear_fog(coord)
         else:
-            fog.set_fog(coord)
+            fog_map.set_fog(coord)
 
 func _random_terrain() -> String:
     _ensure_singletons()
@@ -187,19 +187,18 @@ func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
     for coord in _state.tiles.keys():
         if HexUtils.axial_distance(coord, center) <= reveal_radius:
             _state.tiles[coord]["explored"] = true
-            if fog != null:
-                fog.clear_fog(coord)
+            if fog_map != null:
+                fog_map.clear_fog(coord)
 
 func reveal_all() -> void:
     _ensure_singletons()
     for coord in _state.tiles.keys():
         _state.tiles[coord]["explored"] = true
-        if fog != null:
-            fog.clear_fog(coord)
+        if fog_map != null:
+            fog_map.clear_fog(coord)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
-    var hex_radius := grid.tile_set.tile_size.x / 2.0
-    return HexUtils.axial_to_world(qr.x, qr.y, hex_radius)
+    return grid.map_to_local(qr)
 
 func world_to_axial(pos: Vector2) -> Vector2i:
     var hex_radius := grid.tile_set.tile_size.x / 2.0
