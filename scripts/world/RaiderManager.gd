@@ -3,14 +3,14 @@ extends Node
 const Pathing = preload("res://scripts/world/Pathing.gd")
 const HexUtils = preload("res://scripts/world/HexUtils.gd")
 
-var hex_map: TileMap
+var hex_map: HexMap
 var units_root: Node2D
 var unit_scene: PackedScene
 
 var raiders: Array = []
 var _tick_counter: int = 0
 
-func setup(hmap: TileMap, units: Node2D, scene: PackedScene) -> void:
+func setup(hmap: HexMap, units: Node2D, scene: PackedScene) -> void:
     hex_map = hmap
     units_root = units
     unit_scene = scene

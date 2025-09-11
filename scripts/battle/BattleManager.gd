@@ -4,13 +4,13 @@ class_name BattleManager
 const HexNavigator = preload("res://scripts/battle/HexNavigator.gd")
 
 var world: Node = null
-var hex_map: TileMap = null
+var hex_map: HexMap = null
 var units_root: Node2D = null
 
 func _ready() -> void:
     world = get_parent()
     if world:
-        hex_map = world.get_node("TileMap")
+        hex_map = world.get_node("HexMap") as HexMap
         units_root = world.get_node("Units")
 
 func process_tick() -> void:
