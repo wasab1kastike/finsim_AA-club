@@ -4,7 +4,7 @@ const GameEventBase = preload("res://scripts/events/Event.gd")
 
 func test_policy_apply_and_cooldown(res):
     var gs = Engine.get_main_loop().root.get_node("GameState")
-    var orig = gs.res.duplicate()
+    var orig: Dictionary = gs.res.duplicate()
     gs.res[Resources.KULTA] = 100.0
     gs.res[Resources.SAUNATUNNELMA] = 0.0
     gs.res[Resources.MAKKARA] = 0.0
@@ -27,7 +27,7 @@ func test_policy_apply_and_cooldown(res):
 
 func test_event_inherits_action(res):
     var gs = Engine.get_main_loop().root.get_node("GameState")
-    var orig = gs.res.duplicate()
+    var orig: Dictionary = gs.res.duplicate()
     gs.res[Resources.KULTA] = 100.0
     gs.res[Resources.SAUNATUNNELMA] = 0.0
     gs.res[Resources.MAKKARA] = 0.0
@@ -52,7 +52,7 @@ func test_event_inherits_action(res):
 
 func test_sauna_diplomacy(res):
     var gs = Engine.get_main_loop().root.get_node("GameState")
-    var orig_res = gs.res.duplicate()
+    var orig_res: Dictionary = gs.res.duplicate()
     gs.res[Resources.HALOT] = 50.0
     gs.res[Resources.LOYLY] = 1.0
     gs.res[Resources.LAUDEVALTA] = 0.0
@@ -75,7 +75,7 @@ func test_sauna_diplomacy(res):
 
 func test_cold_snap(res):
     var gs = Engine.get_main_loop().root.get_node("GameState")
-    var orig_res = gs.res.duplicate()
+    var orig_res: Dictionary = gs.res.duplicate()
     var orig_mod = gs.production_modifier
     var orig_ticks = gs.modifier_ticks_remaining
     gs.res[Resources.LOYLY] = 0.0

@@ -70,7 +70,7 @@ func test_raider_saunatunnelma_hit(res) -> void:
     var world = _setup_world()
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
-    var orig = gs.res.duplicate()
+    var orig: Dictionary = gs.res.duplicate()
     for i in range(19):
         world._on_game_tick()
     world._on_game_tick()

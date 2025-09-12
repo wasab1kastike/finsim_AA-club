@@ -8,7 +8,7 @@ func test_battle_player_win(res) -> void:
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
     _remove_save(gs)
-    var orig = gs.res.duplicate()
+    var orig: Dictionary = gs.res.duplicate()
     gs.units.clear()
     gs.tiles.clear()
     var world_scene: PackedScene = load("res://scenes/world/World.tscn")
@@ -16,7 +16,7 @@ func test_battle_player_win(res) -> void:
     tree.root.add_child(world)
     world.spawn_unit_at_center()
     var target := Vector2i(1, 0)
-    var tdata = gs.tiles.get(target, {})
+    var tdata: Dictionary = gs.tiles.get(target, {})
     tdata["terrain"] = "hill"
     tdata["owner"] = "enemy"
     tdata["hostiles"] = [{"hp":50,"atk":5,"def":1}]
@@ -37,7 +37,7 @@ func test_battle_player_loss(res) -> void:
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
     _remove_save(gs)
-    var orig = gs.res.duplicate()
+    var orig: Dictionary = gs.res.duplicate()
     gs.units.clear()
     gs.tiles.clear()
     var world_scene: PackedScene = load("res://scenes/world/World.tscn")
@@ -45,7 +45,7 @@ func test_battle_player_loss(res) -> void:
     tree.root.add_child(world)
     world.spawn_unit_at_center()
     var target := Vector2i(1, 0)
-    var tdata = gs.tiles.get(target, {})
+    var tdata: Dictionary = gs.tiles.get(target, {})
     tdata["terrain"] = "forest"
     tdata["owner"] = "enemy"
     tdata["hostiles"] = [{"hp":200,"atk":20,"def":5}]

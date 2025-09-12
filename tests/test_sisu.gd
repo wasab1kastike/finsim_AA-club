@@ -16,7 +16,7 @@ func test_spend_sisu_heals(res) -> void:
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
     _remove_save(gs)
-    var orig = gs.res.duplicate()
+    var orig: Dictionary = gs.res.duplicate()
     gs.units.clear()
     gs.tiles.clear()
     var world_scene: PackedScene = load("res://scenes/world/World.tscn")
@@ -57,7 +57,7 @@ func test_spend_sisu_without_units(res) -> void:
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
     _remove_save(gs)
-    var orig = gs.res.duplicate()
+    var orig: Dictionary = gs.res.duplicate()
     gs.units.clear()
     gs.tiles.clear()
     gs.res[Resources.SISU] = 5.0

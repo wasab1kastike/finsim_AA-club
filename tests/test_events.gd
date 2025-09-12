@@ -77,7 +77,7 @@ func test_event_fails_prerequisites(res) -> void:
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")
     var em = tree.root.get_node("EventManager")
-    var orig = gs.res.duplicate()
+    var orig: Dictionary = gs.res.duplicate()
     gs.res[Resources.HALOT] = 0.0
     var ev := load("res://resources/events/merchant.tres") as GameEventBase
     if ev == null:
@@ -104,7 +104,7 @@ func test_unaffordable_choice_keeps_resources(res) -> void:
     var em = tree.root.get_node("EventManager")
     var clock = tree.root.get_node("GameClock")
     clock.set_process(false)
-    var orig = gs.res.duplicate()
+    var orig: Dictionary = gs.res.duplicate()
     gs.res[Resources.HALOT] = 0.0
     var ev := load("res://resources/events/merchant.tres") as GameEventBase
     if ev == null:
