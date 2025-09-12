@@ -3,7 +3,7 @@ class_name HexMap
 
 const TILE_SIZE := Vector2i(96, 84)
 
-const BUILDING_SOURCE_IDS: Dictionary[String, int] = {
+const BUILDING_SOURCE_IDS: Dictionary = {
     "town": 4,
     "ruins": 5,
 }
