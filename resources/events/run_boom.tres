@@ -1,0 +1,6 @@
+[gd_resource type="RunBoomEvent" load_steps=2 format=3 uid="uid://1c2dd5201e464e57959590be7cddb02f"]
+[ext_resource path="res://scripts/events/RunBoom.gd" type="Script" id="1"]
+
+[resource]
+script = ExtResource("1")
+name = "Run Boom"
