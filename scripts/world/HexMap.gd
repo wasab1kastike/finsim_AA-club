@@ -10,7 +10,7 @@ const BUILDING_SOURCE_IDS: Dictionary = {
 const DEFAULT_BUILDING_SOURCE_ID := 4
 
 @export var radius: int = 0
-@export var terrain_weights: Dictionary = {}
+@export var terrain_weights: Dictionary[String, float] = {}
 
 @onready var grid: TileMap = $Grid
 @onready var terrain: TileMap = $Grid
@@ -108,10 +108,10 @@ func _choose_terrain() -> String:
     for k in terrain_weights.keys():
         roll -= float(terrain_weights[k])
         if roll <= 0.0:
-            return k
+            return String(k)
     if terrain_weights.is_empty():
         return "forest"
-    return terrain_weights.keys()[0]
+    return String(terrain_weights.keys()[0])
 
 func _disc(center: Vector2i, disc_radius: int) -> Array[Vector2i]:
     var cells: Array[Vector2i] = []
