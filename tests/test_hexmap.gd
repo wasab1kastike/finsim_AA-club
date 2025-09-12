@@ -68,7 +68,7 @@ func test_generate_tiles(res) -> void:
 func test_ready_uses_saved_tiles(res) -> void:
     _reset_tiles()
     var gs = Engine.get_main_loop().root.get_node("GameState")
-    gs.tiles[Vector2i(0,0)] = {"terrain": "forest", "owner": "none", "building": null, "explored": false}
+    gs.tiles[Vector2i(0,0)] = {"terrain": "forest", "owner": "none", "building": "", "explored": false}
     var map = DummyHexMap.new()
     map._ready()
     if gs.tiles.size() != 1 or not gs.tiles.has(Vector2i(0,0)):

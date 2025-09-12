@@ -62,8 +62,8 @@ func _draw_from_saved(saved: Dictionary) -> void:
     for coord in saved.keys():
         var data: Dictionary = saved[coord]
         _paint_terrain(coord, data.get("terrain", "plain"))
-        var b = data.get("building", null)
-        if b != null and b != "":
+        var b: String = data.get("building", "")
+        if b != "":
             var building_name := String(b)
             var source_id: int = BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
             buildings.set_cell(1, coord, source_id)
@@ -95,7 +95,7 @@ func _generate_tiles() -> void:
         GameState.tiles[coord] = {
             "terrain": terrain_type,
             "owner": "none",
-            "building": null,
+            "building": "",
             "explored": false,
         }
         fog.set_cell(2, coord, 0)

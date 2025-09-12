@@ -6,7 +6,7 @@ func _setup_tiles(tile_count: int, hostile_count: int) -> void:
     gs.hostile_tiles.clear()
     for i in range(tile_count):
         var coord := Vector2i(i, 0)
-        gs.tiles[coord] = {"terrain": "forest", "owner": "none", "building": null, "explored": true}
+        gs.tiles[coord] = {"terrain": "forest", "owner": "none", "building": "", "explored": true}
     for i in range(hostile_count):
         var coord := Vector2i(i * 10, 0)
         gs.set_hostile(coord, true)

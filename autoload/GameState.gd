@@ -52,7 +52,7 @@ func save() -> void:
     var tile_data: Dictionary = {}
     for c in tiles.keys():
         var t: Dictionary = tiles[c]
-        var b = t.get("building", null)
+        var b = t.get("building", "")
         if b is BuildingLib:
             t = t.duplicate()
             t["building"] = b.resource_path.get_file().get_basename()
