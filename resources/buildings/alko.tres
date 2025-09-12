@@ -1,3 +1,7 @@
-[gd_resource type="Resource" format=3 uid="uid://buym08cpgelbp"]
+[gd_resource type="Resource" script_class="Building" load_steps=2 format=3 uid="uid://buym08cpgelbp"]
+
+[ext_resource type="Script" path="res://scripts/core/Building.gd" id="1"]
 
 [resource]
+script = ExtResource("1")
+name = "Alko"
