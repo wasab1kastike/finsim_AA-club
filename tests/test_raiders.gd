@@ -5,11 +5,11 @@ func _setup_world():
     var gs = tree.root.get_node("GameState")
     gs.units.clear()
     gs.tiles.clear()
-    gs.tiles[Vector2i(0,0)] = {"terrain": "forest", "owner": "player", "building": null, "explored": true}
-    gs.tiles[Vector2i(1,0)] = {"terrain": "lake", "owner": "none", "building": null, "explored": true}
-    gs.tiles[Vector2i(1,-1)] = {"terrain": "forest", "owner": "none", "building": null, "explored": true}
-    gs.tiles[Vector2i(2,0)] = {"terrain": "forest", "owner": "none", "building": null, "explored": true}
-    gs.tiles[Vector2i(2,-1)] = {"terrain": "forest", "owner": "none", "building": null, "explored": true}
+    gs.tiles[Vector2i(0,0)] = {"terrain": "forest", "owner": "player", "building": "", "explored": true}
+    gs.tiles[Vector2i(1,0)] = {"terrain": "lake", "owner": "none", "building": "", "explored": true}
+    gs.tiles[Vector2i(1,-1)] = {"terrain": "forest", "owner": "none", "building": "", "explored": true}
+    gs.tiles[Vector2i(2,0)] = {"terrain": "forest", "owner": "none", "building": "", "explored": true}
+    gs.tiles[Vector2i(2,-1)] = {"terrain": "forest", "owner": "none", "building": "", "explored": true}
     gs.set_hostile(Vector2i(2,0), true)
     var world_scene: PackedScene = load("res://scenes/world/World.tscn")
     var world = world_scene.instantiate()
