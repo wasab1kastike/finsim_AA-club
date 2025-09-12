@@ -101,7 +101,7 @@ func test_unaffordable_choice_keeps_resources(res) -> void:
     gs.res[Resources.HALOT] = 0.0
     var ev: GameEventBase = load("res://resources/events/merchant.tres")
     em.start_event(ev)
-    var before := gs.res.duplicate()
+    var before: Dictionary = gs.res.duplicate()
     em._on_choice_selected(ev.choices[0])
     _cleanup_overlays(tree)
     if gs.res != before:
