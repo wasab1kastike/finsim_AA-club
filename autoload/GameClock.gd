@@ -4,7 +4,7 @@ signal tick()
 
 const TICK_INTERVAL := 0.5
 var time: float = 0.0
-var running: bool = true
+var running: bool = false
 var _accumulator: float = 0.0
 var speed_multiplier: float = 1.0
 
