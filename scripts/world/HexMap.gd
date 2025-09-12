@@ -99,6 +99,8 @@ func _choose_terrain() -> String:
         roll -= float(terrain_weights[k])
         if roll <= 0.0:
             return k
+    if terrain_weights.is_empty():
+        return "forest"
     return terrain_weights.keys()[0]
 
 func _disc(center: Vector2i, disc_radius: int) -> Array[Vector2i]:
