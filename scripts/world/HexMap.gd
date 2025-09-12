@@ -101,10 +101,10 @@ func _choose_terrain() -> String:
             return k
     return terrain_weights.keys()[0]
 
-func _disc(center: Vector2i, radius: int) -> Array[Vector2i]:
+func _disc(center: Vector2i, disc_radius: int) -> Array[Vector2i]:
     var cells: Array[Vector2i] = []
-    for q in range(-radius, radius + 1):
-        for r in range(max(-radius, -q - radius), min(radius, -q + radius) + 1):
+    for q in range(-disc_radius, disc_radius + 1):
+        for r in range(max(-disc_radius, -q - disc_radius), min(disc_radius, -q + disc_radius) + 1):
             cells.append(center + Vector2i(q, r))
     return cells
 
