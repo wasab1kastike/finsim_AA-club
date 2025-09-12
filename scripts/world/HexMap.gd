@@ -64,7 +64,7 @@ func _draw_from_saved(saved: Dictionary) -> void:
         _paint_terrain(coord, data.get("terrain", "plain"))
         var b: String = data.get("building", "")
         if b != "":
-            var building_name: String = String(b)
+            var building_name: String = b
             var source_id: int = int(BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID))
             buildings.set_cell(1, coord, source_id)
         if data.get("explored", false):
