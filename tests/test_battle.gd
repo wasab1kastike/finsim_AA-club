@@ -4,6 +4,12 @@ func _remove_save(gs) -> void:
     if FileAccess.file_exists(gs.SAVE_PATH):
         DirAccess.remove_absolute(gs.SAVE_PATH)
 
+func test_battle_manager_no_parent(res) -> void:
+    var bm := BattleManager.new()
+    bm._ready()
+    if bm.world != null or bm.hex_map != null or bm.units_root != null:
+        res.fail("BattleManager should not initialize without parent node")
+
 func test_battle_player_win(res) -> void:
     var tree = Engine.get_main_loop()
     var gs = tree.root.get_node("GameState")

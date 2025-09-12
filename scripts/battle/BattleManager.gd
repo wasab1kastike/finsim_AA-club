@@ -8,9 +8,11 @@ var units_root: Node2D = null
 
 func _ready() -> void:
     world = get_parent()
-    if world:
-        hex_map = world.get_node("HexMap") as HexMap
-        units_root = world.get_node("Units")
+    if world == null:
+        push_error("BattleManager requires a parent node.")
+        return
+    hex_map = world.get_node("HexMap") as HexMap
+    units_root = world.get_node("Units")
 
 func process_tick() -> void:
     if GameState.units.is_empty():
