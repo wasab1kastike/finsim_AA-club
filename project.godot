@@ -24,3 +24,205 @@ EventManager="*res://autoload/EventManager.gd"
 [gui]
 
 theme/custom="res://resources/Theme.tres"
+
+[script_classes]
+
+0={
+"base": "Resource",
+"class": "Action",
+"language": "GDScript",
+"path": "res://scripts/core/Action.gd"
+}
+1={
+"base": "Node",
+"class": "AutoResolve",
+"language": "GDScript",
+"path": "res://scripts/battle/AutoResolve.gd"
+}
+2={
+"base": "Node",
+"class": "BattleManager",
+"language": "GDScript",
+"path": "res://scripts/battle/BattleManager.gd"
+}
+3={
+"base": "Resource",
+"class": "Building",
+"language": "GDScript",
+"path": "res://scripts/core/Building.gd"
+}
+4={
+"base": "GameEvent",
+"class": "ColdSnapEvent",
+"language": "GDScript",
+"path": "res://scripts/events/ColdSnap.gd"
+}
+5={
+"base": "CanvasLayer",
+"class": "EventOverlay",
+"language": "GDScript",
+"path": "res://scripts/ui/EventOverlay.gd"
+}
+6={
+"base": "RefCounted",
+"class": "FogMap",
+"language": "GDScript",
+"path": "res://scripts/world/FogMap.gd"
+}
+7={
+"base": "Action",
+"class": "GameEvent",
+"language": "GDScript",
+"path": "res://scripts/events/Event.gd"
+}
+8={
+"base": "GameEvent",
+"class": "HeatWaveEvent",
+"language": "GDScript",
+"path": "res://scripts/events/HeatWave.gd"
+}
+9={
+"base": "Node2D",
+"class": "HexMap",
+"language": "GDScript",
+"path": "res://scripts/world/HexMap.gd"
+}
+10={
+"base": "Object",
+"class": "HexNavigator",
+"language": "GDScript",
+"path": "res://scripts/battle/HexNavigator.gd"
+}
+11={
+"base": "Object",
+"class": "HexUtils",
+"language": "GDScript",
+"path": "res://scripts/world/HexUtils.gd"
+}
+12={
+"base": "Panel",
+"class": "InfoBox",
+"language": "GDScript",
+"path": "res://scripts/ui/InfoBox.gd"
+}
+13={
+"base": "GameEvent",
+"class": "MerchantReturnEvent",
+"language": "GDScript",
+"path": "res://scripts/events/MerchantReturn.gd"
+}
+14={
+"base": "Object",
+"class": "Pathing",
+"language": "GDScript",
+"path": "res://scripts/world/Pathing.gd"
+}
+15={
+"base": "Action",
+"class": "Policy",
+"language": "GDScript",
+"path": "res://scripts/policies/Policy.gd"
+}
+16={
+"base": "Node",
+"class": "RaiderManager",
+"language": "GDScript",
+"path": "res://scripts/world/RaiderManager.gd"
+}
+17={
+"base": "GameEvent",
+"class": "RainEvent",
+"language": "GDScript",
+"path": "res://scripts/events/Rain.gd"
+}
+18={
+"base": "RefCounted",
+"class": "Resources",
+"language": "GDScript",
+"path": "res://scripts/core/Resources.gd"
+}
+19={
+"base": "GameEvent",
+"class": "RunBoomEvent",
+"language": "GDScript",
+"path": "res://scripts/events/RunBoom.gd"
+}
+20={
+"base": "GameEvent",
+"class": "RuneDiscoveryEvent",
+"language": "GDScript",
+"path": "res://scripts/events/RuneDiscovery.gd"
+}
+21={
+"base": "GameEvent",
+"class": "RunePowerEvent",
+"language": "GDScript",
+"path": "res://scripts/events/RunePower.gd"
+}
+22={
+"base": "GameEvent",
+"class": "SaunaDiplomacyEvent",
+"language": "GDScript",
+"path": "res://scripts/events/SaunaDiplomacy.gd"
+}
+23={
+"base": "RefCounted",
+"class": "Saunakunnia",
+"language": "GDScript",
+"path": "res://scripts/core/Saunakunnia.gd"
+}
+24={
+"base": "GameEvent",
+"class": "TraderEvent",
+"language": "GDScript",
+"path": "res://scripts/events/Trader.gd"
+}
+25={
+"base": "CanvasLayer",
+"class": "TutorialOverlay",
+"language": "GDScript",
+"path": "res://scripts/ui/TutorialOverlay.gd"
+}
+26={
+"base": "Resource",
+"class": "UnitData",
+"language": "GDScript",
+"path": "res://scripts/units/UnitData.gd"
+}
+27={
+"base": "RefCounted",
+"class": "UUID",
+"language": "GDScript",
+"path": "res://scripts/core/UUID.gd"
+}
+
+[script_class_names]
+
+Action=0
+AutoResolve=1
+BattleManager=2
+Building=3
+ColdSnapEvent=4
+EventOverlay=5
+FogMap=6
+GameEvent=7
+HeatWaveEvent=8
+HexMap=9
+HexNavigator=10
+HexUtils=11
+InfoBox=12
+MerchantReturnEvent=13
+Pathing=14
+Policy=15
+RaiderManager=16
+RainEvent=17
+Resources=18
+RunBoomEvent=19
+RuneDiscoveryEvent=20
+RunePowerEvent=21
+SaunaDiplomacyEvent=22
+Saunakunnia=23
+TraderEvent=24
+TutorialOverlay=25
+UnitData=26
+UUID=27
