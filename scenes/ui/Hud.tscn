@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://dkay4i5rdr533"]
+[gd_scene load_steps=3 format=3 uid="uid://dkay4i5rdr533"]
 
+[ext_resource type="Script" uid="uid://dgj0jwslqh22m" path="res://scripts/ui/Hud.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/ui/InfoBox.tscn" id="2"]
 
 [node name="Hud" type="CanvasLayer"]
+script = ExtResource("1")
 
 [node name="ResourcesLabel" type="Label" parent="."]
 text = "Money: 0 Ammo: 0"
