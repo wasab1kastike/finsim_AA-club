@@ -103,26 +103,39 @@ func _populate_buildings() -> void:
     building_selector.clear()
     for file in DirAccess.get_files_at("res://resources/buildings"):
         if file.get_extension() == "tres":
-            var b: Building = load("res://resources/buildings/%s" % file)
-            building_selector.add_item(b.name)
-            _buildings_info.append(b)
+            var b_res := load("res://resources/buildings/%s" % file)
+            if b_res == null:
+                push_warning("Failed to load building resource: res://resources/buildings/%s" % file)
+            elif b_res is Building and b_res.name:
+                building_selector.add_item(b_res.name)
+                _buildings_info.append(b_res)
+            else:
+                push_warning("Loaded resource is not a Building: res://resources/buildings/%s" % file)
 
 func _populate_policies() -> void:
     _policies.clear()
     policy_selector.clear()
     for file in DirAccess.get_files_at("res://resources/policies"):
         if file.get_extension() == "tres":
-            var res = load("res://resources/policies/%s" % file)
-            if res is Policy and res.name:
+            var res := load("res://resources/policies/%s" % file)
+            if res == null:
+                push_warning("Failed to load policy resource: res://resources/policies/%s" % file)
+            elif res is PolicyBase and res.name:
                 policy_selector.add_item(res.name)
                 _policies.append(res)
+            else:
+                push_warning("Loaded resource is not a Policy: res://resources/policies/%s" % file)
 
 func _populate_events() -> void:
     _events.clear()
     event_selector.clear()
     for file in DirAccess.get_files_at("res://resources/events"):
         if file.get_extension() == "tres":
-            var res = load("res://resources/events/%s" % file)
-            if res is GameEventBase and res.name:
+            var res := load("res://resources/events/%s" % file)
+            if res == null:
+                push_warning("Failed to load event resource: res://resources/events/%s" % file)
+            elif res is GameEventBase and res.name:
                 event_selector.add_item(res.name)
                 _events.append(res)
+            else:
+                push_warning("Loaded resource is not a GameEventBase: res://resources/events/%s" % file)
