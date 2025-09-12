@@ -111,15 +111,17 @@ func _populate_policies() -> void:
     policy_selector.clear()
     for file in DirAccess.get_files_at("res://resources/policies"):
         if file.get_extension() == "tres":
-            var p: Policy = load("res://resources/policies/%s" % file)
-            policy_selector.add_item(p.name)
-            _policies.append(p)
+            var res = load("res://resources/policies/%s" % file)
+            if res is Policy and res.name:
+                policy_selector.add_item(res.name)
+                _policies.append(res)
 
 func _populate_events() -> void:
     _events.clear()
     event_selector.clear()
     for file in DirAccess.get_files_at("res://resources/events"):
         if file.get_extension() == "tres":
-            var e: GameEventBase = load("res://resources/events/%s" % file)
-            event_selector.add_item(e.name)
-            _events.append(e)
+            var res = load("res://resources/events/%s" % file)
+            if res is GameEventBase and res.name:
+                event_selector.add_item(res.name)
+                _events.append(res)
