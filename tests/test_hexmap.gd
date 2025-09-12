@@ -10,28 +10,15 @@ class DummyHexMap:
         tset.tile_size = TILE_SIZE
         tset.tile_shape = TileSet.TILE_SHAPE_HEXAGON
 
-        var terrain_layer := TileMapLayer.new()
-        terrain_layer.name = "Terrain"
-        terrain_layer.tile_set = tset
-        terrain_layer.cell_tile_size = TILE_SIZE
-        add_child(terrain_layer)
+        var tilemap := TileMap.new()
+        tilemap.name = "Grid"
+        tilemap.tile_set = tset
+        add_child(tilemap)
 
-        var buildings_layer := TileMapLayer.new()
-        buildings_layer.name = "Buildings"
-        buildings_layer.tile_set = tset
-        buildings_layer.cell_tile_size = TILE_SIZE
-        add_child(buildings_layer)
-
-        var fog_layer := TileMapLayer.new()
-        fog_layer.name = "Fog"
-        fog_layer.tile_set = tset
-        fog_layer.cell_tile_size = TILE_SIZE
-        add_child(fog_layer)
-
-        self.grid = terrain_layer
-        self.terrain = terrain_layer
-        self.buildings = buildings_layer
-        self.fog = fog_layer
+        self.grid = tilemap
+        self.terrain = tilemap
+        self.buildings = tilemap
+        self.fog = tilemap
 
     func _set_tile(coord: Vector2i) -> void:
         pass

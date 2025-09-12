@@ -6,18 +6,18 @@ const TILE_SIZE := Vector2i(96, 84)
 @export var radius: int = 0
 @export var terrain_weights: Dictionary = {}
 
-@onready var grid: TileMapLayer = $Terrain
-@onready var terrain: TileMapLayer = $Terrain
-@onready var buildings: TileMapLayer = $Buildings
-@onready var fog: TileMapLayer = $Fog
+@onready var grid: TileMap = $Grid
+@onready var terrain: TileMap = $Grid
+@onready var buildings: TileMap = $Grid
+@onready var fog: TileMap = $Grid
 
 signal tile_clicked(cell: Vector2i)
 
 func _ready() -> void:
-    assert(grid is TileMapLayer, "TileMapLayer node missing or wrong type")
-    assert(terrain is TileMapLayer, "Terrain layer must be TileMapLayer")
-    assert(buildings is TileMapLayer, "Buildings layer must be TileMapLayer")
-    assert(fog is TileMapLayer, "Fog layer must be TileMapLayer")
+    assert(grid is TileMap, "TileMap node missing or wrong type")
+    assert(terrain is TileMap, "Terrain layer must be TileMap")
+    assert(buildings is TileMap, "Buildings layer must be TileMap")
+    assert(fog is TileMap, "Fog layer must be TileMap")
     if radius <= 0:
         push_warning("HexMap radius is 0")
     _ensure_singletons()
@@ -36,33 +36,33 @@ func axial_to_world(qr: Vector2i) -> Vector2:
 
 func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
     for cell in _disc(center, reveal_radius):
-        fog.erase_cell(cell)
+        fog.erase_cell(2, cell)
         if GameState.tiles.has(cell):
             var t: Dictionary = GameState.tiles[cell]
             t["explored"] = true
             GameState.tiles[cell] = t
 
 func reveal_all() -> void:
-    fog.clear()
+    fog.clear_layer(2)
     for coord in GameState.tiles.keys():
         var t: Dictionary = GameState.tiles[coord]
         t["explored"] = true
         GameState.tiles[coord] = t
 
 func _draw_from_saved(saved: Dictionary) -> void:
-    terrain.clear()
-    buildings.clear()
-    fog.clear()
+    terrain.clear_layer(0)
+    buildings.clear_layer(1)
+    fog.clear_layer(2)
     for coord in saved.keys():
         var data: Dictionary = saved[coord]
         _paint_terrain(coord, data.get("terrain", "plain"))
         var b = data.get("building", null)
         if b != null and b != "":
-            buildings.set_cell(coord, 0)
+            buildings.set_cell(1, coord, 0)
         if data.get("explored", false):
-            fog.erase_cell(coord)
+            fog.erase_cell(2, coord)
         else:
-            fog.set_cell(coord, 0)
+            fog.set_cell(2, coord, 0)
 
 func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
     var source_id := 0
@@ -77,7 +77,7 @@ func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
             source_id = 3
         _:
             source_id = 0
-    terrain.set_cell(coord, source_id)
+    terrain.set_cell(0, coord, source_id)
 
 func _generate_tiles() -> void:
     GameState.tiles.clear()
@@ -90,7 +90,7 @@ func _generate_tiles() -> void:
             "building": null,
             "explored": false,
         }
-        fog.set_cell(coord, 0)
+        fog.set_cell(2, coord, 0)
 
 func _choose_terrain() -> String:
     var total := 0.0
