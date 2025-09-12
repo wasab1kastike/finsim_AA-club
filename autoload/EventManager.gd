@@ -15,6 +15,8 @@ const _EVENT_SCRIPTS := [
     preload("res://scripts/events/RunePower.gd"),
     preload("res://scripts/events/SaunaDiplomacy.gd"),
     preload("res://scripts/events/Trader.gd"),
+    preload("res://scripts/events/HeatWave.gd"),
+    preload("res://scripts/events/RunBoom.gd"),
 ]
 
 var events: Array = []
