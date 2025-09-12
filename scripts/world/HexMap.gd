@@ -65,7 +65,7 @@ func _draw_from_saved(saved: Dictionary) -> void:
         var b = data.get("building", null)
         if b != null and b != "":
             var building_name := String(b)
-            var source_id := BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
+            var source_id: int = BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
             buildings.set_cell(1, coord, source_id)
         if data.get("explored", false):
             fog.erase_cell(2, coord)
