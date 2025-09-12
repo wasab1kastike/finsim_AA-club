@@ -35,8 +35,8 @@ func axial_to_world(qr: Vector2i) -> Vector2:
 func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
     for cell in _disc(center, reveal_radius):
         fog.erase_cell(cell)
-        var t: Dictionary = GameState.tiles.get(cell, null)
-        if t != null:
+        if GameState.tiles.has(cell):
+            var t: Dictionary = GameState.tiles[cell]
             t["explored"] = true
             GameState.tiles[cell] = t
 
