@@ -1,3 +1,10 @@
-[gd_resource type="Resource" format=3 uid="uid://diyq4hv3wb2v6"]
+[gd_resource type="Policy" load_steps=2 format=3 uid="uid://diyq4hv3wb2v6"]
+[ext_resource path="res://scripts/policies/Policy.gd" type="Script" id="1"]
 
 [resource]
+script = ExtResource("1")
+name = "Tax Relief"
+description = "Lower taxes to boost morale."
+costs = {"kulta": 20}
+effects = {"saunatunnelma": 10}
+cooldown = 60.0
