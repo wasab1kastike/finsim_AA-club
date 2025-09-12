@@ -35,15 +35,15 @@ func axial_to_world(qr: Vector2i) -> Vector2:
 func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
     for cell in _disc(center, reveal_radius):
         fog.erase_cell(cell)
-        var t := GameState.tiles.get(cell, null)
-        if t:
+        var t: Dictionary = GameState.tiles.get(cell, null)
+        if t != null:
             t["explored"] = true
             GameState.tiles[cell] = t
 
 func reveal_all() -> void:
     fog.clear()
     for coord in GameState.tiles.keys():
-        var t := GameState.tiles[coord]
+        var t: Dictionary = GameState.tiles[coord]
         t["explored"] = true
         GameState.tiles[coord] = t
 
