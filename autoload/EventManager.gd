@@ -28,9 +28,14 @@ func _load_events() -> void:
     events.clear()
     for file in DirAccess.get_files_at("res://resources/events"):
         if file.get_extension() == "tres":
-            var res := load("res://resources/events/%s" % file)
-            if res is GameEventBase:
+            var res_path := "res://resources/events/%s" % file
+            var res := load(res_path)
+            if res == null:
+                push_warning("Failed to load event resource: %s" % res_path)
+            elif res is GameEventBase:
                 events.append(res)
+            else:
+                push_warning("Loaded resource is not a GameEventBase: %s" % res_path)
 
 func _schedule_next_event() -> void:
     _ticks_until_event = 30 + int(RNG.randf() * 21)
