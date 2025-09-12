@@ -109,7 +109,7 @@ func _disc(center: Vector2i, radius: int) -> Array[Vector2i]:
     return cells
 
 func _ensure_singletons() -> void:
-    var root := Engine.get_main_loop().root
+    var root: Node = Engine.get_main_loop().root
     load("res://scripts/core/Resources.gd")
     if not root.has_node("GameState"):
         var gs = load("res://autoload/GameState.gd").new()
