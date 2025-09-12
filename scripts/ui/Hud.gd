@@ -1,5 +1,8 @@
 extends CanvasLayer
 
+const PolicyBase := preload("res://scripts/policies/Policy.gd")
+const GameEventBase = preload("res://scripts/events/Event.gd")
+
 signal start_pressed
 signal pause_pressed
 signal build_pressed
@@ -22,8 +25,6 @@ signal building_selected
 var _policies: Array[Policy] = []
 var _events: Array[GameEventBase] = []
 var _buildings_info: Array[Building] = []
-
-const GameEventBase = preload("res://scripts/events/Event.gd")
 
 func _ready() -> void:
     start_button.pressed.connect(func(): start_pressed.emit())
