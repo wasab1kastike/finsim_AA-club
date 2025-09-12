@@ -24,7 +24,7 @@ func _generate_and_store() -> void:
     for r in map_height:
         for q in map_width:
             var hex: Node2D = hex_tile_scene.instantiate() as Node2D
-            var noise_val := noise.get_noise_2d(float(q), float(r))
+            var noise_val: float = noise.get_noise_2d(float(q), float(r))
             var terrain_type := "water"
             if noise_val > 0.4:
                 terrain_type = "mountain"
