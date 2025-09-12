@@ -1,4 +1,5 @@
 extends Node2D
+class_name UnitNode
 
 const UnitDataBase = preload("res://scripts/units/UnitData.gd")
 

@@ -40,10 +40,12 @@ func process_tick() -> void:
     if changed:
         GameState.save()
 
-func _find_unit_node(uid: String) -> Node:
+## Returns the UnitNode child with the matching `id` from `units_root`.
+## Only children of type UnitNode are considered.
+func _find_unit_node(uid: String) -> UnitNode:
     if units_root == null:
         return null
     for child in units_root.get_children():
-        if child.id == uid:
+        if child is UnitNode and child.id == uid:
             return child
     return null
