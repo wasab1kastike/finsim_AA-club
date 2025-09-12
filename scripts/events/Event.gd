@@ -1,4 +1,4 @@
-extends Resource
+extends Action
 class_name GameEvent
 
 @export var name: String = ""
@@ -6,7 +6,7 @@ class_name GameEvent
 @export var choices: Array[Dictionary] = []
 
 func can_trigger() -> bool:
-    return true
+    return can_apply()
 
 func apply() -> bool:
-    return true
+    return super.apply()
