@@ -2,7 +2,7 @@ extends Node
 
 func test_game_state_resources(res) -> void:
     var gs = Engine.get_main_loop().root.get_node("GameState")
-    var keys := gs.res.keys()
+    var keys: Array = gs.res.keys()
     keys.sort()
     var expected := [
         Resources.HALOT,
