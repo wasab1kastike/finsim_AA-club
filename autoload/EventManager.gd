@@ -5,12 +5,16 @@ extends Node
 
 const GameEventBase := preload("res://scripts/events/Event.gd")
 
-# List of event script paths to ensure their classes are registered with the
+# List of event scripts to ensure their classes are registered with the
 # ClassDB before any event resources are loaded.
-const _EVENT_SCRIPT_PATHS := [
-    "res://scripts/events/ColdSnap.gd",
-    "res://scripts/events/Trader.gd",
-    "res://scripts/events/RuneDiscovery.gd",
+const _EVENT_SCRIPTS := [
+    preload("res://scripts/events/ColdSnap.gd"),
+    preload("res://scripts/events/MerchantReturn.gd"),
+    preload("res://scripts/events/Rain.gd"),
+    preload("res://scripts/events/RuneDiscovery.gd"),
+    preload("res://scripts/events/RunePower.gd"),
+    preload("res://scripts/events/SaunaDiplomacy.gd"),
+    preload("res://scripts/events/Trader.gd"),
 ]
 
 var events: Array = []
@@ -20,8 +24,8 @@ var _ticks_until_event: int = 0
 const OVERLAY_SCENE := preload("res://scenes/ui/EventOverlay.tscn")
 
 func _ready() -> void:
-    for p in _EVENT_SCRIPT_PATHS:
-        load(p)
+    for _s in _EVENT_SCRIPTS:
+        pass
     _load_events()
     GameClock.tick.connect(_on_tick)
     _schedule_next_event()

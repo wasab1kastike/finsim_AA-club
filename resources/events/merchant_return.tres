@@ -1,5 +1,5 @@
-[gd_resource type="GameEvent" load_steps=2 format=3 uid="uid://b8ecm46kwtudd"]
-[ext_resource path="res://scripts/events/Event.gd" type="Script" id="1"]
+[gd_resource type="MerchantReturnEvent" load_steps=2 format=3 uid="uid://b8ecm46kwtudd"]
+[ext_resource path="res://scripts/events/MerchantReturn.gd" type="Script" id="1"]
 
 [resource]
 script = ExtResource("1")
