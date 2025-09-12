@@ -34,15 +34,15 @@ func test_bfs_performance(res) -> void:
     var goal := Vector2i(40, 0)
     var passable := func(cell: Vector2i) -> bool:
         return true
-    var queue_time := 0
-    var array_time := 0
+    var queue_time: int = 0
+    var array_time: int = 0
     var iterations := 3
     for i in range(iterations):
-        var t0 := Time.get_ticks_usec()
+        var t0: int = Time.get_ticks_usec()
         Pathing.bfs_path(start, goal, passable)
         queue_time += Time.get_ticks_usec() - t0
     for i in range(iterations):
-        var t1 := Time.get_ticks_usec()
+        var t1: int = Time.get_ticks_usec()
         _naive_bfs(start, goal, passable)
         array_time += Time.get_ticks_usec() - t1
     if queue_time * 5 >= array_time * 6:

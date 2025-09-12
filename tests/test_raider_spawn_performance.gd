@@ -25,14 +25,14 @@ func _optimized_spawn_loop() -> void:
 func test_raider_spawn_performance(res) -> void:
     _setup_tiles(10000, 10)
     var iterations := 50
-    var t0 := Time.get_ticks_usec()
+    var t0: int = Time.get_ticks_usec()
     for i in range(iterations):
         _naive_spawn_loop()
-    var naive_time := Time.get_ticks_usec() - t0
-    var t1 := Time.get_ticks_usec()
+    var naive_time: int = Time.get_ticks_usec() - t0
+    var t1: int = Time.get_ticks_usec()
     for i in range(iterations):
         _optimized_spawn_loop()
-    var opt_time := Time.get_ticks_usec() - t1
+    var opt_time: int = Time.get_ticks_usec() - t1
     var gs = Engine.get_main_loop().root.get_node("GameState")
     gs.tiles.clear()
     gs.hostile_tiles.clear()
