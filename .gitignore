@@ -14,3 +14,7 @@ Thumbs.db
 # Logs & temp
 logs/
 *.tmp
+
+# Font files (not stored in repository)
+assets/fonts/*.ttf
+assets/fonts/*.otf
