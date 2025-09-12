@@ -92,8 +92,13 @@ func _on_choice_selected(choice: Dictionary) -> void:
     var next_path: String = choice.get("next_event", "")
     current_event = null
     if next_path != "":
-        var next_ev: GameEventBase = load(next_path)
-        start_event(next_ev)
+        var next_res := load(next_path)
+        if next_res == null:
+            push_warning("Failed to load next event resource: %s" % next_path)
+        elif next_res is GameEventBase:
+            start_event(next_res)
+        else:
+            push_warning("Loaded next event is not a GameEventBase: %s" % next_path)
     else:
         GameClock.start()
         _schedule_next_event()
