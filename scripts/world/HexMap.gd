@@ -18,6 +18,8 @@ func _ready() -> void:
     assert(terrain is TileMapLayer, "Terrain layer must be TileMapLayer")
     assert(buildings is TileMapLayer, "Buildings layer must be TileMapLayer")
     assert(fog is TileMapLayer, "Fog layer must be TileMapLayer")
+    if radius <= 0:
+        push_warning("HexMap radius is 0")
     _ensure_singletons()
     if GameState.tiles.is_empty():
         _generate_tiles()
