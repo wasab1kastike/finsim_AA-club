@@ -4,11 +4,11 @@ class_name FogMap
 ## Name used to identify the fog source within the TileSet.
 const FOG_SOURCE_NAME := "fog"
 
-var tile_map: TileMap
+var tile_map: TileMapLayer
 var fog_layer: TileMapLayer
 var source_id: int = -1
 
-func _init(p_tile_map: TileMap, p_fog_layer: TileMapLayer) -> void:
+func _init(p_tile_map: TileMapLayer, p_fog_layer: TileMapLayer) -> void:
     tile_map = p_tile_map
     fog_layer = p_fog_layer
     var tset: TileSet = tile_map.tile_set
