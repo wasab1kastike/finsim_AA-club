@@ -142,4 +142,22 @@ func test_event_apply_returns_false(res) -> void:
     if not clock.running:
         res.fail("GameClock stopped despite apply returning false")
     clock.set_process(true)
+
+func test_all_event_resources_load(res) -> void:
+    var dir := DirAccess.open("res://resources/events")
+    if dir == null:
+        res.fail("could not open events directory")
+        return
+    dir.list_dir_begin()
+    var file_name := dir.get_next()
+    while file_name != "":
+        if not dir.current_is_dir() and file_name.ends_with(".tres"):
+            var path := "res://resources/events/%s" % file_name
+            var ev := load(path) as GameEventBase
+            if ev == null:
+                dir.list_dir_end()
+                res.fail("%s failed to load" % file_name)
+                return
+        file_name = dir.get_next()
+    dir.list_dir_end()
         
