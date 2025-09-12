@@ -40,6 +40,7 @@ func _generate_and_store() -> void:
             hex.r = r
             hex.terrain = terrain_type
             hex.resource = resource_type
+            hex.update_sprite()
             hex.position = HexUtils.axial_to_world(q, r, hex_radius)
             add_child(hex)
             var coord := Vector2i(q, r)
@@ -58,5 +59,6 @@ func _draw_from_saved() -> void:
         hex.r = coord.y
         hex.terrain = data.get("terrain", "water")
         hex.resource = data.get("resource", "")
+        hex.update_sprite()
         hex.position = HexUtils.axial_to_world(coord.x, coord.y, hex_radius)
         add_child(hex)
