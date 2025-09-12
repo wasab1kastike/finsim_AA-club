@@ -20,7 +20,10 @@ func test_branching_event(res) -> void:
     clock.set_process(false)
     gs.res[Resources.HALOT] = 20.0
     gs.res[Resources.MAKKARA] = 0.0
-    var ev: GameEventBase = load("res://resources/events/merchant.tres")
+    var ev := load("res://resources/events/merchant.tres") as GameEventBase
+    if ev == null:
+        res.fail("Merchant event failed to load")
+        return
     em.start_event(ev)
     em._on_choice_selected(ev.choices[0])
     _cleanup_overlays(tree)
@@ -76,7 +79,11 @@ func test_event_fails_prerequisites(res) -> void:
     var em = tree.root.get_node("EventManager")
     var orig = gs.res.duplicate()
     gs.res[Resources.HALOT] = 0.0
-    var ev: GameEventBase = load("res://resources/events/merchant.tres")
+    var ev := load("res://resources/events/merchant.tres") as GameEventBase
+    if ev == null:
+        res.fail("Merchant event failed to load")
+        gs.res = orig
+        return
     if ev.can_trigger():
         res.fail("event unexpectedly triggerable")
         gs.res = orig
@@ -99,7 +106,11 @@ func test_unaffordable_choice_keeps_resources(res) -> void:
     clock.set_process(false)
     var orig = gs.res.duplicate()
     gs.res[Resources.HALOT] = 0.0
-    var ev: GameEventBase = load("res://resources/events/merchant.tres")
+    var ev := load("res://resources/events/merchant.tres") as GameEventBase
+    if ev == null:
+        res.fail("Merchant event failed to load")
+        gs.res = orig
+        return
     em.start_event(ev)
     var before: Dictionary = gs.res.duplicate()
     em._on_choice_selected(ev.choices[0])

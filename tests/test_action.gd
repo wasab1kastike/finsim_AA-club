@@ -8,7 +8,10 @@ func test_policy_apply_and_cooldown(res):
     gs.res[Resources.KULTA] = 100.0
     gs.res[Resources.SAUNATUNNELMA] = 0.0
     gs.res[Resources.MAKKARA] = 0.0
-    var policy: Policy = load("res://resources/policies/tax_relief.tres")
+    var policy := load("res://resources/policies/tax_relief.tres") as Policy
+    if policy == null:
+        res.fail("Policy failed to load")
+        return
     if not (policy is Action):
         res.fail("Policy does not inherit Action")
         return
@@ -28,7 +31,10 @@ func test_event_inherits_action(res):
     gs.res[Resources.KULTA] = 100.0
     gs.res[Resources.SAUNATUNNELMA] = 0.0
     gs.res[Resources.MAKKARA] = 0.0
-    var ev: GameEventBase = load("res://resources/events/rain.tres")
+    var ev := load("res://resources/events/rain.tres") as GameEventBase
+    if ev == null:
+        res.fail("Event failed to load")
+        return
     if not (ev is Action):
         res.fail("Event does not inherit Action")
         return
@@ -50,7 +56,11 @@ func test_sauna_diplomacy(res):
     gs.res[Resources.HALOT] = 50.0
     gs.res[Resources.LOYLY] = 1.0
     gs.res[Resources.LAUDEVALTA] = 0.0
-    var ev: GameEventBase = load("res://resources/events/sauna_diplomacy.tres")
+    var ev := load("res://resources/events/sauna_diplomacy.tres") as GameEventBase
+    if ev == null:
+        res.fail("Sauna Diplomacy failed to load")
+        gs.res = orig_res
+        return
     if not ev.can_trigger():
         res.fail("Sauna Diplomacy cannot trigger")
         gs.res = orig_res
@@ -71,7 +81,11 @@ func test_cold_snap(res):
     gs.res[Resources.LOYLY] = 0.0
     gs.production_modifier = 1.0
     gs.modifier_ticks_remaining = 0
-    var ev = load("res://resources/events/cold_snap.tres")
+    var ev := load("res://resources/events/cold_snap.tres") as GameEventBase
+    if ev == null:
+        res.fail("Cold Snap failed to load")
+        _restore(gs, orig_res, orig_mod, orig_ticks)
+        return
     if not ev.apply():
         res.fail("Cold Snap failed to apply without löyly")
         _restore(gs, orig_res, orig_mod, orig_ticks)
