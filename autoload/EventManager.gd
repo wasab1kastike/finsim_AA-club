@@ -26,8 +26,8 @@ var _ticks_until_event: int = 0
 const OVERLAY_SCENE := preload("res://scenes/ui/EventOverlay.tscn")
 
 func _ready() -> void:
-    for _s in _EVENT_SCRIPTS:
-        pass
+    for script in _EVENT_SCRIPTS:
+        script.new()  # ensures class_name is registered
     _load_events()
     GameClock.tick.connect(_on_tick)
     _schedule_next_event()
