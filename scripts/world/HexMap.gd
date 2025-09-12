@@ -3,6 +3,12 @@ class_name HexMap
 
 const TILE_SIZE := Vector2i(96, 84)
 
+const BUILDING_SOURCE_IDS := {
+    "town": 4,
+    "ruins": 5,
+}
+const DEFAULT_BUILDING_SOURCE_ID := 4
+
 @export var radius: int = 0
 @export var terrain_weights: Dictionary = {}
 
@@ -58,7 +64,9 @@ func _draw_from_saved(saved: Dictionary) -> void:
         _paint_terrain(coord, data.get("terrain", "plain"))
         var b = data.get("building", null)
         if b != null and b != "":
-            buildings.set_cell(1, coord, 0)
+            var building_name := String(b)
+            var source_id := BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
+            buildings.set_cell(1, coord, source_id)
         if data.get("explored", false):
             fog.erase_cell(2, coord)
         else:
