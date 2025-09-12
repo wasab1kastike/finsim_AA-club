@@ -5,6 +5,14 @@ extends Node
 
 const GameEventBase := preload("res://scripts/events/Event.gd")
 
+# Preload all event scripts so their classes are registered with the ClassDB
+# before any event resources are loaded.
+const _EVENT_SCRIPTS := [
+    preload("res://scripts/events/ColdSnap.gd"),
+    preload("res://scripts/events/Trader.gd"),
+    preload("res://scripts/events/RuneDiscovery.gd"),
+]
+
 var events: Array = []
 var current_event: GameEventBase = null
 var _ticks_until_event: int = 0
