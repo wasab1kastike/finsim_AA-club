@@ -12,6 +12,7 @@ current = true
 
 [node name="HexMap" type="Node2D" parent="."]
 script = ExtResource("4")
+radius = 6
 
 [node name="TileMap" type="TileMap" parent="HexMap"]
 tile_set = ExtResource("2")
