@@ -1,0 +1,2 @@
+extends GameEvent
+class_name RunePowerEvent
