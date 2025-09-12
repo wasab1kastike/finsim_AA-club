@@ -3,7 +3,7 @@ extends Node2D
 signal tile_clicked(qr: Vector2i)
 
 @onready var cam: Camera2D = $Camera2D
-@onready var grid: TileMap = $HexMap/TileMap
+@onready var grid: TileMapLayer = $HexMap/Terrain
 @onready var hex_map: HexMap = $HexMap
 @onready var units_root: Node2D = $Units
 

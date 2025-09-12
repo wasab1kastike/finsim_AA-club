@@ -6,15 +6,15 @@ const TILE_SIZE := Vector2i(96, 84)
 @export var radius: int = 0
 @export var terrain_weights: Dictionary = {}
 
-@onready var grid: TileMap = $TileMap
-@onready var terrain: TileMapLayer = $TileMap/Terrain
-@onready var buildings: TileMapLayer = $TileMap/Buildings
-@onready var fog: TileMapLayer = $TileMap/Fog
+@onready var grid: TileMapLayer = $Terrain
+@onready var terrain: TileMapLayer = $Terrain
+@onready var buildings: TileMapLayer = $Buildings
+@onready var fog: TileMapLayer = $Fog
 
 signal tile_clicked(cell: Vector2i)
 
 func _ready() -> void:
-    assert(grid is TileMap, "TileMap node missing or wrong type")
+    assert(grid is TileMapLayer, "TileMapLayer node missing or wrong type")
     assert(terrain is TileMapLayer, "Terrain layer must be TileMapLayer")
     assert(buildings is TileMapLayer, "Buildings layer must be TileMapLayer")
     assert(fog is TileMapLayer, "Fog layer must be TileMapLayer")
