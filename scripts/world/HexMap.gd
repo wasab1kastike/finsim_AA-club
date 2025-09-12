@@ -3,7 +3,7 @@ class_name HexMap
 
 const TILE_SIZE := Vector2i(96, 84)
 
-const BUILDING_SOURCE_IDS: Dictionary = {
+const BUILDING_SOURCE_IDS: Dictionary[String, int] = {
     "town": 4,
     "ruins": 5,
 }
@@ -65,7 +65,7 @@ func _draw_from_saved(saved: Dictionary) -> void:
         var b: String = data.get("building", "")
         if b != "":
             var building_name: String = b
-            var source_id: int = int(BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID))
+            var source_id: int = BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
             buildings.set_cell(1, coord, source_id)
         if data.get("explored", false):
             fog.erase_cell(2, coord)
