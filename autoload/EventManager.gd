@@ -37,10 +37,9 @@ func _load_events() -> void:
     for file in DirAccess.get_files_at("res://resources/events"):
         if file.get_extension() == "tres":
             var res_path := "res://resources/events/%s" % file
-            var err := OK
-            var res: Resource = ResourceLoader.load(res_path, "", ResourceLoader.CACHE_MODE_REUSE, false, err)
-            if err != OK or res == null:
-                push_warning("Failed to load event resource: %s (error %s)" % [res_path, err])
+            var res: Resource = ResourceLoader.load(res_path, "", ResourceLoader.CACHE_MODE_REUSE)
+            if res == null:
+                push_warning("Failed to load event resource: %s" % res_path)
             elif res is GameEventBase:
                 events.append(res)
             else:
