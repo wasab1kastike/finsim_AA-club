@@ -18,6 +18,7 @@ const DEFAULT_BUILDING_SOURCE_ID := 4
 @onready var terrain_layer: TileMapLayer = $Grid/Terrain
 @onready var buildings_layer: TileMapLayer = $Grid/Buildings
 @onready var fog_layer: TileMapLayer = $Grid/Fog
+var fog_map: FogMap
 
 const CONFIG_SEED_PATH := "finsim/seed"
 var _rng := RandomNumberGenerator.new()
@@ -34,6 +35,7 @@ func _ready() -> void:
     _ensure_singletons()
     seed = int(ProjectSettings.get_setting(CONFIG_SEED_PATH, seed))
     _rng.seed = seed
+    fog_map = FogMap.new(terrain_layer, fog_layer)
     if GameState.tiles.is_empty():
         _generate_tiles()
     else:
@@ -49,7 +51,7 @@ func axial_to_world(qr: Vector2i) -> Vector2:
 
 func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
     for cell in _disc(center, reveal_radius):
-        fog_layer.erase_cell(cell)
+        fog_map.clear_fog(cell)
         if GameState.tiles.has(cell):
             var t: Dictionary = GameState.tiles[cell]
             t["explored"] = true
@@ -75,9 +77,9 @@ func _draw_from_saved(saved: Dictionary) -> void:
             var source_id: int = BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
             buildings_layer.set_cell(coord, source_id)
         if data.get("explored", false):
-            fog_layer.erase_cell(coord)
+            fog_map.clear_fog(coord)
         else:
-        fog_layer.set_cell(coord, 0)
+            fog_map.set_fog(coord)
 
 func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
     var source_id := 0
@@ -106,7 +108,7 @@ func _generate_tiles() -> void:
             "building": "",
             "explored": false,
         }
-        fog_layer.set_cell(coord, 0)
+        fog_map.set_fog(coord)
     GameState.save()
 
 func _choose_terrain() -> String:

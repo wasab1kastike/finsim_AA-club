@@ -4,9 +4,6 @@ signal tile_clicked(qr: Vector2i)
 
 @onready var cam: Camera2D = $Camera2D
 @onready var grid: TileMap = $HexMap/Grid
-@onready var terrain_layer: TileMapLayer = $HexMap/Grid/Terrain
-@onready var buildings_layer: TileMapLayer = $HexMap/Grid/Buildings
-@onready var fog_layer: TileMapLayer = $HexMap/Grid/Fog
 @onready var hex_map: HexMap = $HexMap
 @onready var units_root: Node2D = $Units
 
