@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;\nuniform vec4 tint : source_color = vec4(0.49, 0.83, 0.99, 1.0);\nuniform float thickness : hint_range(0.0, 1.0) = 0.22;\nvoid fragment(){\n    vec2 uv = (UV * 2.0) - 1.0;\n    float r = length(uv);\n    float ring = smoothstep(1.0, 1.0 - thickness, r) - smoothstep(1.0 - thickness, 0.0, r);\n    COLOR = vec4(tint.rgb, ring * tint.a);\n}"
+
+[resource]
+shader = SubResource(1)

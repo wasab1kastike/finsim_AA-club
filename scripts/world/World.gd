@@ -3,12 +3,14 @@ extends Node2D
 signal tile_clicked(qr: Vector2i)
 
 const Palette = preload("res://styles/palette.gd")
+const UnitNode   = preload("res://units/scripts/unit_node.gd")
+const UnitData   = preload("res://units/scripts/unit_data.gd")
 
 @onready var cam: Camera2D = $Camera2D
 @onready var hex_map: HexMap = $HexMap
 @onready var units_root: Node2D = $Units
 
-var selected_unit: Node = null
+var selected_unit: UnitNode = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 
 const UnitDataBase = preload("res://scripts/units/UnitData.gd")
@@ -201,3 +203,32 @@ func _resolve_combat(pos: Vector2i) -> void:
         GameState.add_sisu(casualties)
     GameState.tiles[pos] = tile
     GameState.set_hostile(pos, not enemy_left.is_empty())
+
+func spawn_unit(kind: String, grid_pos: Vector2i, faction := UnitData.Faction.PLAYER) -> UnitNode:
+    var u := UnitNode.new()
+    var d := UnitData.new()
+    d.faction = faction
+    match kind:
+        "soldier":
+            d.name = "Soldier"; d.icon_path = "res://units/art/unit_soldier.svg"; d.max_hp = 12; d.hp = 12
+        "raider":
+            d.name = "Raider"; d.icon_path = "res://units/art/unit_raider.svg"; d.faction = UnitData.Faction.RAIDER
+        "scout":
+            d.name = "Scout"; d.icon_path = "res://units/art/unit_scout.svg"; d.move = 4
+        _:
+            d.name = "Unit"
+    u.set_data(d)
+    units_root.add_child(u)
+    u.position = hex_map.axial_to_world(grid_pos)
+    u.selected.connect(_on_unit_selected)
+    return u
+
+func select_unit(u: UnitNode) -> void:
+    if selected_unit and is_instance_valid(selected_unit):
+        selected_unit.set_selected(false)
+    selected_unit = u
+    if selected_unit:
+        selected_unit.set_selected(true)
+
+func _on_unit_selected(u: UnitNode) -> void:
+    select_unit(u)
