@@ -3,6 +3,15 @@ class_name HexMap
 
 const TILE_SIZE := Vector2i(96, 84)
 
+const Palette = preload("res://styles/palette.gd")
+
+const TERRAIN_SOURCE_IDS: Dictionary[String, int] = {
+    "forest": 0,
+    "taiga": 1,
+    "hill": 2,
+    "lake": 3,
+    "plain": 0,
+}
 
 const BUILDING_SOURCE_IDS: Dictionary[String, int] = {
     "town": 4,
@@ -68,7 +77,9 @@ func _draw_from_saved(saved: Dictionary) -> void:
     fog_layer.clear()
     for coord in saved.keys():
         var data: Dictionary = saved[coord]
-        _paint_terrain(coord, data.get("terrain", "plain"))
+        var terrain_type: String = data.get("terrain", "plain")
+        var source_id: int = TERRAIN_SOURCE_IDS.get(terrain_type, 0)
+        _paint_cell(terrain_layer.layer_id, coord, source_id, terrain_type)
         var b: String = data.get("building", "")
         if b != "":
             var building_name: String = b
@@ -79,27 +90,31 @@ func _draw_from_saved(saved: Dictionary) -> void:
         else:
             fog_map.set_fog(coord)
 
-func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
-    var source_id := 0
-    match terrain_type:
-        "forest":
-            source_id = 0
-        "taiga":
-            source_id = 1
-        "hill":
-            source_id = 2
-        "lake":
-            source_id = 3
-        _:
-            source_id = 0
-    terrain_layer.set_cell(coord, source_id)
+func _paint_cell(layer: int, coord: Vector2i, source_id: int, terrain: String) -> void:
+    grid.set_cell(layer, coord, source_id)
+    var tile_data := grid.get_cell_tile_data(layer, coord)
+    if tile_data:
+        var color := Palette.PLAIN
+        match terrain:
+            "lake":
+                color = Palette.WATER
+            "hill":
+                color = Palette.HILL
+            "taiga":
+                color = Palette.TAIGA
+            "forest":
+                color = Palette.FOREST
+            _:
+                color = Palette.PLAIN
+        tile_data.modulate = color
 
 func _generate_tiles() -> void:
     _rng.seed = map_seed
     GameState.tiles.clear()
     for coord in _disc(Vector2i.ZERO, radius):
         var terrain_type := _choose_terrain()
-        _paint_terrain(coord, terrain_type)
+        var source_id: int = TERRAIN_SOURCE_IDS.get(terrain_type, 0)
+        _paint_cell(terrain_layer.layer_id, coord, source_id, terrain_type)
         GameState.tiles[coord] = {
             "terrain": terrain_type,
             "owner": "none",
