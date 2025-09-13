@@ -63,6 +63,7 @@ func _on_build_pressed() -> void:
     GameState.tiles[_last_clicked] = tile
     hud.update_tile(_last_clicked, _selected_building)
     hud.update_resources(GameState.res)
+    GameState.save()
 
 func _on_tile_clicked(qr: Vector2i) -> void:
     _last_clicked = qr
