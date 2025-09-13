@@ -23,11 +23,11 @@ func _ready() -> void:
     cam.zoom_smoothed = true
     cam.position_smoothing_speed = 8.0
     cam.zoom_smoothing_speed = 8.0
-    var vignette := ColorRect.new()
+    var vignette: ColorRect = ColorRect.new()
     vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
     vignette.anchor_right = 1.0
     vignette.anchor_bottom = 1.0
-    var v_shader := Shader.new()
+    var v_shader: Shader = Shader.new()
     v_shader.code = """
 shader_type canvas_item;
 void fragment() {
@@ -37,16 +37,16 @@ void fragment() {
     COLOR = vec4(0.0, 0.0, 0.0, vig);
 }
 """
-    var v_mat := ShaderMaterial.new()
+    var v_mat: ShaderMaterial = ShaderMaterial.new()
     v_mat.shader = v_shader
     vignette.material = v_mat
     add_child(vignette)
-    var fog := ColorRect.new()
+    var fog: ColorRect = ColorRect.new()
     fog.name = "FogOverlay"
     fog.mouse_filter = Control.MOUSE_FILTER_IGNORE
     fog.anchor_right = 1.0
     fog.anchor_bottom = 1.0
-    var f_shader := Shader.new()
+    var f_shader: Shader = Shader.new()
     f_shader.code = """
 shader_type canvas_item;
 uniform float density : hint_range(0.0, 1.0) = 0.0;
@@ -54,7 +54,7 @@ void fragment() {
     COLOR = vec4(0.0, 0.0, 0.0, density);
 }
 """
-    var f_mat := ShaderMaterial.new()
+    var f_mat: ShaderMaterial = ShaderMaterial.new()
     f_mat.shader = f_shader
     fog.material = f_mat
     add_child(fog)
@@ -67,8 +67,8 @@ void fragment() {
     raider_manager.setup(hex_map, units_root, unit_scene)
     hex_map.tile_clicked.connect(_on_tile_clicked)
     GameClock.tick.connect(_on_game_tick)
-    for data in GameState.units:
-        var u = unit_scene.instantiate()
+    for data: Dictionary in GameState.units:
+        var u: UnitNode = unit_scene.instantiate() as UnitNode
         u.from_dict(data)
         u.position = hex_map.axial_to_world(u.pos_qr)
         units_root.add_child(u)
@@ -76,13 +76,13 @@ void fragment() {
 
 func _unhandled_input(event: InputEvent) -> void:
     if event is InputEventMouseButton and event.pressed:
-        var delta := 0.0
+        var delta: float = 0.0
         if event.button_index == MOUSE_BUTTON_WHEEL_UP:
             delta = -0.1
         elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
             delta = 0.1
         if delta != 0.0:
-            var z := clamp(cam.zoom.x + delta, 0.5, 2.0)
+            var z: float = clamp(cam.zoom.x + delta, 0.5, 2.0)
             cam.zoom = Vector2.ONE * z
             get_viewport().set_input_as_handled()
 
@@ -96,7 +96,7 @@ func _on_tile_clicked(qr: Vector2i) -> void:
             var next: Vector2i = path[1]
             selected_unit.pos_qr = next
             selected_unit.position = hex_map.axial_to_world(next)
-            for i in range(GameState.units.size()):
+            for i: int in range(GameState.units.size()):
                 var u: Dictionary = GameState.units[i]
                 if u.get("id", "") == selected_unit.id:
                     GameState.units[i] = selected_unit.to_dict()
@@ -110,7 +110,7 @@ func _on_game_tick() -> void:
 
 
 func spawn_unit_at_center() -> void:
-    var u: Node = unit_scene.instantiate()
+    var u: UnitNode = unit_scene.instantiate() as UnitNode
     var data_res: UnitData = load("res://resources/units/saunoja.tres")
     if data_res:
         u.apply_data(data_res)
@@ -132,17 +132,17 @@ func center_on(qr: Vector2i) -> void:
 
 func torille() -> void:
     var sauna_tiles: Array[Vector2i] = []
-    for c in GameState.tiles.keys():
+    for c: Vector2i in GameState.tiles.keys():
         if GameState.tiles[c].get("building", "") == "sauna":
             sauna_tiles.append(c)
     if sauna_tiles.is_empty():
         return
-    var passable := func(p: Vector2i):
+    var passable: Callable = func(p: Vector2i):
         return GameState.tiles.has(p) and GameState.tiles[p].get("terrain", "") != "lake"
-    for unit in units_root.get_children():
+    for unit: UnitNode in units_root.get_children():
         var best_dest: Vector2i = unit.pos_qr
-        var best_len := 1_000_000
-        for sauna in sauna_tiles:
+        var best_len: int = 1_000_000
+        for sauna: Vector2i in sauna_tiles:
             var path: Array[Vector2i] = Pathing.bfs_path(unit.pos_qr, sauna, passable)
             if path.size() > 0 and path.size() < best_len:
                 best_len = path.size()
@@ -150,7 +150,7 @@ func torille() -> void:
         if best_len < 1_000_000:
             unit.pos_qr = best_dest
             unit.position = hex_map.axial_to_world(best_dest)
-            for i in range(GameState.units.size()):
+            for i: int in range(GameState.units.size()):
                 var data: Dictionary = GameState.units[i]
                 if data.get("id", "") == unit.id:
                     data["pos_qr"] = best_dest
@@ -162,21 +162,21 @@ func torille() -> void:
 
 func _resolve_combat(pos: Vector2i) -> void:
     var tile: Dictionary = GameState.tiles.get(pos, {})
-    var enemies: Array = tile.get("hostiles", [])
+    var enemies: Array[Dictionary] = tile.get("hostiles", [])
     if enemies.is_empty():
         return
-    var friendly: Array = []
-    for u in GameState.units:
+    var friendly: Array[Dictionary] = []
+    for u: Dictionary in GameState.units:
         if u.get("pos_qr", Vector2i.ZERO) == pos:
             friendly.append(u.duplicate())
-    var initial := friendly.size()
+    var initial: int = friendly.size()
     var result: Dictionary = AutoResolve.resolve(friendly, enemies, tile.get("terrain", "plain"))
-    var survivors: Array = result.get("friendly", [])
-    var enemy_left: Array = result.get("enemies", [])
+    var survivors: Array[Dictionary] = result.get("friendly", [])
+    var enemy_left: Array[Dictionary] = result.get("enemies", [])
     var ids: Dictionary = {}
-    for f in survivors:
+    for f: Dictionary in survivors:
         ids[f.get("id", "")] = f.get("hp", 0)
-    for i in range(GameState.units.size() - 1, -1, -1):
+    for i: int in range(GameState.units.size() - 1, -1, -1):
         var data: Dictionary = GameState.units[i]
         if data.get("pos_qr", Vector2i.ZERO) == pos:
             var uid: String = data.get("id", "")
@@ -184,7 +184,7 @@ func _resolve_combat(pos: Vector2i) -> void:
                 data["hp"] = ids[uid]
                 GameState.units[i] = data
             else:
-                for child in units_root.get_children():
+                for child: UnitNode in units_root.get_children():
                     if child.id == uid:
                         child.queue_free()
                         break
@@ -197,15 +197,15 @@ func _resolve_combat(pos: Vector2i) -> void:
         GameState.res[Resources.LAUDEVALTA] = GameState.res.get(Resources.LAUDEVALTA, 0.0) + 0.5
     elif survivors.is_empty():
         GameState.decrease_saunatunnelma(1.0)
-    var casualties := initial - survivors.size()
+    var casualties: int = initial - survivors.size()
     if casualties > 0:
         GameState.add_sisu(casualties)
     GameState.tiles[pos] = tile
     GameState.set_hostile(pos, not enemy_left.is_empty())
 
 func spawn_unit(kind: String, grid_pos: Vector2i, faction := BattleUnitData.Faction.PLAYER) -> UnitNode:
-    var u := UnitNode.new()
-    var d := BattleUnitData.new()
+    var u: UnitNode = UnitNode.new()
+    var d: BattleUnitData = BattleUnitData.new()
     d.faction = faction
     match kind:
         "soldier":
