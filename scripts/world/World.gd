@@ -3,7 +3,6 @@ extends Node2D
 signal tile_clicked(qr: Vector2i)
 
 @onready var cam: Camera2D = $Camera2D
-@onready var grid: TileMap = $HexMap/Grid
 @onready var hex_map: HexMap = $HexMap
 @onready var units_root: Node2D = $Units
 
@@ -15,8 +14,7 @@ const UnitDataBase = preload("res://scripts/units/UnitData.gd")
 var raider_manager: RaiderManager
 
 func _ready() -> void:
-    assert(grid.tile_set != null, "Grid TileSet is missing")
-    cam.position = grid.map_to_local(Vector2i(0, 0))
+    cam.position = hex_map.axial_to_world(Vector2i(0, 0))
     hex_map.reveal_area(Vector2i(0, 0), 2)
     print("World._ready: reveal_area executed")
     hex_map.reveal_all()
