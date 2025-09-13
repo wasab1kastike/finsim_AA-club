@@ -36,7 +36,7 @@ func set_selected(v: bool) -> void:
     else: emit_signal("deselected", self)
 
 func apply_damage(amount: int) -> void:
-    data.hp = clampi(data.hp - amount, 0, data.max_hp)
+    data.hp = clamp(data.hp - amount, 0, data.max_hp)
     hp_bar.value = data.hp
     hp_bar.get_theme_stylebox("fill", "ProgressBar").bg_color = \
         (data.hp > data.max_hp/2) ? Palette.HP_GREEN : Palette.HP_RED
