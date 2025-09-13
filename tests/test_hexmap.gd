@@ -138,3 +138,21 @@ func test_buildings_persist_across_save(res) -> void:
         res.fail("building did not persist across save/load")
     _remove_save(gs)
 
+func test_seed_generates_consistent_map(res) -> void:
+    _reset_tiles()
+    ProjectSettings.set_setting("finsim/seed", 123)
+    var map1 = DummyHexMap.new()
+    map1.radius = 2
+    map1.terrain_weights = {"forest": 1.0, "hill": 1.0}
+    map1._generate_tiles()
+    var first := GameState.tiles.duplicate(true)
+    _reset_tiles()
+    var map2 = DummyHexMap.new()
+    map2.radius = 2
+    map2.terrain_weights = {"forest": 1.0, "hill": 1.0}
+    map2._generate_tiles()
+    var second := GameState.tiles.duplicate(true)
+    ProjectSettings.clear("finsim/seed")
+    if JSON.stringify(first) != JSON.stringify(second):
+        res.fail("maps differ with same seed")
+
