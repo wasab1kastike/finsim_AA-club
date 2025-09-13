@@ -1,4 +1,4 @@
-[gd_resource type="TraderEvent" load_steps=2 format=3 uid="uid://cadpr7xc40h0n"]
+[gd_resource type="Resource" script_class="TraderEvent" load_steps=2 format=3 uid="uid://cadpr7xc40h0n"]
 [ext_resource path="res://scripts/events/Trader.gd" type="Script" id="1"]
 
 [resource]

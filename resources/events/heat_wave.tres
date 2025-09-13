@@ -1,4 +1,4 @@
-[gd_resource type="HeatWaveEvent" load_steps=2 format=3 uid="uid://f3a327eab47344a3a249c5afc58f4017"]
+[gd_resource type="Resource" script_class="HeatWaveEvent" load_steps=2 format=3 uid="uid://f3a327eab47344a3a249c5afc58f4017"]
 [ext_resource path="res://scripts/events/HeatWave.gd" type="Script" id="1"]
 
 [resource]

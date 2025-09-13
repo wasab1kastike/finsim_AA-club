@@ -1,4 +1,4 @@
-[gd_resource type="RunBoomEvent" load_steps=2 format=3 uid="uid://1c2dd5201e464e57959590be7cddb02f"]
+[gd_resource type="Resource" script_class="RunBoomEvent" load_steps=2 format=3 uid="uid://1c2dd5201e464e57959590be7cddb02f"]
 [ext_resource path="res://scripts/events/RunBoom.gd" type="Script" id="1"]
 
 [resource]
