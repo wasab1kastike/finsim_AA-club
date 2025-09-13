@@ -39,6 +39,7 @@ func _ready() -> void:
 
 func _on_game_tick() -> void:
     hud.update_resources(GameState.res)
+    hud.update_clock(GameClock.time)
     _update_sisu_buttons()
 
 func _on_building_selected(building_name: String) -> void:
