@@ -8,6 +8,9 @@ var tile_map: TileMapLayer
 var fog_layer: TileMapLayer
 var source_id: int = -1
 
+static var _cached_texture: Texture2D
+static var _cached_source: TileSetAtlasSource
+
 func _init(p_tile_map: TileMapLayer, p_fog_layer: TileMapLayer) -> void:
     tile_map = p_tile_map
     fog_layer = p_fog_layer
@@ -37,9 +40,13 @@ func _get_or_create_fog_source(tset: TileSet) -> int:
         var existing: TileSetSource = tset.get_source(id)
         if existing is TileSetAtlasSource and existing.resource_name == FOG_SOURCE_NAME:
             return id
-    var src := TileSetAtlasSource.new()
-    src.resource_name = FOG_SOURCE_NAME
-    src.texture = _generate_fog_texture(size)
-    src.modulate = Color(1, 1, 1, 0.55)
-    src.texture_region_size = size
+    if _cached_texture == null or _cached_source == null or _cached_source.texture_region_size != size:
+        if _cached_texture == null or (_cached_source != null and _cached_source.texture_region_size != size):
+            _cached_texture = _generate_fog_texture(size)
+        _cached_source = TileSetAtlasSource.new()
+        _cached_source.resource_name = FOG_SOURCE_NAME
+        _cached_source.texture = _cached_texture
+        _cached_source.modulate = Color(1, 1, 1, 0.55)
+        _cached_source.texture_region_size = size
+    var src := _cached_source.duplicate()
     return tset.add_source(src)
