@@ -19,6 +19,7 @@ class DummyHexMap:
         self.terrain = tilemap
         self.buildings = tilemap
         self.fog = tilemap
+        _setup_layers()
 
     func _set_tile(coord: Vector2i) -> void:
         pass
@@ -27,7 +28,13 @@ class DummyHexMap:
         pass
 
     func _setup_layers() -> void:
-        pass
+        var tm: TileMap = grid
+        # Ensure the TileMap has three layers for terrain, buildings and fog.
+        while tm.get_layers_count() < 3:
+            tm.add_layer()
+        tm.set_layer_name(0, "Terrain")
+        tm.set_layer_name(1, "Buildings")
+        tm.set_layer_name(2, "Fog")
 
     func _ready() -> void:
         _ensure_singletons()
