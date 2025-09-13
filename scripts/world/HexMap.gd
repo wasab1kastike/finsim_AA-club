@@ -3,12 +3,25 @@ class_name HexMap
 
 const TILE_SIZE := Vector2i(96, 84)
 
+const Palette = preload("res://styles/palette.gd")
 
 const BUILDING_SOURCE_IDS: Dictionary[String, int] = {
     "town": 4,
     "ruins": 5,
 }
 const DEFAULT_BUILDING_SOURCE_ID := 4
+
+const TERRAIN_SOURCE_IDS: Dictionary[String, int] = {
+    "forest": 0,
+    "taiga": 1,
+    "hill": 2,
+    "lake": 3,
+    "water": 3,
+    "plain": 0,
+    "grass": 0,
+    "mountain": 2,
+}
+const DEFAULT_TERRAIN_SOURCE_ID := 0
 
 @export var radius: int = 0
 @export var map_seed: int = 0
@@ -19,6 +32,8 @@ const DEFAULT_BUILDING_SOURCE_ID := 4
 @onready var buildings_layer: TileMapLayer = $Grid/Buildings
 @onready var fog_layer: TileMapLayer = $Grid/Fog
 var fog_map: FogMap
+
+@onready var terrain_layer_index: int = terrain_layer.get_index()
 
 const CONFIG_SEED_PATH := "finsim/seed"
 var _rng := RandomNumberGenerator.new()
@@ -68,7 +83,9 @@ func _draw_from_saved(saved: Dictionary) -> void:
     fog_layer.clear()
     for coord in saved.keys():
         var data: Dictionary = saved[coord]
-        _paint_terrain(coord, data.get("terrain", "plain"))
+        var terrain_type: String = data.get("terrain", "plain")
+        var source_id: int = TERRAIN_SOURCE_IDS.get(terrain_type, DEFAULT_TERRAIN_SOURCE_ID)
+        _paint_cell(terrain_layer_index, coord, source_id, terrain_type)
         var b: String = data.get("building", "")
         if b != "":
             var building_name: String = b
@@ -79,27 +96,32 @@ func _draw_from_saved(saved: Dictionary) -> void:
         else:
             fog_map.set_fog(coord)
 
-func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
-    var source_id := 0
-    match terrain_type:
+func _paint_cell(layer: int, coord: Vector2i, source_id: int, terrain: String) -> void:
+    grid.set_cell(layer, coord, source_id)
+    var td := grid.get_cell_tile_data(layer, coord)
+    if td == null:
+        return
+    match terrain:
+        "water", "lake":
+            td.modulate = Palette.WATER
+        "plain", "grass":
+            td.modulate = Palette.PLAIN
         "forest":
-            source_id = 0
+            td.modulate = Palette.FOREST
         "taiga":
-            source_id = 1
-        "hill":
-            source_id = 2
-        "lake":
-            source_id = 3
+            td.modulate = Palette.TAIGA
+        "hill", "mountain":
+            td.modulate = Palette.HILL
         _:
-            source_id = 0
-    terrain_layer.set_cell(coord, source_id)
+            td.modulate = Palette.PLAIN
 
 func _generate_tiles() -> void:
     _rng.seed = map_seed
     GameState.tiles.clear()
     for coord in _disc(Vector2i.ZERO, radius):
         var terrain_type := _choose_terrain()
-        _paint_terrain(coord, terrain_type)
+        var source_id: int = TERRAIN_SOURCE_IDS.get(terrain_type, DEFAULT_TERRAIN_SOURCE_ID)
+        _paint_cell(terrain_layer_index, coord, source_id, terrain_type)
         GameState.tiles[coord] = {
             "terrain": terrain_type,
             "owner": "none",
