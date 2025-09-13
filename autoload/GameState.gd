@@ -73,6 +73,7 @@ func save() -> void:
         "units": unit_data,
         "tutorial_done": tutorial_done,
     }
+    DirAccess.make_dir_recursive_absolute(SAVE_PATH.get_base_dir())
     var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
     if file:
         file.store_string(JSON.stringify(data))

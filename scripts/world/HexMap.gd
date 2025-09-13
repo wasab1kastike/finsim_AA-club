@@ -106,6 +106,7 @@ func _generate_tiles() -> void:
             "explored": false,
         }
         fog.set_cell(2, coord, 0)
+    GameState.save()
 
 func _choose_terrain() -> String:
     var total := 0.0
