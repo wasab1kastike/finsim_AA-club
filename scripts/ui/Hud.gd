@@ -65,7 +65,10 @@ func update_tile(tile_pos: Vector2i, building: Building) -> void:
     tile_info_label.text = text
 
 func update_clock(time: float) -> void:
-    clock_label.text = "Time: %.2f" % time
+    var total_seconds := int(time)
+    var minutes := total_seconds / 60
+    var seconds := total_seconds % 60
+    clock_label.text = "Time: %02d:%02d" % [minutes, seconds]
 
 func _on_policy_pressed() -> void:
     var idx := policy_selector.get_selected()
