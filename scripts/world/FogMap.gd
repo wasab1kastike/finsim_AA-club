@@ -36,7 +36,8 @@ func _generate_fog_texture(size: Vector2i) -> Texture2D:
 ## Returns an existing fog source or creates one if absent.
 func _get_or_create_fog_source(tset: TileSet) -> int:
     var size: Vector2i = tset.tile_size
-    for id in tset.get_source_id_list():
+    for i in range(tset.get_source_count()):
+        var id: int = tset.get_source_id(i)
         var existing: TileSetSource = tset.get_source(id)
         if existing is TileSetAtlasSource and existing.resource_name == FOG_SOURCE_NAME:
             return id
