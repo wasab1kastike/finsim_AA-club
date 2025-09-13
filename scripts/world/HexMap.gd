@@ -23,6 +23,16 @@ const DEFAULT_BUILDING_SOURCE_ID := 4
 @export var map_seed: int = 0
 @export var terrain_weights: Dictionary[String, float] = {}
 
+@export var line_thickness: float = 2.0:
+    set(value):
+        line_thickness = value
+        _update_grid_outline()
+
+@export var line_alpha: float = 0.5:
+    set(value):
+        line_alpha = value
+        _update_grid_outline()
+
 @onready var grid: TileMap = $Grid
 @onready var terrain_layer: TileMapLayer = $Grid/Terrain
 @onready var buildings_layer: TileMapLayer = $Grid/Buildings
@@ -36,6 +46,7 @@ signal tile_clicked(cell: Vector2i)
 
 func _ready() -> void:
     assert(grid is TileMap, "TileMap node missing or wrong type")
+    _update_grid_outline()
     if radius <= 0:
         push_warning("HexMap radius is 0")
     _ensure_singletons()
@@ -70,6 +81,11 @@ func reveal_all() -> void:
         var t: Dictionary = GameState.tiles[coord]
         t["explored"] = true
         GameState.tiles[coord] = t
+
+func _update_grid_outline() -> void:
+    if grid.material is ShaderMaterial:
+        grid.material.set_shader_parameter("line_thickness", line_thickness)
+        grid.material.set_shader_parameter("line_alpha", line_alpha)
 
 func _draw_from_saved(saved: Dictionary) -> void:
     terrain_layer.clear()
