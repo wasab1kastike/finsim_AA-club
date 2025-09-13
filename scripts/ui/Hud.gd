@@ -8,19 +8,19 @@ signal pause_pressed
 signal build_pressed
 signal building_selected
 
-@onready var resources_label: Label = $ResourcesLabel
-@onready var tile_info_label: Label = $TileInfoLabel
-@onready var start_button: Button = $StartButton
-@onready var pause_button: Button = $PauseButton
-@onready var clock_label: Label = $ClockLabel
-@onready var policy_button: Button = $PolicyButton
-@onready var event_button: Button = $EventButton
-@onready var event_label: Label = $EventLabel
-@onready var build_button: Button = $BuildButton
-@onready var building_selector: OptionButton = $BuildingSelector
-@onready var policy_selector: OptionButton = $PolicySelector
-@onready var event_selector: OptionButton = $EventSelector
-@onready var info_box: InfoBox = $InfoBox
+@onready var resources_label: Label = $MarginContainer/Panel/HBoxContainer/ResourcesLabel
+@onready var tile_info_label: Label = $MarginContainer/Panel/HBoxContainer/TileInfoLabel
+@onready var start_button: Button = $MarginContainer/Panel/HBoxContainer/StartButton
+@onready var pause_button: Button = $MarginContainer/Panel/HBoxContainer/PauseButton
+@onready var clock_label: Label = $MarginContainer/Panel/HBoxContainer/ClockLabel
+@onready var policy_button: Button = $MarginContainer/Panel/HBoxContainer/PolicyButton
+@onready var event_button: Button = $MarginContainer/Panel/HBoxContainer/EventButton
+@onready var event_label: Label = $MarginContainer/Panel/HBoxContainer/EventLabel
+@onready var build_button: Button = $MarginContainer/Panel/HBoxContainer/BuildButton
+@onready var building_selector: OptionButton = $MarginContainer/Panel/HBoxContainer/BuildingSelector
+@onready var policy_selector: OptionButton = $MarginContainer/Panel/HBoxContainer/PolicySelector
+@onready var event_selector: OptionButton = $MarginContainer/Panel/HBoxContainer/EventSelector
+@onready var info_box: InfoBox = $MarginContainer/Panel/HBoxContainer/InfoBox
 
 var _policies: Array[Policy] = []
 var _events: Array[GameEventBase] = []
