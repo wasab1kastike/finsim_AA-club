@@ -15,11 +15,22 @@ class DummyHexMap:
         tilemap.tile_set = tset
         add_child(tilemap)
 
+        var terrain_layer := TileMapLayer.new()
+        terrain_layer.name = "Terrain"
+        tilemap.add_child(terrain_layer)
+
+        var buildings_layer := TileMapLayer.new()
+        buildings_layer.name = "Buildings"
+        tilemap.add_child(buildings_layer)
+
+        var fog_layer := TileMapLayer.new()
+        fog_layer.name = "Fog"
+        tilemap.add_child(fog_layer)
+
         self.grid = tilemap
-        self.terrain = tilemap
-        self.buildings = tilemap
-        self.fog = tilemap
-        _setup_layers()
+        self.terrain_layer = terrain_layer
+        self.buildings_layer = buildings_layer
+        self.fog_layer = fog_layer
 
     func _set_tile(coord: Vector2i) -> void:
         pass
@@ -28,13 +39,7 @@ class DummyHexMap:
         pass
 
     func _setup_layers() -> void:
-        var tm: TileMap = grid
-        # Ensure the TileMap has three layers for terrain, buildings and fog.
-        while tm.get_layers_count() < 3:
-            tm.add_layer()
-        tm.set_layer_name(0, "Terrain")
-        tm.set_layer_name(1, "Buildings")
-        tm.set_layer_name(2, "Fog")
+        pass
 
     func _ready() -> void:
         _ensure_singletons()
