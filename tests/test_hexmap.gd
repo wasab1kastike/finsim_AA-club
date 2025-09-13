@@ -13,24 +13,15 @@ class DummyHexMap:
         var tilemap := TileMap.new()
         tilemap.name = "Grid"
         tilemap.tile_set = tset
+        tilemap.set_layer_name(0, "Terrain")
+        tilemap.add_layer(1)
+        tilemap.set_layer_name(1, "Buildings")
+        tilemap.add_layer(2)
+        tilemap.set_layer_name(2, "Fog")
+        tilemap.set_layer_modulate(2, Color(1, 1, 1, 0.55))
         add_child(tilemap)
 
-        var terrain_layer := TileMapLayer.new()
-        terrain_layer.name = "Terrain"
-        tilemap.add_child(terrain_layer)
-
-        var buildings_layer := TileMapLayer.new()
-        buildings_layer.name = "Buildings"
-        tilemap.add_child(buildings_layer)
-
-        var fog_layer := TileMapLayer.new()
-        fog_layer.name = "Fog"
-        tilemap.add_child(fog_layer)
-
         self.grid = tilemap
-        self.terrain_layer = terrain_layer
-        self.buildings_layer = buildings_layer
-        self.fog_layer = fog_layer
 
     func _set_tile(coord: Vector2i) -> void:
         pass

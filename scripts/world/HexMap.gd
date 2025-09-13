@@ -15,10 +15,11 @@ const DEFAULT_BUILDING_SOURCE_ID := 4
 @export var terrain_weights: Dictionary[String, float] = {}
 
 @onready var grid: TileMap = $Grid
-@onready var terrain_layer: TileMapLayer = $Grid/Terrain
-@onready var buildings_layer: TileMapLayer = $Grid/Buildings
-@onready var fog_layer: TileMapLayer = $Grid/Fog
 var fog_map: FogMap
+
+const TERRAIN_LAYER := 0
+const BUILDINGS_LAYER := 1
+const FOG_LAYER := 2
 
 const CONFIG_SEED_PATH := "finsim/seed"
 var _rng := RandomNumberGenerator.new()
@@ -27,15 +28,12 @@ signal tile_clicked(cell: Vector2i)
 
 func _ready() -> void:
     assert(grid is TileMap, "TileMap node missing or wrong type")
-    assert(terrain_layer is TileMapLayer, "Terrain layer must be TileMapLayer")
-    assert(buildings_layer is TileMapLayer, "Buildings layer must be TileMapLayer")
-    assert(fog_layer is TileMapLayer, "Fog layer must be TileMapLayer")
     if radius <= 0:
         push_warning("HexMap radius is 0")
     _ensure_singletons()
     map_seed = int(ProjectSettings.get_setting(CONFIG_SEED_PATH, map_seed))
     _rng.seed = map_seed
-    fog_map = FogMap.new(terrain_layer, fog_layer)
+    fog_map = FogMap.new(grid, FOG_LAYER)
     if GameState.tiles.is_empty():
         _generate_tiles()
     else:
@@ -58,16 +56,16 @@ func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
             GameState.tiles[cell] = t
 
 func reveal_all() -> void:
-    fog_layer.clear()
+    grid.clear_layer(FOG_LAYER)
     for coord in GameState.tiles.keys():
         var t: Dictionary = GameState.tiles[coord]
         t["explored"] = true
         GameState.tiles[coord] = t
 
 func _draw_from_saved(saved: Dictionary) -> void:
-    terrain_layer.clear()
-    buildings_layer.clear()
-    fog_layer.clear()
+    grid.clear_layer(TERRAIN_LAYER)
+    grid.clear_layer(BUILDINGS_LAYER)
+    grid.clear_layer(FOG_LAYER)
     for coord in saved.keys():
         var data: Dictionary = saved[coord]
         _paint_terrain(coord, data.get("terrain", "plain"))
@@ -75,7 +73,7 @@ func _draw_from_saved(saved: Dictionary) -> void:
         if b != "":
             var building_name: String = b
             var source_id: int = BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
-            buildings_layer.set_cell(coord, source_id)
+            grid.set_cell(BUILDINGS_LAYER, coord, source_id)
         if data.get("explored", false):
             fog_map.clear_fog(coord)
         else:
@@ -94,7 +92,7 @@ func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
             source_id = 3
         _:
             source_id = 0
-    terrain_layer.set_cell(coord, source_id)
+    grid.set_cell(TERRAIN_LAYER, coord, source_id)
 
 func _generate_tiles() -> void:
     _rng.seed = map_seed
