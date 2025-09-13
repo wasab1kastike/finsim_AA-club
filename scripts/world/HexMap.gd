@@ -11,7 +11,7 @@ const BUILDING_SOURCE_IDS: Dictionary[String, int] = {
 const DEFAULT_BUILDING_SOURCE_ID := 4
 
 @export var radius: int = 0
-@export var seed: int = 0
+@export var map_seed: int = 0
 @export var terrain_weights: Dictionary[String, float] = {}
 
 @onready var grid: TileMap = $Grid
@@ -33,8 +33,8 @@ func _ready() -> void:
     if radius <= 0:
         push_warning("HexMap radius is 0")
     _ensure_singletons()
-    seed = int(ProjectSettings.get_setting(CONFIG_SEED_PATH, seed))
-    _rng.seed = seed
+    map_seed = int(ProjectSettings.get_setting(CONFIG_SEED_PATH, map_seed))
+    _rng.seed = map_seed
     fog_map = FogMap.new(terrain_layer, fog_layer)
     if GameState.tiles.is_empty():
         _generate_tiles()
@@ -97,7 +97,7 @@ func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
     terrain_layer.set_cell(coord, source_id)
 
 func _generate_tiles() -> void:
-    _rng.seed = seed
+    _rng.seed = map_seed
     GameState.tiles.clear()
     for coord in _disc(Vector2i.ZERO, radius):
         var terrain_type := _choose_terrain()
