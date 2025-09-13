@@ -19,7 +19,5 @@ tile_set = ExtResource("2")
 cell_tile_size = Vector2i(96, 84)
 layers/0/name = "Terrain"
 layers/1/name = "Buildings"
-layers/2/name = "Fog"
-layers/2/modulate = Color(1, 1, 1, 0.55)
 
 [node name="Units" type="Node2D" parent="."]

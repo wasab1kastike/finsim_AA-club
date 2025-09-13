@@ -33,7 +33,6 @@ func process_tick() -> void:
             node.position = hex_map.axial_to_world(next)
         data["pos_qr"] = next
         GameState.units[i] = data
-        hex_map.reveal_area(next, 1)
         changed = true
         if path.size() == 2:
             world._resolve_combat(next)

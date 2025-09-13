@@ -4,7 +4,6 @@ const TutorialOverlayScene = preload("res://scenes/ui/TutorialOverlay.tscn")
 
 @onready var world: Node = $World
 @onready var hud: CanvasLayer = $Hud
-@onready var reveal_btn: Button = $DebugUI/RevealAllButton
 @onready var spawn_btn: Button = $DebugUI/SpawnButton
 @onready var sisu_btn: Button = $DebugUI/SpendSisuButton
 @onready var torille_btn: Button = $DebugUI/TorilleButton
@@ -27,7 +26,6 @@ func _ready() -> void:
     hud.build_pressed.connect(_on_build_pressed)
     hud.building_selected.connect(_on_building_selected)
     GameClock.tick.connect(_on_game_tick)
-    reveal_btn.pressed.connect(_on_reveal_all)
     spawn_btn.pressed.connect(_on_spawn)
     sisu_btn.pressed.connect(_on_sisu_pressed)
     torille_btn.pressed.connect(_on_torille_pressed)
@@ -73,9 +71,6 @@ func _on_tile_clicked(qr: Vector2i) -> void:
     hud.update_tile(qr, building)
     hud.show_building_info(building)
     print("Main: clicked %s terrain %s" % [qr, data.get("terrain", "")])
-
-func _on_reveal_all() -> void:
-    world.reveal_all()
 
 func _on_spawn() -> void:
     world.spawn_unit_at_center()

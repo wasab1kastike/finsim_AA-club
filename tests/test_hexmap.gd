@@ -16,9 +16,6 @@ class DummyHexMap:
         tilemap.set_layer_name(0, "Terrain")
         tilemap.add_layer(1)
         tilemap.set_layer_name(1, "Buildings")
-        tilemap.add_layer(2)
-        tilemap.set_layer_name(2, "Fog")
-        tilemap.set_layer_modulate(2, Color(1, 1, 1, 0.55))
         add_child(tilemap)
 
         self.grid = tilemap
@@ -38,11 +35,6 @@ class DummyHexMap:
             _generate_tiles()
         else:
             _draw_from_saved(GameState.tiles)
-
-    func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
-        for coord in GameState.tiles.keys():
-            if HexUtils.axial_distance(coord, center) <= reveal_radius:
-                GameState.tiles[coord]["explored"] = true
 
 func _reset_tiles() -> void:
     var tree = Engine.get_main_loop()
@@ -76,34 +68,6 @@ func test_ready_uses_saved_tiles(res) -> void:
     map._ready()
     if gs.tiles.size() != 1 or not gs.tiles.has(Vector2i(0,0)):
         res.fail("Expected existing tiles to persist after _ready")
-
-func test_reveal_area(res) -> void:
-    _reset_tiles()
-    var map = DummyHexMap.new()
-    map.radius = 2
-    map.terrain_weights = {"forest": 1.0}
-    map._generate_tiles()
-    map.reveal_area(Vector2i.ZERO, 1)
-    var gs = Engine.get_main_loop().root.get_node("GameState")
-    var explored: Array[Vector2i] = []
-    for coord in gs.tiles.keys():
-        if gs.tiles[coord]["explored"]:
-            explored.append(coord)
-    var expected := [
-        Vector2i(0,0), Vector2i(1,0), Vector2i(1,-1),
-        Vector2i(0,-1), Vector2i(-1,0), Vector2i(-1,1), Vector2i(0,1)
-    ]
-    if explored.size() != expected.size():
-        res.fail("Expected %d explored, got %d" % [expected.size(), explored.size()])
-    else:
-        for e in expected:
-            if e not in explored:
-                res.fail("Missing %s" % e)
-                break
-    for coord in gs.tiles.keys():
-        if coord not in expected and gs.tiles[coord]["explored"]:
-            res.fail("Tile %s explored outside radius" % coord)
-            break
 
 func test_tiles_persist_across_save(res) -> void:
     _reset_tiles()

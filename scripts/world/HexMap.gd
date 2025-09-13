@@ -15,11 +15,9 @@ const DEFAULT_BUILDING_SOURCE_ID := 4
 @export var terrain_weights: Dictionary[String, float] = {}
 
 @onready var grid: TileMap = $Grid
-var fog_map: FogMap
 
 const TERRAIN_LAYER := 0
 const BUILDINGS_LAYER := 1
-const FOG_LAYER := 2
 
 const CONFIG_SEED_PATH := "finsim/seed"
 var _rng := RandomNumberGenerator.new()
@@ -33,12 +31,10 @@ func _ready() -> void:
     _ensure_singletons()
     map_seed = int(ProjectSettings.get_setting(CONFIG_SEED_PATH, map_seed))
     _rng.seed = map_seed
-    fog_map = FogMap.new(grid, FOG_LAYER)
     if GameState.tiles.is_empty():
         _generate_tiles()
     else:
         _draw_from_saved(GameState.tiles)
-    reveal_all()
 
 func _unhandled_input(event: InputEvent) -> void:
     if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -48,25 +44,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func axial_to_world(qr: Vector2i) -> Vector2:
     return grid.map_to_local(qr)
 
-func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
-    for cell in _disc(center, reveal_radius):
-        fog_map.clear_fog(cell)
-        if GameState.tiles.has(cell):
-            var t: Dictionary = GameState.tiles[cell]
-            t["explored"] = true
-            GameState.tiles[cell] = t
-
-func reveal_all() -> void:
-    grid.clear_layer(FOG_LAYER)
-    for coord in GameState.tiles.keys():
-        var t: Dictionary = GameState.tiles[coord]
-        t["explored"] = true
-        GameState.tiles[coord] = t
-
 func _draw_from_saved(saved: Dictionary) -> void:
     grid.clear_layer(TERRAIN_LAYER)
     grid.clear_layer(BUILDINGS_LAYER)
-    grid.clear_layer(FOG_LAYER)
     for coord in saved.keys():
         var data: Dictionary = saved[coord]
         _paint_terrain(coord, data.get("terrain", "plain"))
@@ -75,10 +55,8 @@ func _draw_from_saved(saved: Dictionary) -> void:
             var building_name: String = b
             var source_id: int = BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
             grid.set_cell(BUILDINGS_LAYER, coord, source_id)
-        if data.get("explored", false):
-            fog_map.clear_fog(coord)
-        else:
-            fog_map.set_fog(coord)
+        data["explored"] = true
+        saved[coord] = data
 
 func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
     var source_id := 0
@@ -105,9 +83,8 @@ func _generate_tiles() -> void:
             "terrain": terrain_type,
             "owner": "none",
             "building": "",
-            "explored": false,
+            "explored": true,
         }
-        fog_map.set_fog(coord)
     GameState.save()
 
 func _choose_terrain() -> String:

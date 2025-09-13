@@ -16,9 +16,6 @@ var raider_manager: RaiderManager
 
 func _ready() -> void:
     cam.position = grid.map_to_local(Vector2i(0, 0))
-    hex_map.reveal_area(Vector2i(0, 0), 2)
-    print("World._ready: reveal_area executed")
-    hex_map.reveal_all()
     raider_manager = RaiderManager.new()
     add_child(raider_manager)
     raider_manager.setup(hex_map, units_root, unit_scene)
@@ -46,7 +43,6 @@ func _on_tile_clicked(qr: Vector2i) -> void:
                 if u.get("id", "") == selected_unit.id:
                     GameState.units[i] = selected_unit.to_dict()
                     break
-            hex_map.reveal_area(next, 1)
             _resolve_combat(next)
             GameState.save()
 
@@ -65,11 +61,6 @@ func spawn_unit_at_center() -> void:
     u.position = hex_map.axial_to_world(u.pos_qr)
     GameState.units.append(u.to_dict())
     selected_unit = u
-    hex_map.reveal_area(u.pos_qr, 1)
-    GameState.save()
-
-func reveal_all() -> void:
-    hex_map.reveal_all()
     GameState.save()
 
 func center_on(qr: Vector2i) -> void:
@@ -101,7 +92,6 @@ func torille() -> void:
                     data["pos_qr"] = best_dest
                     GameState.units[i] = data
                     break
-            hex_map.reveal_area(best_dest, 1)
             _resolve_combat(best_dest)
     GameState.save()
 

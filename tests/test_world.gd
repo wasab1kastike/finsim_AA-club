@@ -23,7 +23,6 @@ func test_spawn_and_reveal(res) -> void:
         res.fail("unit not at center")
         world.queue_free()
         return
-    world.reveal_all()
     for data in GameState.tiles.values():
         if not data.get("explored", false):
             res.fail("tile not revealed")
