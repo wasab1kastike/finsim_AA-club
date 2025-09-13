@@ -2,6 +2,8 @@ class_name UnitNode
 extends Node2D
 
 const UnitData  = preload("res://units/scripts/unit_data.gd")
+const HPTheme   = preload("res://units/themes/hp_theme.gd")
+const Palette   = preload("res://styles/palette.gd")
 
 @onready var icon: Sprite2D         = $Icon
 @onready var ring: ColorRect        = $SelectionRing
@@ -20,6 +22,7 @@ func _ready():
     icon.modulate = data.faction_color()
     hp_bar.max_value = data.max_hp
     hp_bar.value = data.hp
+    hp_bar.theme = HPTheme.new()
 
 func set_data(d: UnitData) -> void:
     data = d
