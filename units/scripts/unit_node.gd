@@ -1,7 +1,6 @@
 class_name UnitNode
 extends Node2D
 
-const Palette   = preload("res://styles/palette.gd")
 const UnitData  = preload("res://units/scripts/unit_data.gd")
 
 @onready var icon: Sprite2D         = $Icon

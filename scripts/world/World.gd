@@ -2,7 +2,6 @@ extends Node2D
 
 signal tile_clicked(qr: Vector2i)
 
-const Palette = preload("res://styles/palette.gd")
 const UnitNode   = preload("res://units/scripts/unit_node.gd")
 const UnitData   = preload("res://units/scripts/unit_data.gd")
 

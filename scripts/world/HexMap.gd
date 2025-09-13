@@ -3,7 +3,6 @@ class_name HexMap
 
 const TILE_SIZE := Vector2i(96, 84)
 
-const Palette = preload("res://styles/palette.gd")
 
 const TERRAIN_SOURCE_IDS: Dictionary[String, int] = {
     "forest": 0,
