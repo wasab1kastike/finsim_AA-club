@@ -20,10 +20,7 @@ GameState="*res://autoload/GameState.gd"
 GameClock="*res://autoload/GameClock.gd"
 RNG="*res://autoload/RNG.gd"
 EventManager="*res://autoload/EventManager.gd"
-
-[gui]
-
-theme/custom="res://resources/Theme.tres"
+ThemeSetup="*res://ui/theme_setup.gd"
 
 [script_classes]
 
