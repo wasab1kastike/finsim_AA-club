@@ -1,5 +1,8 @@
 # Godot
-.godot/
+.godot/*
+!.godot/imported/
+.godot/imported/*
+!.godot/imported/*.md5
 .import/
 
 # Exported builds (keep presets file)
