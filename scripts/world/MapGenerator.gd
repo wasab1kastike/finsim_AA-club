@@ -2,7 +2,7 @@ extends Node2D
 
 @export var map_width: int = 10
 @export var map_height: int = 10
-@export var seed: int = 0
+@export var generator_seed: int = 0
 @export var hex_radius: float = 32.0
 
 var noise := FastNoiseLite.new()
@@ -10,8 +10,8 @@ var noise := FastNoiseLite.new()
 var _state: Node
 
 func _ready() -> void:
-    noise.seed = seed
-    RNG.seed_from_string(str(seed))
+    noise.seed = generator_seed
+    RNG.seed_from_string(str(generator_seed))
     _state = Engine.get_main_loop().root.get_node("GameState")
     if _state.tiles.is_empty():
         _generate_and_store()
