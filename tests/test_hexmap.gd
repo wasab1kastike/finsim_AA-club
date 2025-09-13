@@ -156,3 +156,21 @@ func test_seed_generates_consistent_map(res) -> void:
     if JSON.stringify(first) != JSON.stringify(second):
         res.fail("maps differ with same seed")
 
+func test_tiles_are_saved_after_generation(res) -> void:
+    _reset_tiles()
+    var tree = Engine.get_main_loop()
+    var gs = tree.root.get_node("GameState")
+    _remove_save(gs)
+    var map = DummyHexMap.new()
+    map.radius = 1
+    map.terrain_weights = {"forest": 1.0}
+    map._generate_tiles()
+    if not FileAccess.file_exists(gs.SAVE_PATH):
+        res.fail("save file not created after tile generation")
+        return
+    gs.tiles.clear()
+    gs.load()
+    if gs.tiles.is_empty():
+        res.fail("tiles not persisted after generation")
+    _remove_save(gs)
+
