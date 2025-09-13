@@ -122,13 +122,24 @@ func _disc(center: Vector2i, disc_radius: int) -> Array[Vector2i]:
 
 func _ensure_singletons() -> void:
     var root: Node = Engine.get_main_loop().root
-    load("res://scripts/core/Resources.gd")
+    var resources_res := ResourceLoader.load("res://scripts/core/Resources.gd")
+    if resources_res == null:
+        push_error("Failed to load Resources.gd")
+        return
     if not root.has_node("GameState"):
-        var gs = load("res://autoload/GameState.gd").new()
+        var gs_res := ResourceLoader.load("res://autoload/GameState.gd")
+        if gs_res == null:
+            push_error("Failed to load GameState.gd")
+            return
+        var gs = gs_res.new()
         gs.name = "GameState"
         root.add_child(gs)
     if not root.has_node("GameClock"):
-        var gc = load("res://autoload/GameClock.gd").new()
+        var gc_res := ResourceLoader.load("res://autoload/GameClock.gd")
+        if gc_res == null:
+            push_error("Failed to load GameClock.gd")
+            return
+        var gc = gc_res.new()
         gc.name = "GameClock"
         root.add_child(gc)
 
