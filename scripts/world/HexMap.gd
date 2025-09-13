@@ -98,8 +98,8 @@ func _draw_from_saved(saved: Dictionary) -> void:
         var b: String = data.get("building", "")
         if b != "":
             var building_name: String = b
-            var source_id: int = BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
-            buildings_layer.set_cell(coord, source_id)
+            var building_source_id: int = BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
+            buildings_layer.set_cell(coord, building_source_id)
         if data.get("explored", false):
             fog_map.clear_fog(coord)
         else:
