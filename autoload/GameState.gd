@@ -1,5 +1,9 @@
 extends Node
 
+# Ensure the global Resources class is available when running in headless
+# mode without the editor-generated class database.
+const Resources = preload("res://scripts/core/Resources.gd")
+
 const HALOT_PER_TICK := 0.2
 const MAKKARA_PER_TICK := 0.1
 const LOYLY_PER_TICK := 0.2
