@@ -10,12 +10,16 @@ const BUILDING_SOURCE_IDS: Dictionary[String, int] = {
 const DEFAULT_BUILDING_SOURCE_ID := 4
 
 @export var radius: int = 0
+@export var seed: int = 0
 @export var terrain_weights: Dictionary[String, float] = {}
 
 @onready var grid: TileMap = $Grid
 @onready var terrain: TileMap = $Grid
 @onready var buildings: TileMap = $Grid
 @onready var fog: TileMap = $Grid
+
+const CONFIG_SEED_PATH := "finsim/seed"
+var _rng := RandomNumberGenerator.new()
 
 signal tile_clicked(cell: Vector2i)
 
@@ -27,6 +31,8 @@ func _ready() -> void:
     if radius <= 0:
         push_warning("HexMap radius is 0")
     _ensure_singletons()
+    seed = int(ProjectSettings.get_setting(CONFIG_SEED_PATH, seed))
+    _rng.seed = seed
     if GameState.tiles.is_empty():
         _generate_tiles()
     else:
@@ -88,6 +94,7 @@ func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
     terrain.set_cell(0, coord, source_id)
 
 func _generate_tiles() -> void:
+    _rng.seed = seed
     GameState.tiles.clear()
     for coord in _disc(Vector2i.ZERO, radius):
         var terrain_type := _choose_terrain()
@@ -104,7 +111,7 @@ func _choose_terrain() -> String:
     var total := 0.0
     for v in terrain_weights.values():
         total += float(v)
-    var roll := randf() * total
+    var roll := _rng.randf() * total
     for k in terrain_weights.keys():
         roll -= float(terrain_weights[k])
         if roll <= 0.0:
