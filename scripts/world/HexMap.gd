@@ -3,9 +3,6 @@ class_name HexMap
 
 const TILE_SIZE := Vector2i(96, 84)
 
-const LAYER_TERRAIN := 0
-const LAYER_BUILDINGS := 1
-const LAYER_FOG := 2
 
 const BUILDING_SOURCE_IDS: Dictionary[String, int] = {
     "town": 4,
@@ -18,9 +15,9 @@ const DEFAULT_BUILDING_SOURCE_ID := 4
 @export var terrain_weights: Dictionary[String, float] = {}
 
 @onready var grid: TileMap = $Grid
-@onready var terrain: TileMap = $Grid
-@onready var buildings: TileMap = $Grid
-@onready var fog: TileMap = $Grid
+@onready var terrain_layer: TileMapLayer = $Grid/Terrain
+@onready var buildings_layer: TileMapLayer = $Grid/Buildings
+@onready var fog_layer: TileMapLayer = $Grid/Fog
 
 const CONFIG_SEED_PATH := "finsim/seed"
 var _rng := RandomNumberGenerator.new()
@@ -29,10 +26,9 @@ signal tile_clicked(cell: Vector2i)
 
 func _ready() -> void:
     assert(grid is TileMap, "TileMap node missing or wrong type")
-    assert(terrain is TileMap, "Terrain layer must be TileMap")
-    assert(buildings is TileMap, "Buildings layer must be TileMap")
-    assert(fog is TileMap, "Fog layer must be TileMap")
-    _ensure_layers()
+    assert(terrain_layer is TileMapLayer, "Terrain layer must be TileMapLayer")
+    assert(buildings_layer is TileMapLayer, "Buildings layer must be TileMapLayer")
+    assert(fog_layer is TileMapLayer, "Fog layer must be TileMapLayer")
     if radius <= 0:
         push_warning("HexMap radius is 0")
     _ensure_singletons()
@@ -53,23 +49,23 @@ func axial_to_world(qr: Vector2i) -> Vector2:
 
 func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
     for cell in _disc(center, reveal_radius):
-        fog.erase_cell(LAYER_FOG, cell)
+        fog_layer.erase_cell(cell)
         if GameState.tiles.has(cell):
             var t: Dictionary = GameState.tiles[cell]
             t["explored"] = true
             GameState.tiles[cell] = t
 
 func reveal_all() -> void:
-    fog.clear_layer(LAYER_FOG)
+    fog_layer.clear()
     for coord in GameState.tiles.keys():
         var t: Dictionary = GameState.tiles[coord]
         t["explored"] = true
         GameState.tiles[coord] = t
 
 func _draw_from_saved(saved: Dictionary) -> void:
-    terrain.clear_layer(LAYER_TERRAIN)
-    buildings.clear_layer(LAYER_BUILDINGS)
-    fog.clear_layer(LAYER_FOG)
+    terrain_layer.clear()
+    buildings_layer.clear()
+    fog_layer.clear()
     for coord in saved.keys():
         var data: Dictionary = saved[coord]
         _paint_terrain(coord, data.get("terrain", "plain"))
@@ -77,11 +73,11 @@ func _draw_from_saved(saved: Dictionary) -> void:
         if b != "":
             var building_name: String = b
             var source_id: int = BUILDING_SOURCE_IDS.get(building_name, DEFAULT_BUILDING_SOURCE_ID)
-            buildings.set_cell(LAYER_BUILDINGS, coord, source_id)
+            buildings_layer.set_cell(coord, source_id)
         if data.get("explored", false):
-            fog.erase_cell(LAYER_FOG, coord)
+            fog_layer.erase_cell(coord)
         else:
-            fog.set_cell(LAYER_FOG, coord, 0)
+        fog_layer.set_cell(coord, 0)
 
 func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
     var source_id := 0
@@ -96,7 +92,7 @@ func _paint_terrain(coord: Vector2i, terrain_type: String) -> void:
             source_id = 3
         _:
             source_id = 0
-    terrain.set_cell(LAYER_TERRAIN, coord, source_id)
+    terrain_layer.set_cell(coord, source_id)
 
 func _generate_tiles() -> void:
     _rng.seed = seed
@@ -110,7 +106,7 @@ func _generate_tiles() -> void:
             "building": "",
             "explored": false,
         }
-        fog.set_cell(LAYER_FOG, coord, 0)
+        fog_layer.set_cell(coord, 0)
     GameState.save()
 
 func _choose_terrain() -> String:
@@ -132,19 +128,6 @@ func _disc(center: Vector2i, disc_radius: int) -> Array[Vector2i]:
         for r in range(max(-disc_radius, -q - disc_radius), min(disc_radius, -q + disc_radius) + 1):
             cells.append(center + Vector2i(q, r))
     return cells
-
-func _ensure_layers() -> void:
-    var required_layers := 3
-    var count := grid.get_layers_count()
-    while count < required_layers:
-        grid.add_layer()
-        var new_count := grid.get_layers_count()
-        if new_count == count:
-            push_error("Failed to add required TileMap layers")
-            break
-        count = new_count
-    if grid.get_layers_count() < required_layers:
-        push_error("HexMap requires at least %d layers" % required_layers)
 
 func _ensure_singletons() -> void:
     var root: Node = Engine.get_main_loop().root
