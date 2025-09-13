@@ -18,3 +18,5 @@ logs/
 # Font files (not stored in repository)
 assets/fonts/*.ttf
 assets/fonts/*.otf
+fonts/*.ttf
+fonts/*.otf
