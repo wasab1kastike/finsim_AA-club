@@ -101,19 +101,7 @@ func _paint_cell(layer: int, coord: Vector2i, source_id: int, terrain: String) -
     var td := grid.get_cell_tile_data(layer, coord)
     if td == null:
         return
-    match terrain:
-        "water", "lake":
-            td.modulate = Palette.WATER
-        "plain", "grass":
-            td.modulate = Palette.PLAIN
-        "forest":
-            td.modulate = Palette.FOREST
-        "taiga":
-            td.modulate = Palette.TAIGA
-        "hill", "mountain":
-            td.modulate = Palette.HILL
-        _:
-            td.modulate = Palette.PLAIN
+    td.modulate = Palette.TERRAIN_COLORS.get(terrain, Palette.PLAIN)
 
 func _generate_tiles() -> void:
     _rng.seed = map_seed

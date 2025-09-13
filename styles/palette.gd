@@ -12,3 +12,14 @@ const FOREST := Color("#a6e3a1")
 const TAIGA := Color("#94e2d5")
 const HILL := Color("#fab387")
 const MOUNTAIN := Color("#cba6f7")
+
+const TERRAIN_COLORS := {
+    "water": WATER,
+    "lake": WATER,
+    "plain": PLAIN,
+    "grass": PLAIN,
+    "forest": FOREST,
+    "taiga": TAIGA,
+    "hill": HILL,
+    "mountain": MOUNTAIN,
+}
