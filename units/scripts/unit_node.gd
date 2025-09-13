@@ -1,7 +1,7 @@
 class_name UnitNode
 extends Node2D
 
-const UnitData  = preload("res://units/scripts/unit_data.gd")
+const BattleUnitData = preload("res://units/scripts/unit_data.gd")
 const HPTheme   = preload("res://units/themes/hp_theme.gd")
 const Palette   = preload("res://styles/palette.gd")
 
@@ -13,7 +13,7 @@ signal selected(unit: UnitNode)
 signal deselected(unit: UnitNode)
 signal hp_changed(unit: UnitNode, hp: int)
 
-var data: UnitData = UnitData.new()
+var data: BattleUnitData = BattleUnitData.new()
 var is_selected: bool = false
 
 func _ready():
@@ -24,7 +24,7 @@ func _ready():
     hp_bar.value = data.hp
     hp_bar.theme = HPTheme.new()
 
-func set_data(d: UnitData) -> void:
+func set_data(d: BattleUnitData) -> void:
     data = d
     if is_inside_tree(): _ready()
 
@@ -42,7 +42,7 @@ func apply_damage(amount: int) -> void:
         (data.hp > data.max_hp/2) ? Palette.HP_GREEN : Palette.HP_RED
     emit_signal("hp_changed", self, data.hp)
 
-func set_faction(f: int) -> void:
+func set_faction(f: BattleUnitData.Faction) -> void:
     data.faction = f
     icon.modulate = data.faction_color()
 

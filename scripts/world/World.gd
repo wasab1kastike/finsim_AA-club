@@ -2,8 +2,8 @@ extends Node2D
 
 signal tile_clicked(qr: Vector2i)
 
-const UnitNode   = preload("res://units/scripts/unit_node.gd")
-const UnitData   = preload("res://units/scripts/unit_data.gd")
+const UnitNode        = preload("res://units/scripts/unit_node.gd")
+const BattleUnitData  = preload("res://units/scripts/unit_data.gd")
 
 @onready var cam: Camera2D = $Camera2D
 @onready var hex_map: HexMap = $HexMap
@@ -12,7 +12,7 @@ const UnitData   = preload("res://units/scripts/unit_data.gd")
 var selected_unit: UnitNode = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 
-const UnitDataBase = preload("res://scripts/units/UnitData.gd")
+const UnitData = preload("res://scripts/units/UnitData.gd")
 
 var raider_manager: RaiderManager
 
@@ -111,7 +111,7 @@ func _on_game_tick() -> void:
 
 func spawn_unit_at_center() -> void:
     var u: Node = unit_scene.instantiate()
-    var data_res: UnitDataBase = load("res://resources/units/saunoja.tres")
+    var data_res: UnitData = load("res://resources/units/saunoja.tres")
     if data_res:
         u.apply_data(data_res)
     u.id = UUID.new_uuid_string()
@@ -203,15 +203,15 @@ func _resolve_combat(pos: Vector2i) -> void:
     GameState.tiles[pos] = tile
     GameState.set_hostile(pos, not enemy_left.is_empty())
 
-func spawn_unit(kind: String, grid_pos: Vector2i, faction := UnitData.Faction.PLAYER) -> UnitNode:
+func spawn_unit(kind: String, grid_pos: Vector2i, faction := BattleUnitData.Faction.PLAYER) -> UnitNode:
     var u := UnitNode.new()
-    var d := UnitData.new()
+    var d := BattleUnitData.new()
     d.faction = faction
     match kind:
         "soldier":
             d.name = "Soldier"; d.icon_path = "res://units/art/unit_soldier.svg"; d.max_hp = 12; d.hp = 12
         "raider":
-            d.name = "Raider"; d.icon_path = "res://units/art/unit_raider.svg"; d.faction = UnitData.Faction.RAIDER
+            d.name = "Raider"; d.icon_path = "res://units/art/unit_raider.svg"; d.faction = BattleUnitData.Faction.RAIDER
         "scout":
             d.name = "Scout"; d.icon_path = "res://units/art/unit_scout.svg"; d.move = 4
         _:
