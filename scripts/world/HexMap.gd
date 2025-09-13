@@ -33,7 +33,6 @@ const DEFAULT_TERRAIN_SOURCE_ID := 0
 @onready var fog_layer: TileMapLayer = $Grid/Fog
 var fog_map: FogMap
 
-@onready var terrain_layer_index: int = terrain_layer.get_index()
 
 const CONFIG_SEED_PATH := "finsim/seed"
 var _rng := RandomNumberGenerator.new()
@@ -85,7 +84,7 @@ func _draw_from_saved(saved: Dictionary) -> void:
         var data: Dictionary = saved[coord]
         var terrain_type: String = data.get("terrain", "plain")
         var source_id: int = TERRAIN_SOURCE_IDS.get(terrain_type, DEFAULT_TERRAIN_SOURCE_ID)
-        _paint_cell(terrain_layer_index, coord, source_id, terrain_type)
+        _paint_cell(terrain_layer, coord, source_id, terrain_type)
         var b: String = data.get("building", "")
         if b != "":
             var building_name: String = b
@@ -96,9 +95,10 @@ func _draw_from_saved(saved: Dictionary) -> void:
         else:
             fog_map.set_fog(coord)
 
-func _paint_cell(layer: int, coord: Vector2i, source_id: int, terrain: String) -> void:
-    grid.set_cell(layer, coord, source_id)
-    var td := grid.get_cell_tile_data(layer, coord)
+func _paint_cell(layer: TileMapLayer, coord: Vector2i, source_id: int, terrain: String) -> void:
+    var layer_idx := layer.get_index()
+    grid.set_cell(layer_idx, coord, source_id)
+    var td := grid.get_cell_tile_data(layer_idx, coord)
     if td == null:
         return
     td.modulate = Palette.TERRAIN_COLORS.get(terrain, Palette.PLAIN)
@@ -109,7 +109,7 @@ func _generate_tiles() -> void:
     for coord in _disc(Vector2i.ZERO, radius):
         var terrain_type := _choose_terrain()
         var source_id: int = TERRAIN_SOURCE_IDS.get(terrain_type, DEFAULT_TERRAIN_SOURCE_ID)
-        _paint_cell(terrain_layer_index, coord, source_id, terrain_type)
+        _paint_cell(terrain_layer, coord, source_id, terrain_type)
         GameState.tiles[coord] = {
             "terrain": terrain_type,
             "owner": "none",

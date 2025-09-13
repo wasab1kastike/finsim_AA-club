@@ -13,7 +13,7 @@ const TAIGA := Color("#94e2d5")
 const HILL := Color("#fab387")
 const MOUNTAIN := Color("#cba6f7")
 
-const TERRAIN_COLORS := {
+const TERRAIN_COLORS: Dictionary[String, Color] = {
     "water": WATER,
     "lake": WATER,
     "plain": PLAIN,
