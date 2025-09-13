@@ -66,7 +66,7 @@ func update_tile(tile_pos: Vector2i, building: Building) -> void:
 
 func update_clock(time: float) -> void:
     var total_seconds := int(time)
-    var minutes := total_seconds / 60
+    var minutes := int(total_seconds / 60)
     var seconds := total_seconds % 60
     clock_label.text = "Time: %02d:%02d" % [minutes, seconds]
 
