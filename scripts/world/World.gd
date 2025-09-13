@@ -2,14 +2,14 @@ extends Node2D
 
 signal tile_clicked(qr: Vector2i)
 
-const UnitNode        = preload("res://units/scripts/unit_node.gd")
+const Unit        = preload("res://scripts/units/Unit.gd")
 const BattleUnitData  = preload("res://units/scripts/unit_data.gd")
 
 @onready var cam: Camera2D = $Camera2D
 @onready var hex_map: HexMap = $HexMap
 @onready var units_root: Node2D = $Units
 
-var selected_unit: UnitNode = null
+var selected_unit: Unit = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 
 const UnitData = preload("res://scripts/units/UnitData.gd")
@@ -67,11 +67,13 @@ void fragment() {
     raider_manager.setup(hex_map, units_root, unit_scene)
     hex_map.tile_clicked.connect(_on_tile_clicked)
     GameClock.tick.connect(_on_game_tick)
-    for data: Dictionary in GameState.units:
-        var u: UnitNode = unit_scene.instantiate() as UnitNode
+    for i in range(GameState.units.size()):
+        var data: Dictionary = GameState.units[i]
+        var u: Unit = unit_scene.instantiate() as Unit
         u.from_dict(data)
         u.position = hex_map.axial_to_world(u.pos_qr)
         units_root.add_child(u)
+        GameState.units[i] = u.to_dict()
         selected_unit = u
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -110,7 +112,7 @@ func _on_game_tick() -> void:
 
 
 func spawn_unit_at_center() -> void:
-    var u: UnitNode = unit_scene.instantiate() as UnitNode
+    var u: Unit = unit_scene.instantiate() as Unit
     var data_res: UnitData = load("res://resources/units/saunoja.tres")
     if data_res:
         u.apply_data(data_res)
@@ -139,7 +141,7 @@ func torille() -> void:
         return
     var passable: Callable = func(p: Vector2i):
         return GameState.tiles.has(p) and GameState.tiles[p].get("terrain", "") != "lake"
-    for unit: UnitNode in units_root.get_children():
+    for unit: Unit in units_root.get_children():
         var best_dest: Vector2i = unit.pos_qr
         var best_len: int = 1_000_000
         for sauna: Vector2i in sauna_tiles:
@@ -184,7 +186,7 @@ func _resolve_combat(pos: Vector2i) -> void:
                 data["hp"] = ids[uid]
                 GameState.units[i] = data
             else:
-                for child: UnitNode in units_root.get_children():
+                for child: Unit in units_root.get_children():
                     if child.id == uid:
                         child.queue_free()
                         break
@@ -203,8 +205,8 @@ func _resolve_combat(pos: Vector2i) -> void:
     GameState.tiles[pos] = tile
     GameState.set_hostile(pos, not enemy_left.is_empty())
 
-func spawn_unit(kind: String, grid_pos: Vector2i, faction := BattleUnitData.Faction.PLAYER) -> UnitNode:
-    var u: UnitNode = UnitNode.new()
+func spawn_unit(kind: String, grid_pos: Vector2i, faction := BattleUnitData.Faction.PLAYER) -> Unit:
+    var u: Unit = Unit.new()
     var d: BattleUnitData = BattleUnitData.new()
     d.faction = faction
     match kind:
@@ -222,12 +224,12 @@ func spawn_unit(kind: String, grid_pos: Vector2i, faction := BattleUnitData.Fact
     u.selected.connect(_on_unit_selected)
     return u
 
-func select_unit(u: UnitNode) -> void:
+func select_unit(u: Unit) -> void:
     if selected_unit and is_instance_valid(selected_unit):
         selected_unit.set_selected(false)
     selected_unit = u
     if selected_unit:
         selected_unit.set_selected(true)
 
-func _on_unit_selected(u: UnitNode) -> void:
+func _on_unit_selected(u: Unit) -> void:
     select_unit(u)

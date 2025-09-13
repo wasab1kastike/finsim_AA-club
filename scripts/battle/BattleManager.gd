@@ -27,7 +27,7 @@ func process_tick() -> void:
                 changed = true
             continue
         var next: Vector2i = path[1]
-        var node = _find_unit_node(data.get("id", ""))
+        var node = _find_unit(data.get("id", ""))
         if node:
             node.pos_qr = next
             node.position = hex_map.axial_to_world(next)
@@ -40,12 +40,12 @@ func process_tick() -> void:
     if changed:
         GameState.save()
 
-## Returns the UnitNode child with the matching `id` from `units_root`.
-## Only children of type UnitNode are considered.
-func _find_unit_node(uid: String) -> UnitNode:
+## Returns the Unit child with the matching `id` from `units_root`.
+## Only children of type Unit are considered.
+func _find_unit(uid: String) -> Unit:
     if units_root == null:
         return null
     for child in units_root.get_children():
-        if child is UnitNode and child.id == uid:
+        if child is Unit and child.id == uid:
             return child
     return null
