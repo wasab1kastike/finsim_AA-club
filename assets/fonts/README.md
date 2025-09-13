@@ -1,10 +1,8 @@
-This directory should contain font files used by the project.
+This directory is provided for optional font files used by the project.
 
-To keep the repository lightweight and avoid storing binary assets,
-acquire the following fonts separately and place them in this folder:
-
-- `OpenSans-Regular.ttf`
-- `PressStart2P-Regular.ttf`
+The default theme now references the bundled `fonts/Inter-Regular.ttf`.
+If you wish to experiment with alternative fonts, place them here and
+update `resources/Theme.tres` or other style resources accordingly.
 
 Fonts can be downloaded from [Google Fonts](https://fonts.google.com/)
 or other reliable sources.
