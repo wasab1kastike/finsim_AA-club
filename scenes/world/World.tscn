@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://r05bec2uf1ff"]
+[gd_scene load_steps=5 format=3 uid="uid://r05bec2uf1ff"]
 
 [ext_resource type="Script" uid="uid://vrp3a5sbcd7r" path="res://scripts/world/World.gd" id="1"]
 [ext_resource type="TileSet" path="res://resources/TileSet.tres" id="2"]
+[ext_resource type="ShaderMaterial" path="res://resources/GridOutline.tres" id="3"]
 [ext_resource type="Script" uid="uid://bp0hhotxo8l28" path="res://scripts/world/HexMap.gd" id="4"]
 
 [node name="World" type="Node2D"]
@@ -15,6 +16,7 @@ script = ExtResource("4")
 radius = 6
 
 [node name="Grid" type="TileMap" parent="HexMap"]
+material = ExtResource("3")
 tile_set = ExtResource("2")
 cell_tile_size = Vector2i(96, 84)
 
