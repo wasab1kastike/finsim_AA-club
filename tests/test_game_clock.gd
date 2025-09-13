@@ -17,3 +17,11 @@ func test_process_no_increment_when_stopped(res):
     clock._process(1.0)
     if clock.time != 0.0:
         res.fail("Time should not advance when stopped")
+
+func test_process_respects_speed_multiplier(res):
+    var clock = GameClock.new()
+    clock.set_speed(2.0)
+    clock.start()
+    clock._process(0.5)
+    if clock.time != 1.0:
+        res.fail("Time should scale with speed multiplier")

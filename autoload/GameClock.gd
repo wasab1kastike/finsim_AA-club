@@ -11,7 +11,7 @@ var speed_multiplier: float = 1.0
 func _process(delta: float) -> void:
     if not running:
         return
-    time += delta
+    time += delta * speed_multiplier
     _accumulator += delta * speed_multiplier
     while _accumulator >= TICK_INTERVAL:
         _accumulator -= TICK_INTERVAL
