@@ -17,6 +17,8 @@ var raider_manager: RaiderManager
 func _ready() -> void:
     cam.position = grid.map_to_local(Vector2i(0, 0))
     hex_map.reveal_area(Vector2i(0, 0), 2)
+    print("World._ready: reveal_area executed")
+    hex_map.reveal_all()
     raider_manager = RaiderManager.new()
     add_child(raider_manager)
     raider_manager.setup(hex_map, units_root, unit_scene)
