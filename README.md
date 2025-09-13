@@ -18,9 +18,10 @@ Vertical slice WIP: 3 buildings, 1 unit, hex-grid combat, 1 neighbor AI, saunaku
 
 ## Build
 1. Install Godot 4.4.1.
-2. Open `project.godot` in Godot 4.4.1 (Main Scene: `scenes/ui/Main.tscn`).
-3. Press ▶ to run.
-4. Exports via `export_presets.cfg` (Linux, Web, Windows).
+2. Run `./tools/download_fonts.sh` to fetch required fonts.
+3. Open `project.godot` in Godot 4.4.1 (Main Scene: `scenes/ui/Main.tscn`).
+4. Press ▶ to run.
+5. Exports via `export_presets.cfg` (Linux, Web, Windows).
 
 > If you see a UID-upgrade dialog, run once in 4.4.1 and commit the updated `.tscn`/`.tres` files.
 
