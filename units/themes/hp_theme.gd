@@ -1,4 +1,6 @@
 extends Theme
+
+const Palette = preload("res://styles/palette.gd")
 func _init():
     var fg := StyleBoxFlat.new()
     fg.bg_color = Palette.HP_GREEN

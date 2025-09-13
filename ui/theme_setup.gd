@@ -1,5 +1,6 @@
 extends Node
 
+const Palette = preload("res://styles/palette.gd")
 
 func _ready() -> void:
     var theme := Theme.new()

@@ -1,4 +1,5 @@
 class_name Palette
+extends RefCounted
 
 const BG := Color("#1e1e2e")
 const FG := Color("#cdd6f4")
@@ -11,10 +12,10 @@ const FOREST := Color("#94e2d5")
 const TAIGA := Color("#74c7ec")
 const HILL := Color("#fab387")
 
-const TEXT      : Color = Color("#e6e6e9")
-const HP_GREEN  : Color = Color("#22c55e")
-const HP_RED    : Color = Color("#ef4444")
-const SEL_RING  : Color = Color("#7dd3fc")
-const PLAYER    : Color = Color("#60a5fa")
-const RAIDER    : Color = Color("#f87171")
-const NEUTRAL   : Color = Color("#a3a3a3")
+const TEXT := Color("#e6e6e9")
+const HP_GREEN := Color("#22c55e")
+const HP_RED := Color("#ef4444")
+const SEL_RING := Color("#7dd3fc")
+const PLAYER := Color("#60a5fa")
+const RAIDER := Color("#f87171")
+const NEUTRAL := Color("#a3a3a3")
