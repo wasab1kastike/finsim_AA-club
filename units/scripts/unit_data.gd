@@ -1,4 +1,4 @@
-class_name UnitData
+class_name BattleUnitData
 enum Faction { PLAYER, RAIDER, NEUTRAL }
 
 var name: String
