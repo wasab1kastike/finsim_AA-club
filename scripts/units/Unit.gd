@@ -114,6 +114,6 @@ func from_dict(d: Dictionary) -> void:
     atk = d.get("atk", atk)
     def = d.get("def", def)
     hp = d.get("hp", data.hp)
-    data.faction = BattleUnitData.Faction(d.get("faction", data.faction))
+    data.faction = d.get("faction", data.faction) as BattleUnitData.Faction
     if is_inside_tree():
         _ready()
