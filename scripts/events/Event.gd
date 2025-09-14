@@ -1,4 +1,4 @@
-extends Action
+extends "res://scripts/core/Action.gd"
 class_name GameEvent
 
 @export var name: String = ""

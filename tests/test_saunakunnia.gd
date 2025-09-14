@@ -1,4 +1,5 @@
 extends Node
+var Resources = preload("res://scripts/core/Resources.gd")
 
 func test_saunakunnia_resets(res) -> void:
     var tree = Engine.get_main_loop()

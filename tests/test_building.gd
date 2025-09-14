@@ -1,5 +1,6 @@
 extends Node
 var Building = preload("res://scripts/core/Building.gd")
+var Resources = preload("res://scripts/core/Resources.gd")
 
 func test_upgrade_increments_level(res):
     var building = Building.new()
