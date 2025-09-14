@@ -1,4 +1,4 @@
-[gd_resource type="Policy" load_steps=2 format=3 uid="uid://diyq4hv3wb2v6"]
+[gd_resource type="Resource" script_class="Policy" load_steps=2 format=3 uid="uid://diyq4hv3wb2v6"]
 [ext_resource path="res://scripts/policies/Policy.gd" type="Script" id="1"]
 
 [resource]
