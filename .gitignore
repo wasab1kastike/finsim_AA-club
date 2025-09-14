@@ -4,6 +4,7 @@
 .godot/imported/*
 !.godot/imported/*.md5
 .import/
+*.gd.uid
 
 # Exported builds (keep presets file)
 export/
