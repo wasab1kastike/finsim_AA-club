@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://r05bec2uf1ff"]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/World.gd" id="1"]
-[ext_resource type="TileSet" path="res://resources/TileSet.tres" id="2"]
-[ext_resource type="ShaderMaterial" path="res://resources/GridOutline.tres" id="3"]
+[ext_resource type="Material" path="res://resources/GridOutline.tres" id="3"]
 [ext_resource type="Script" path="res://scripts/world/HexMap.gd" id="4"]
 
 [node name="World" type="Node2D"]
@@ -17,13 +16,13 @@ radius = 6
 
 [node name="Terrain" type="TileMapLayer" parent="HexMap"]
 material = ExtResource("3")
-tile_set = ExtResource("2")
+tile_set = null
 
 [node name="Buildings" type="TileMapLayer" parent="HexMap"]
-tile_set = ExtResource("2")
+tile_set = null
 
 [node name="Fog" type="TileMapLayer" parent="HexMap"]
-tile_set = ExtResource("2")
+tile_set = null
 modulate = Color(1, 1, 1, 0.55)
 
 [node name="Units" type="Node2D" parent="."]

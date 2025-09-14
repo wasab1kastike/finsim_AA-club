@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://b1osxapae08ln"]
+[gd_scene load_steps=5 format=3]
 
-[ext_resource type="PackedScene" uid="uid://dkay4i5rdr533" path="res://scenes/ui/Hud.tscn" id="1"]
-[ext_resource type="PackedScene" uid="uid://r05bec2uf1ff" path="res://scenes/world/World.tscn" id="2"]
-[ext_resource type="Script" uid="uid://d2j6kl30p06t" path="res://scripts/ui/Main.gd" id="3"]
-[ext_resource type="Script" uid="uid://yitfl8tkxtg1" path="res://scripts/systems/SisuSystem.gd" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/ui/Hud.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/world/World.tscn" id="2"]
+[ext_resource type="Script" path="res://scripts/ui/Main.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/systems/SisuSystem.gd" id="5"]
 
 [node name="Main" type="Node"]
 script = ExtResource("3")
