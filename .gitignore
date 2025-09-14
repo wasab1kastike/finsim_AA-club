@@ -4,9 +4,14 @@
 .godot/imported/*
 !.godot/imported/*.md5
 .import/
+*.import/
+*.translation
 
 # Exported builds (keep presets file)
 export/
+bin/
+build/
+dist/
 
 # OS / Editor
 .DS_Store
