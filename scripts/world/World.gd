@@ -2,17 +2,12 @@ extends Node2D
 
 signal tile_clicked(qr: Vector2i)
 
-const Unit        = preload("res://scripts/units/Unit.gd")
-const BattleUnitData  = preload("res://units/scripts/unit_data.gd")
-
 @onready var cam: Camera2D = $Camera2D
 @onready var hex_map: HexMap = $HexMap
 @onready var units_root: Node2D = $Units
 
 var selected_unit: Unit = null
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
-
-const UnitData = preload("res://scripts/units/UnitData.gd")
 
 var raider_manager: RaiderManager
 
