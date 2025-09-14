@@ -1,10 +1,7 @@
 extends Node2D
 class_name Unit
 
-const BattleUnitData = preload("res://units/scripts/unit_data.gd")
-const UnitData       = preload("res://scripts/units/UnitData.gd")
 const HPTheme   = preload("res://units/themes/hp_theme.gd")
-const Palette   = preload("res://styles/palette.gd")
 
 @onready var icon: Sprite2D      = $Icon
 @onready var ring: ColorRect     = $SelectionRing
