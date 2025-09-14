@@ -1,3 +1,4 @@
+const Palette = preload("res://styles/palette.gd")
 class_name BattleUnitData
 enum Faction { PLAYER, RAIDER, NEUTRAL }
 
