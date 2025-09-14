@@ -3,6 +3,7 @@
 A 4X strategy autobattler with idle elements.
 
 See [codex](codex.md) for detailed design notes, including the hex-grid combat model.
+See [CHANGELOG](CHANGELOG.md) for release history.
 
 ## Gameplay
 - Start with a single sauna in Finland.
