@@ -46,7 +46,6 @@ func _get_or_create_fog_source(tset: TileSet) -> int:
         _cached_source = TileSetAtlasSource.new()
         _cached_source.resource_name = FOG_SOURCE_NAME
         _cached_source.texture = _cached_texture
-        _cached_source.modulate = Color(1, 1, 1, 0.55)
         _cached_source.texture_region_size = size
     var src := _cached_source.duplicate()
     return tset.add_source(src)
