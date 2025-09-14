@@ -16,7 +16,7 @@ var zoom_smoothing_speed: float = 8.0
 
 func _ready() -> void:
     RenderingServer.set_default_clear_color(Palette.BG)
-    cam.limit_smoothing_enabled = true
+    cam.limit_smoothing = true
     cam.position_smoothing_enabled = true
     cam.position_smoothing_speed = 8.0
     target_zoom = cam.zoom
