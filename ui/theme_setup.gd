@@ -6,8 +6,6 @@ func _ready() -> void:
     if ResourceLoader.exists(font_path):
         var font: FontFile = load(font_path)
         theme.default_font = font
-    else:
-        push_warning("Missing %s, using default font" % font_path)
     theme.default_font_size = 18
 
     theme.set_color("font_color", "Label", Palette.FG)
