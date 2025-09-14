@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://r05bec2uf1ff"]
 
-[ext_resource type="Script" uid="uid://vrp3a5sbcd7r" path="res://scripts/world/World.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/world/World.gd" id="1"]
 [ext_resource type="TileSet" path="res://resources/TileSet.tres" id="2"]
 [ext_resource type="ShaderMaterial" path="res://resources/GridOutline.tres" id="3"]
-[ext_resource type="Script" uid="uid://bp0hhotxo8l28" path="res://scripts/world/HexMap.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/world/HexMap.gd" id="4"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1")
