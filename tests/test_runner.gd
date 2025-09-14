@@ -20,6 +20,7 @@ var test_script_paths := [
     "res://tests/test_resources.gd",
     "res://tests/test_saunakunnia.gd",
     "res://tests/test_events.gd",
+    "res://tests/test_policies.gd",
     "res://tests/test_world.gd",
     "res://tests/test_battle.gd",
     "res://tests/test_raiders.gd",
