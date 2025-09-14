@@ -1,6 +1,5 @@
 class_name BattleUnitData
 extends RefCounted
-const Palette = preload("res://styles/palette.gd")
 enum Faction { PLAYER, RAIDER, NEUTRAL }
 
 var name: String
