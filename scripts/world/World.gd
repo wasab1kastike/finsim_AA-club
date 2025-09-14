@@ -11,13 +11,15 @@ var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 
 var raider_manager: RaiderManager
 
+var target_zoom: Vector2 = Vector2.ONE
+var zoom_smoothing_speed: float = 8.0
+
 func _ready() -> void:
     RenderingServer.set_default_clear_color(Palette.BG)
-    cam.limit_smoothed = true
+    cam.limit_smoothing_enabled = true
     cam.position_smoothing_enabled = true
-    cam.zoom_smoothed = true
     cam.position_smoothing_speed = 8.0
-    cam.zoom_smoothing_speed = 8.0
+    target_zoom = cam.zoom
     var vignette: ColorRect = ColorRect.new()
     vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
     vignette.anchor_right = 1.0
@@ -79,9 +81,12 @@ func _unhandled_input(event: InputEvent) -> void:
         elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
             delta = 0.1
         if delta != 0.0:
-            var z: float = clamp(cam.zoom.x + delta, 0.5, 2.0)
-            cam.zoom = Vector2.ONE * z
+            var z: float = clamp(target_zoom.x + delta, 0.5, 2.0)
+            target_zoom = Vector2.ONE * z
             get_viewport().set_input_as_handled()
+
+func _process(delta: float) -> void:
+    cam.zoom = cam.zoom.lerp(target_zoom, min(delta * zoom_smoothing_speed, 1.0))
 
 func _on_tile_clicked(qr: Vector2i) -> void:
     emit_signal("tile_clicked", qr)
