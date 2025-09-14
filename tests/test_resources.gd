@@ -1,4 +1,5 @@
 extends Node
+var Resources = preload("res://scripts/core/Resources.gd")
 
 func test_game_state_resources(res) -> void:
     var gs = Engine.get_main_loop().root.get_node("GameState")

@@ -1,5 +1,7 @@
 extends Node2D
 
+const Terrain = preload("res://scripts/world/Terrain.gd")
+
 @export var map_width: int = 10
 @export var map_height: int = 10
 @export var generator_seed: int = 0
@@ -25,11 +27,11 @@ func _generate_and_store() -> void:
         for q in map_width:
             var hex: Node2D = hex_tile_scene.instantiate() as Node2D
             var noise_val: float = noise.get_noise_2d(float(q), float(r))
-            var terrain_type := "water"
+            var terrain_type := Terrain.WATER
             if noise_val > 0.4:
-                terrain_type = "mountain"
+                terrain_type = Terrain.MOUNTAIN
             elif noise_val > 0.0:
-                terrain_type = "grass"
+                terrain_type = Terrain.GRASS
             var resource_type := ""
             var roll := RNG.randf()
             if roll < 0.1:
@@ -57,7 +59,7 @@ func _draw_from_saved() -> void:
         var hex: Node2D = hex_tile_scene.instantiate() as Node2D
         hex.q = coord.x
         hex.r = coord.y
-        hex.terrain = data.get("terrain", "water")
+        hex.terrain = data.get("terrain", Terrain.WATER)
         hex.resource = data.get("resource", "")
         hex.update_sprite()
         hex.position = HexUtils.axial_to_world(coord.x, coord.y, hex_radius)

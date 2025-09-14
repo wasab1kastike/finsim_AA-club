@@ -1,4 +1,5 @@
 extends Node
+var Resources = preload("res://scripts/core/Resources.gd")
 
 func _remove_save(gs) -> void:
     if FileAccess.file_exists(gs.SAVE_PATH):
