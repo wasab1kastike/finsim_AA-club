@@ -34,6 +34,7 @@ func _ready() -> void:
     build_button.pressed.connect(func(): build_pressed.emit())
     _populate_buildings()
     _populate_policies()
+    assert(_policies.size() > 0, "No policies loaded during initialization")
     _populate_events()
     building_selector.item_selected.connect(_on_building_selected)
     var popup := building_selector.get_popup()
@@ -118,16 +119,26 @@ func _populate_buildings() -> void:
 func _populate_policies() -> void:
     _policies.clear()
     policy_selector.clear()
+    policy_selector.disabled = false
+    policy_button.disabled = false
     for file in DirAccess.get_files_at("res://resources/policies"):
         if file.get_extension() == "tres":
-            var res := load("res://resources/policies/%s" % file)
+            var path := "res://resources/policies/%s" % file
+            var res := load(path)
             if res == null:
-                push_warning("Failed to load policy resource: res://resources/policies/%s" % file)
+                push_error("Failed to load policy resource: %s" % path)
             elif res is PolicyBase and res.name:
                 policy_selector.add_item(res.name)
                 _policies.append(res)
             else:
-                push_warning("Loaded resource is not a Policy: res://resources/policies/%s" % file)
+                push_error("Loaded resource is not a Policy: %s" % path)
+    if _policies.is_empty():
+        var msg := "No policies available"
+        policy_selector.add_item(msg)
+        policy_selector.select(0)
+        policy_selector.disabled = true
+        policy_button.disabled = true
+        push_warning(msg)
 
 func _populate_events() -> void:
     _events.clear()
