@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://bakkv70rr6dd5"]
+[gd_scene load_steps=2 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/EventOverlay.gd" id="1"]
 
