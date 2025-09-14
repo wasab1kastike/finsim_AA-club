@@ -2,6 +2,7 @@ extends Node2D
 class_name HexMap
 
 const TILE_SIZE := Vector2i(96, 84)
+const TILE_SET_PATH := "res://resources/TileSet.tres"
 
 
 const TERRAIN_SOURCE_IDS: Dictionary[String, int] = {
@@ -43,6 +44,7 @@ var _rng := RandomNumberGenerator.new()
 signal tile_clicked(cell: Vector2i)
 
 func _ready() -> void:
+    _ensure_tile_sets()
     _update_grid_outline()
     if radius <= 0:
         push_warning("HexMap radius is 0")
@@ -78,6 +80,15 @@ func reveal_all() -> void:
         var t: Dictionary = GameState.tiles[coord]
         t["explored"] = true
         GameState.tiles[coord] = t
+
+func _ensure_tile_sets() -> void:
+    var ts: TileSet = load(TILE_SET_PATH)
+    if terrain_layer.tile_set == null:
+        terrain_layer.tile_set = ts
+    if buildings_layer.tile_set == null:
+        buildings_layer.tile_set = ts
+    if fog_layer.tile_set == null:
+        fog_layer.tile_set = ts
 
 func _update_grid_outline() -> void:
     if terrain_layer.material is ShaderMaterial:
