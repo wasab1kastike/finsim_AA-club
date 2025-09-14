@@ -29,7 +29,7 @@ var hp: int:
         if is_inside_tree():
             hp_bar.value = data.hp
             hp_bar.get_theme_stylebox("fill", "ProgressBar").bg_color = \
-                Palette.HP_GREEN if data.hp > data.max_hp / 2 else Palette.HP_RED
+                Palette.HP_GREEN if data.hp > data.max_hp / 2.0 else Palette.HP_RED
         emit_signal("hp_changed", self, data.hp)
         for i in range(GameState.units.size()):
             var u: Dictionary = GameState.units[i]
