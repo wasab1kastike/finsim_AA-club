@@ -15,16 +15,15 @@ current = true
 script = ExtResource("4")
 radius = 6
 
-[node name="Grid" type="TileMap" parent="HexMap"]
+[node name="Terrain" type="TileMapLayer" parent="HexMap"]
 material = ExtResource("3")
 tile_set = ExtResource("2")
-cell_tile_size = Vector2i(96, 84)
 
-[node name="Terrain" type="TileMapLayer" parent="HexMap/Grid"]
+[node name="Buildings" type="TileMapLayer" parent="HexMap"]
+tile_set = ExtResource("2")
 
-[node name="Buildings" type="TileMapLayer" parent="HexMap/Grid"]
-
-[node name="Fog" type="TileMapLayer" parent="HexMap/Grid"]
+[node name="Fog" type="TileMapLayer" parent="HexMap"]
+tile_set = ExtResource("2")
 modulate = Color(1, 1, 1, 0.55)
 
 [node name="Units" type="Node2D" parent="."]

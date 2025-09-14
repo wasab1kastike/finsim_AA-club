@@ -32,10 +32,9 @@ const DEFAULT_BUILDING_SOURCE_ID := 4
         line_alpha = value
         _update_grid_outline()
 
-@onready var grid: TileMap = $Grid
-@onready var terrain_layer: TileMapLayer = $Grid/Terrain
-@onready var buildings_layer: TileMapLayer = $Grid/Buildings
-@onready var fog_layer: TileMapLayer = $Grid/Fog
+@onready var terrain_layer: TileMapLayer = $Terrain
+@onready var buildings_layer: TileMapLayer = $Buildings
+@onready var fog_layer: TileMapLayer = $Fog
 var fog_map: FogMap
 
 const CONFIG_SEED_PATH := "finsim/seed"
@@ -44,7 +43,6 @@ var _rng := RandomNumberGenerator.new()
 signal tile_clicked(cell: Vector2i)
 
 func _ready() -> void:
-    assert(grid is TileMap, "TileMap node missing or wrong type")
     _update_grid_outline()
     if radius <= 0:
         push_warning("HexMap radius is 0")
@@ -60,11 +58,11 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
     if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-        var cell := grid.local_to_map(grid.to_local(event.position))
+        var cell := terrain_layer.local_to_map(terrain_layer.to_local(event.position))
         emit_signal("tile_clicked", cell)
 
 func axial_to_world(qr: Vector2i) -> Vector2:
-    return grid.map_to_local(qr)
+    return terrain_layer.map_to_local(qr)
 
 func reveal_area(center: Vector2i, reveal_radius: int = 2) -> void:
     for cell in _disc(center, reveal_radius):
@@ -82,9 +80,9 @@ func reveal_all() -> void:
         GameState.tiles[coord] = t
 
 func _update_grid_outline() -> void:
-    if grid.material is ShaderMaterial:
-        grid.material.set_shader_parameter("line_thickness", line_thickness)
-        grid.material.set_shader_parameter("line_alpha", line_alpha)
+    if terrain_layer.material is ShaderMaterial:
+        terrain_layer.material.set_shader_parameter("line_thickness", line_thickness)
+        terrain_layer.material.set_shader_parameter("line_alpha", line_alpha)
 
 func _draw_from_saved(saved: Dictionary) -> void:
     terrain_layer.clear()
@@ -94,7 +92,7 @@ func _draw_from_saved(saved: Dictionary) -> void:
         var data: Dictionary = saved[coord]
         var terrain_type: String = data.get("terrain", "plain")
         var source_id: int = TERRAIN_SOURCE_IDS.get(terrain_type, 0)
-        _paint_cell(terrain_layer.layer_id, coord, source_id, terrain_type)
+        _paint_cell(terrain_layer, coord, source_id, terrain_type)
         var b: String = data.get("building", "")
         if b != "":
             var building_name: String = b
@@ -105,9 +103,9 @@ func _draw_from_saved(saved: Dictionary) -> void:
         else:
             fog_map.set_fog(coord)
 
-func _paint_cell(layer: int, coord: Vector2i, source_id: int, terrain: String) -> void:
-    grid.set_cell(layer, coord, source_id)
-    var tile_data := grid.get_cell_tile_data(layer, coord)
+func _paint_cell(layer: TileMapLayer, coord: Vector2i, source_id: int, terrain: String) -> void:
+    layer.set_cell(coord, source_id)
+    var tile_data := layer.get_cell_tile_data(coord)
     if tile_data:
         var color := Palette.PLAIN
         match terrain:
@@ -129,7 +127,7 @@ func _generate_tiles() -> void:
     for coord in _disc(Vector2i.ZERO, radius):
         var terrain_type := _choose_terrain()
         var source_id: int = TERRAIN_SOURCE_IDS.get(terrain_type, 0)
-        _paint_cell(terrain_layer.layer_id, coord, source_id, terrain_type)
+        _paint_cell(terrain_layer, coord, source_id, terrain_type)
         GameState.tiles[coord] = {
             "terrain": terrain_type,
             "owner": "none",

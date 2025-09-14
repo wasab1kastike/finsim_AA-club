@@ -12,12 +12,11 @@ static var _cached_source: TileSetAtlasSource
 
 func _init(p_layer: TileMapLayer) -> void:
     layer = p_layer
-    var tile_map: TileMap = layer.get_parent()
-    var tset: TileSet = tile_map.tile_set
+    var tset: TileSet = layer.tile_set
     if tset == null:
         tset = TileSet.new()
         tset.tile_shape = TileSet.TILE_SHAPE_HEXAGON
-        tile_map.tile_set = tset
+        layer.tile_set = tset
     source_id = _get_or_create_fog_source(tset)
 
 func set_fog(coord: Vector2i) -> void:

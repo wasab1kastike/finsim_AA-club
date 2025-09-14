@@ -10,26 +10,26 @@ class DummyHexMap:
         tset.tile_size = TILE_SIZE
         tset.tile_shape = TileSet.TILE_SHAPE_HEXAGON
 
-        var tilemap := TileMap.new()
-        tilemap.name = "Grid"
-        tilemap.tile_set = tset
-
         var terrain_layer := TileMapLayer.new()
         terrain_layer.name = "Terrain"
-        tilemap.add_child(terrain_layer)
+        terrain_layer.tile_set = tset
 
         var buildings_layer := TileMapLayer.new()
         buildings_layer.name = "Buildings"
-        tilemap.add_child(buildings_layer)
+        buildings_layer.tile_set = tset
 
         var fog_layer := TileMapLayer.new()
         fog_layer.name = "Fog"
+        fog_layer.tile_set = tset
         fog_layer.modulate = Color(1, 1, 1, 0.55)
-        tilemap.add_child(fog_layer)
 
-        add_child(tilemap)
+        add_child(terrain_layer)
+        add_child(buildings_layer)
+        add_child(fog_layer)
 
-        self.grid = tilemap
+        self.terrain_layer = terrain_layer
+        self.buildings_layer = buildings_layer
+        self.fog_layer = fog_layer
 
     func _set_tile(coord: Vector2i) -> void:
         pass
