@@ -200,7 +200,7 @@ func _resolve_combat(pos: Vector2i) -> void:
     GameState.tiles[pos] = tile
     GameState.set_hostile(pos, not enemy_left.is_empty())
 
-func spawn_unit(kind: String, grid_pos: Vector2i, faction := BattleUnitData.Faction.PLAYER) -> Unit:
+func spawn_unit(kind: String, grid_pos: Vector2i, faction: BattleUnitData.Faction = BattleUnitData.Faction.PLAYER) -> Unit:
     var u: Unit = Unit.new()
     var d: BattleUnitData = BattleUnitData.new()
     d.faction = faction
